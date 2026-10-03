@@ -24,7 +24,7 @@ tr:hover td{background:#2f3142}
 td.dom a{color:#8be9fd;text-decoration:none;font-weight:600}
 td.dom a:hover{text-decoration:underline;color:#50fa7b}
 td.kind{width:60px;text-align:center;font-weight:700}
-.k-occ{color:#50fa7b}.k-reg{color:#ffb86c}
+.k-occ{color:#50fa7b}.k-reg{color:#ffb86c}.k-un{color:#6272a4}
 td.st{width:56px;text-align:center;font-weight:700}
 .empty{color:#6272a4;text-align:center;padding:40px;font-size:15px}
 .foot{color:#6272a4;font-size:12px;margin-top:16px;text-align:center}
@@ -47,20 +47,22 @@ td.st{width:56px;text-align:center;font-weight:700}
 <script>
 let doms=[];
 function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function stColor(st){if(st<300)return '#50fa7b';if(st<400)return '#ffb86c';return '#ff5555'}
+function stColor(kind){if(kind==='注册')return '#50fa7b';if(kind==='无注册')return '#ffb86c';return '#6272a4'}
 function render(){
   const kw=(document.getElementById('kw').value||'').toLowerCase();
   const box=document.getElementById('tbl');
   let list=doms;
   if(kw){list=doms.filter(d=>d.domain.toLowerCase().includes(kw));}
-  document.getElementById('cnt').textContent='当前存活 '+doms.length+' 条'+(kw?(' · 过滤结果 '+list.length+' 条'):'');
+  document.getElementById('cnt').textContent='结果 '+doms.length+' 条'+(kw?(' · 过滤 '+list.length+' 条'):'');
   if(!list.length){box.innerHTML='<div class="empty">'+(!doms.length?'暂无数据':'没有匹配「'+esc(kw)+'」的域名')+'</div>';return}
   let rows='';
   for(const it of list){
     const link='http://'+esc(it.domain)+'/';
+    const kind=it.kind==='占用'?'注册':(it.kind==='可注册'?'无注册':(it.kind||'未知'));
+    const kc=it.kind==='占用'?'k-occ':(it.kind==='可注册'?'k-reg':'k-un');
     rows+='<tr><td class="dom"><a href="'+link+'" target="_blank">'+esc(it.domain)+'</a></td>'
-        +'<td class="kind '+(it.kind==='占用'?'k-occ':'k-reg')+'">'+esc(it.kind)+'</td>'
-        +'<td class="st" style="color:'+stColor(it.status)+'">'+esc(it.status)+'</td></tr>';
+        +'<td class="kind '+kc+'">'+esc(kind)+'</td>'
+        +'<td class="st" style="color:'+stColor(kind)+'">'+esc(it.status==null?'—':it.status)+'</td></tr>';
   }
   box.innerHTML='<table><thead><tr><th style="width:22%">域名（点击进入）</th><th style="width:12%">状态</th><th style="width:8%">HTTP</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }

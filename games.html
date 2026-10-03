@@ -135,7 +135,7 @@ show('snake');
 
 /* ===== 贪吃蛇 ===== */
 var snake,dir,snakeTimer,snakeOver,snakePause=false,sc=0;
-function snakeInit(){var c=document.getElementById('snake');var g=c.getContext('2d');snake=[[20,20],[19,20],[18,20]];dir=[1,0];sc=0;snakeOver=false;snakePause=false;snakeFood();snakeDraw();snakeTick();}
+function snakeInit(){var c=document.getElementById('snake');var g=c.getContext('2d');snake=[[10,10],[9,10],[8,10]];dir=[1,0];sc=0;snakeOver=false;snakePause=false;snakeFood();snakeDraw();snakeTick();}
 function snakeFood(){var c=document.getElementById('snake');var f;do{f=[Math.floor(Math.random()*20),Math.floor(Math.random()*20)]}while(snake.some(function(s){return s[0]==f[0]&&s[1]==f[1]}));snake.food=f;}
 function snakeDraw(){var c=document.getElementById('snake');var g=c.getContext('2d');g.clearRect(0,0,400,400);g.fillStyle='#282a36';g.fillRect(0,0,400,400);
   snake.forEach(function(s,i){g.fillStyle=i===0?'#ff5555':'#50fa7b';g.fillRect(s[0]*20+1,s[1]*20+1,18,18)});
@@ -324,11 +324,11 @@ function sandClear(){sand.cells=Array(sand.w).fill(0).map(function(){return Arra
 sandInit();
 
 /* ===== 双摆 ===== */
-var pend={g:null,run:false,timer:null,a1:Math.PI/2,a2:Math.PI/2,v1:0,v2:0,m1:10,m2:10,l1:120,l2:120,g:9.81,trace:[]};
+var pend={g:null,run:false,timer:null,a1:Math.PI/2,a2:Math.PI/2,v1:0,v2:0,m1:10,m2:10,l1:110,l2:110,grav:9.81,trace:[]};
 function pendInit(){var c=document.getElementById('pend');pend.g=c.getContext('2d');pendReset();}
-function pendStep(){var dt=0.02;var num1=-pend.g*(2*pend.m1+pend.m2)*Math.sin(pend.a1)-pend.m2*pend.g*Math.sin(pend.a1-2*pend.a2)-2*Math.sin(pend.a1-pend.a2)*pend.m2*(pend.v2*pend.v2*pend.l2+pend.v1*pend.v1*pend.l1*Math.cos(pend.a1-pend.a2));
+function pendStep(){var dt=0.02;var num1=-pend.grav*(2*pend.m1+pend.m2)*Math.sin(pend.a1)-pend.m2*pend.grav*Math.sin(pend.a1-2*pend.a2)-2*Math.sin(pend.a1-pend.a2)*pend.m2*(pend.v2*pend.v2*pend.l2+pend.v1*pend.v1*pend.l1*Math.cos(pend.a1-pend.a2));
   var den1=pend.l1*(2*pend.m1+pend.m2-pend.m2*Math.cos(2*pend.a1-2*pend.a2));
-  var num2=2*Math.sin(pend.a1-pend.a2)*(pend.v1*pend.v1*pend.l1*(pend.m1+pend.m2)+pend.g*(pend.m1+pend.m2)*Math.cos(pend.a1)+pend.v2*pend.v2*pend.l2*pend.m2*Math.cos(pend.a1-pend.a2));
+  var num2=2*Math.sin(pend.a1-pend.a2)*(pend.v1*pend.v1*pend.l1*(pend.m1+pend.m2)+pend.grav*(pend.m1+pend.m2)*Math.cos(pend.a1)+pend.v2*pend.v2*pend.l2*pend.m2*Math.cos(pend.a1-pend.a2));
   var den2=pend.l2*(2*pend.m1+pend.m2-pend.m2*Math.cos(2*pend.a1-2*pend.a2));
   var aa1=(num1/den1)*dt,aa2=(num2/den2)*dt;
   pend.v1+=aa1;pend.v2+=aa2;pend.a1+=pend.v1*dt;pend.a2+=pend.v2*dt;
@@ -347,14 +347,22 @@ pendInit();
 
 /* ===== π 计算器 ===== */
 function computePi(){var n=+document.getElementById('pi-n').value;if(n<1||n>5000){alert('请输入 1-5000');return;}
-  var digits=Array(n+2).fill(0);var carry=0;
-  for(var i=0;i<digits.length;i++)digits[i]=0;
-  digits[1]=2;
-  for(var i=n*3/2|0;i>=1;i-=2){
-    var tmp=0;
-    for(var j=0;j<digits.length;j++){tmp+=digits[j]*i*10;digits[j]=tmp%10;tmp=Math.floor(tmp/10);}
+  var len=Math.floor(10*n/3)+2;var a=new Array(len);for(var i=0;i<len;i++)a[i]=2;
+  var digits=[],nines=0,predigit=0;
+  for(var j=0;j<n+1;j++){
+    var q=0;
+    for(var i=len;i>0;i--){
+      var x=10*a[i-1]+q*i;
+      a[i-1]=x%(2*i-1);
+      q=Math.floor(x/(2*i-1));
+    }
+    a[0]=q%10;q=Math.floor(q/10);
+    if(q===9){nines++;}
+    else if(q===10){digits.push(predigit+1);for(var k=0;k<nines;k++)digits.push(0);predigit=0;nines=0;}
+    else{digits.push(predigit);for(var k=0;k<nines;k++)digits.push(9);predigit=q;nines=0;}
   }
-  var s='3.';for(var k=1;k<=n;k++)s+=digits[k];
+  digits.push(predigit);
+  var s='3.'+digits.slice(2,n+2).join('');
   document.getElementById('pi-out').textContent='π ≈ '+s;}
 </script>
 </body>

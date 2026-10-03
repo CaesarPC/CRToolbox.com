@@ -67,6 +67,7 @@ td.dom a:hover{text-decoration:underline;color:#50fa7b}
     <div class="row">
       <button class="btn" id="btn" onclick="run()">🔍 生成并查询</button>
       <button class="btn btn-ghost" onclick="clearAll()">清空结果</button>
+      <button class="btn btn-ghost" onclick="exportResults()">⬇️ 导出结果 JSON</button>
       <span id="status" style="font-size:13px;color:#bdc3c7"></span>
     </div>
   </div>
@@ -151,6 +152,20 @@ async function run(){
 function clearAll(){
   document.getElementById('tbl').innerHTML='<div class="empty">结果已清空。</div>';
   document.getElementById('cnt').textContent='';
+}
+function exportResults(){
+  const rows=document.querySelectorAll('#tbl tbody tr');
+  if(!rows.length){alert('当前没有可导出的结果，请先「生成并查询」');return;}
+  const out=[];
+  rows.forEach(r=>{
+    const dom=r.querySelector('.dom').textContent.trim();
+    const kind=r.querySelector('td:nth-child(2)').textContent.trim();
+    out.push({domain:dom,kind:(kind.indexOf('占用')>-1?'占用':'可注册')});
+  });
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='组合器导出.json';a.click();
+  alert('已导出 '+out.length+' 条结果到「组合器导出.json」。把它放到本地网站查找器目录，运行「导入组合器结果.py」即可同步进查看器。');
 }
 </script>
 </body>

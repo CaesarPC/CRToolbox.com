@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件转换器 · Cr专属工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 20px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer}
+.btn:hover{background:#69ff94}
+.btn:disabled{background:#555;cursor:not-allowed;color:#999}
+.btn-ghost{background:#44475a;color:#e6e6e6}.btn-ghost:hover{background:#6272a4}
+.wrap{max-width:1000px;margin:20px auto;padding:0 16px}
+.panel{background:#282a36;border-radius:12px;padding:18px 20px;margin-bottom:16px;border:1px solid #44475a}
+.panel h2{margin:0 0 12px;font-size:15px;color:#50fa7b}
+.panel p{font-size:12.5px;color:#bdc3c7;margin:0 0 10px;line-height:1.6}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tab{background:#1e1e2e;border:1px solid #44475a;color:#bdc3c7;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:700}
+.tab.on{background:#50fa7b;color:#1e1e2e;border-color:#50fa7b}
+.drop{background:#1e1e2e;border:2px dashed #44475a;border-radius:10px;padding:30px;text-align:center;color:#6272a4;cursor:pointer;margin-bottom:12px;transition:.15s}
+.drop:hover{border-color:#50fa7b;color:#50fa7b}
+textarea{width:100%;box-sizing:border-box;min-height:130px;padding:10px 12px;font-size:13px;border-radius:8px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;resize:vertical;font-family:Consolas,monospace}
+textarea:focus{border-color:#50fa7b;outline:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.row label{font-size:13px;color:#bdc3c7}
+select{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;padding:9px 12px;border-radius:8px;font-size:14px}
+.out-label{font-size:12px;color:#6272a4;margin:6px 0 4px}
+.err{color:#ff5555;font-size:12.5px;margin-top:8px}
+.ok{color:#50fa7b;font-size:12.5px;margin-top:8px}
+#prev{max-width:220px;margin-top:12px;border-radius:8px;border:1px solid #44475a}
+.foot{color:#6272a4;font-size:12px;margin-top:16px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hd">
+  <div><h1>📦 文件转换器</h1><div class="st">图片格式 · CSV/JSON · 文件哈希</div></div>
+  <a class="btn btn-ghost" href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-mode="img">图片格式</div>
+    <div class="tab" data-mode="csv">CSV↔JSON</div>
+    <div class="tab" data-mode="hash">文件哈希</div>
+  </div>
+
+  <!-- 图片格式 -->
+  <div class="panel" id="p-img">
+    <h2>图片格式转换</h2>
+    <p>选择一张图片，转成 JPG / PNG / WebP 格式（浏览器本地转换，不上传）。</p>
+    <div class="drop" id="dropImg">点击选择图片文件（PNG / JPG / WebP / BMP）</div>
+    <img id="prev" style="display:none" alt="预览">
+    <div class="row">
+      <label>转换格式：</label>
+      <select id="imgFmt"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select>
+      <button class="btn" id="btnImg" disabled onclick="convertImg()">转换并下载</button>
+    </div>
+    <div class="err" id="imgErr"></div>
+  </div>
+
+  <!-- CSV/JSON -->
+  <div class="panel" id="p-csv" style="display:none">
+    <h2>CSV ↔ JSON 转换</h2>
+    <p>在下方粘贴 CSV 或 JSON 数据，转换方向可选。注意：CSV 转 JSON 需第一行为表头。</p>
+    <div class="row">
+      <label>方向：</label>
+      <select id="csvDir"><option value="csv2json">CSV → JSON</option><option value="json2csv">JSON → CSV</option></select>
+      <button class="btn" onclick="convertCSV()">转换</button>
+    </div>
+    <div class="out-label">输入：</div>
+    <textarea id="csvIn" placeholder="粘贴 CSV 或 JSON 数据..."></textarea>
+    <div class="out-label">输出：</div>
+    <textarea id="csvOut" placeholder="结果在这里..."></textarea>
+    <div class="err" id="csvErr"></div>
+  </div>
+
+  <!-- 文件哈希 -->
+  <div class="panel" id="p-hash" style="display:none">
+    <h2>文件哈希校验（SHA-256）</h2>
+    <p>选择文件，计算其 SHA-256 哈希值，用于校验文件是否被篡改或损坏。</p>
+    <div class="drop" id="dropHash">点击选择文件</div>
+    <div class="out-label">SHA-256：</div>
+    <textarea id="hashOut" placeholder="哈希结果...（大文件需要一点时间）"></textarea>
+    <div class="err" id="hashErr"></div>
+  </div>
+</div>
+<div class="foot">Cr专属工具箱 · 文件转换器 · 全部本地处理，不上传服务器</div>
+<script>
+let mode='img';
+const tabs=document.querySelectorAll('.tab');
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('on'));t.classList.add('on');mode=t.dataset.mode;
+  document.getElementById('p-img').style.display=mode==='img'?'block':'none';
+  document.getElementById('p-csv').style.display=mode==='csv'?'block':'none';
+  document.getElementById('p-hash').style.display=mode==='hash'?'block':'none';
+}));
+function setErr(id,msg){document.getElementById(id).textContent=msg||'';}
+
+// ---- 图片转换 ----
+let imgFile=null,imgEl=null;
+const dropImg=document.getElementById('dropImg');
+dropImg.addEventListener('click',()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=e=>{if(e.target.files[0]){loadImg(e.target.files[0]);}};i.click();});
+dropImg.addEventListener('dragover',e=>e.preventDefault());
+dropImg.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0])loadImg(e.dataTransfer.files[0]);});
+function loadImg(f){
+  imgFile=f;
+  const url=URL.createObjectURL(f);
+  const img=new Image();
+  img.onload=()=>{imgEl=img;document.getElementById('prev').src=url;document.getElementById('prev').style.display='block';document.getElementById('btnImg').disabled=false;setErr('imgErr','');};
+  img.onerror=()=>setErr('imgErr','无法读取该图片文件');
+  img.src=url;
+}
+function convertImg(){
+  if(!imgEl)return;
+  const fmt=document.getElementById('imgFmt').value;
+  const canvas=document.createElement('canvas');
+  canvas.width=imgEl.naturalWidth;canvas.height=imgEl.naturalHeight;
+  const ctx=canvas.getContext('2d');
+  ctx.drawImage(imgEl,0,0);
+  const ext=fmt.replace('image/','');
+  canvas.toBlob(blob=>{
+    if(!blob){setErr('imgErr','转换失败');return;}
+    const a=document.createElement('a');
+    const name=(imgFile?imgFile.name.replace(/\.[^.]+$/,'')+'.'+ext:('转换.'+ext));
+    a.href=URL.createObjectURL(blob);a.download=name;a.click();
+    setErr('imgErr','');setErr('imgErr','转换成功，已开始下载：'+name);
+  },'image/'+ext,0.9);
+}
+
+// ---- CSV/JSON ----
+function convertCSV(){
+  const v=document.getElementById('csvIn').value;if(!v){setErr('csvErr','请输入数据');return;}
+  const dir=document.getElementById('csvDir').value;
+  try{
+    if(dir==='csv2json'){
+      const lines=v.split(/\r?\n/).filter(l=>l.trim());
+      if(lines.length<2){setErr('csvErr','CSV 至少需要表头 + 一行数据');return;}
+      const headers=lines[0].split(',').map(h=>h.trim());
+      const arr=[];
+      for(let i=1;i<lines.length;i++){
+        const cells=lines[i].split(',').map(c=>c.trim());
+        const obj={};
+        headers.forEach((h,j)=>{obj[h]=cells[j]!==undefined?cells[j]:'';});
+        arr.push(obj);
+      }
+      document.getElementById('csvOut').value=JSON.stringify(arr,null,2);
+    }else{
+      const data=JSON.parse(v);
+      const arr=Array.isArray(data)?data:[data];
+      const headers=[...new Set(arr.reduce((acc,o)=>acc.concat(Object.keys(o)),[]))];
+      const rows=[headers.join(',')];
+      arr.forEach(o=>{rows.push(headers.map(h=>(o[h]!==undefined?o[h]:'').toString().replace(/,/g,',')).join(','));});
+      document.getElementById('csvOut').value=rows.join('\n');
+    }
+    setErr('csvErr','');
+  }catch(e){setErr('csvErr','转换失败：'+e.message);}
+}
+
+// ---- 文件哈希 ----
+const dropHash=document.getElementById('dropHash');
+dropHash.addEventListener('click',()=>{const i=document.createElement('input');i.type='file';i.onchange=e=>{if(e.target.files[0])hashFile(e.target.files[0]);};i.click();});
+dropHash.addEventListener('dragover',e=>e.preventDefault());
+dropHash.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0])hashFile(e.dataTransfer.files[0]);});
+async function hashFile(f){
+  document.getElementById('hashOut').value='计算中...';setErr('hashErr','');
+  try{
+    const buf=await f.arrayBuffer();
+    const hash=await crypto.subtle.digest('SHA-256',buf);
+    const hex=[...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    document.getElementById('hashOut').value=f.name+' ('+Math.ceil(buf.byteLength/1024)+' KB)\nSHA-256:\n'+hex;
+  }catch(e){setErr('hashErr','哈希计算失败：'+e.message);document.getElementById('hashOut').value='';}
+}
+</script>
+</body>
+</html>

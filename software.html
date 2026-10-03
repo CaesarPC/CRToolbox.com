@@ -22,13 +22,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 .card .meta{font-size:11.5px;color:#6272a4;margin:8px 0}
 .card .btn{display:inline-block;background:#50fa7b;color:#1e1e2e;border:none;padding:7px 16px;font-size:13px;font-weight:700;border-radius:7px;cursor:pointer;text-decoration:none;margin-top:4px}
 .card .btn:hover{background:#69ff94}
-.foot{color:#6272a4;font-size:12px;margin-top:24px;text-align:center}
+.card .btn.ghost{background:#44475a;color:#8be9fd}.card .btn.ghost:hover{background:#6272a4}
+.ghbar{margin-top:20px;background:#282a36;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ghbar span{font-size:12.5px;color:#bdc3c7}
+.ghbar a{color:#8be9fd;text-decoration:none;font-weight:600}
+.foot{color:#6272a4;font-size:12px;margin-top:20px;text-align:center}
 </style>
 </head>
 <body>
 <div class="hd">
   <h1>📥 软件下载</h1>
-  <a class="back" href="index.html">← 返回首页</a>
+  <a class="back" href="https://github.com/CaesarPC/website-finder" target="_blank">← 返回 GitHub 仓库</a>
 </div>
 <div class="wrap">
   <div class="notice">
@@ -41,31 +45,35 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
       <h3>钢4工具箱</h3>
       <p>钢铁雄心4 辅助工具：一键科技、资源、人力、稳定度等外挂指令，快速点国策、全科技。</p>
       <div class="meta">Windows · 32.6 MB</div>
-      <a class="btn" href="downloads/钢4工具箱.exe" download>⬇ 下载</a>
+      <a class="btn" href="https://github.com/CaesarPC/website-finder/releases/download/cr-tools-v1/hoi4-toolbox.exe" target="_blank">⬇ 下载</a>
     </div>
     <div class="card">
       <div class="ic">💾</div>
       <h3>钢4存档守护</h3>
       <p>钢铁雄心4 存档自动备份守护工具，防止坏档、定期保存进度。</p>
       <div class="meta">Windows · 32.1 MB</div>
-      <a class="btn" href="downloads/钢4存档守护.exe" download>⬇ 下载</a>
+      <a class="btn" href="https://github.com/CaesarPC/website-finder/releases/download/cr-tools-v1/hoi4-save-guard.exe" target="_blank">⬇ 下载</a>
     </div>
     <div class="card">
       <div class="ic">🖱️</div>
       <h3>鼠标宏软件 V3</h3>
       <p>跨平台鼠标宏工具，支持 Windows/macOS/安卓/鸿蒙，自定义宏命令与配置。</p>
       <div class="meta">Windows · 10.4 MB</div>
-      <a class="btn" href="downloads/鼠标宏软件V3.exe" download>⬇ 下载</a>
+      <a class="btn" href="https://github.com/CaesarPC/website-finder/releases/download/cr-tools-v1/macro-v3.exe" target="_blank">⬇ 下载</a>
     </div>
     <div class="card">
       <div class="ic">📡</div>
       <h3>网络测速工具</h3>
-      <p>图形化网速测试小工具（Python 源码版），测上下行带宽、延迟。需本地 Python 环境。</p>
+      <p>图形化网速测试小工具（Python 源码包），测上下行带宽、延迟。需本地 Python 环境。</p>
       <div class="meta">Python · 源码包</div>
-      <a class="btn" href="downloads/网络测速工具/NetworkSpeedTool.pyw" download>⬇ 下载源码</a>
+      <a class="btn ghost" href="https://github.com/CaesarPC/website-finder/releases/download/cr-tools-v1/network-speed-tool.zip" target="_blank">⬇ 下载源码</a>
     </div>
   </div>
-  <div class="foot">Cr专属工具箱 · 软件下载仅供个人使用</div>
+  <div class="ghbar">
+    <span>所有文件托管于 GitHub Release，点下载按钮会跳转到 GitHub 官方下载。</span>
+    <a href="https://github.com/CaesarPC/website-finder/releases/tag/cr-tools-v1" target="_blank">查看 Release 页面 ↗</a>
+  </div>
+  <div class="foot">Cr专属工具箱 · 软件下载 · 由 GitHub Release 提供</div>
 </div>
 </body>
 </html>

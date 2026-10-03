@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>编码解码工具 · Cr专属工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 20px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer}
+.btn:hover{background:#69ff94}
+.btn-ghost{background:#44475a;color:#e6e6e6}.btn-ghost:hover{background:#6272a4}
+.wrap{max-width:1000px;margin:20px auto;padding:0 16px}
+.panel{background:#282a36;border-radius:12px;padding:18px 20px;margin-bottom:16px;border:1px solid #44475a}
+.panel h2{margin:0 0 12px;font-size:15px;color:#50fa7b}
+.panel p{font-size:12.5px;color:#bdc3c7;margin:0 0 10px;line-height:1.6}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tab{background:#1e1e2e;border:1px solid #44475a;color:#bdc3c7;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:700}
+.tab.on{background:#50fa7b;color:#1e1e2e;border-color:#50fa7b}
+textarea{width:100%;box-sizing:border-box;min-height:140px;padding:10px 12px;font-size:13px;border-radius:8px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;resize:vertical;font-family:Consolas,monospace}
+textarea:focus{border-color:#50fa7b;outline:none}
+.btns{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+.out-label{font-size:12px;color:#6272a4;margin:6px 0 4px}
+.foot{color:#6272a4;font-size:12px;margin-top:16px;text-align:center}
+.err{color:#ff5555;font-size:12.5px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <div><h1>🔐 编码解码工具</h1><div class="st">Base64 / URL / HTML / Unicode 编码解码</div></div>
+  <a class="btn btn-ghost" href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-mode="base64">Base64</div>
+    <div class="tab" data-mode="url">URL</div>
+    <div class="tab" data-mode="html">HTML实体</div>
+    <div class="tab" data-mode="unicode">Unicode</div>
+  </div>
+  <div class="panel">
+    <h2 id="title">Base64 编解码</h2>
+    <p id="desc">Base64 编码/解码（支持 UTF-8 中文）。</p>
+    <textarea id="in" placeholder="输入要编码/解码的内容..."></textarea>
+    <div class="btns">
+      <button class="btn" onclick="encode()">编码 →</button>
+      <button class="btn btn-ghost" onclick="decode()">← 解码</button>
+      <button class="btn btn-ghost" onclick="clearIn()">清空输入</button>
+    </div>
+    <div class="out-label">输出：</div>
+    <textarea id="out" placeholder="结果在这里..."></textarea>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+<div class="foot">Cr专属工具箱 · 编码解码工具 · 纯前端本地处理，不上传服务器</div>
+<script>
+let mode='base64';
+const tabs=document.querySelectorAll('.tab');
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');mode=t.dataset.mode;
+  const titles={base64:'Base64 编解码',url:'URL 编解码',html:'HTML 实体编解码',unicode:'Unicode 编解码'};
+  const descs={base64:'Base64 编码/解码（支持 UTF-8 中文）。',url:'URL 编码（百分号编码）与解码。',html:'HTML 实体编码/解码（&amp; &lt; 等）。',unicode:'Unicode 转义（\\uXXXX）编码/解码。'};
+  document.getElementById('title').textContent=titles[mode];
+  document.getElementById('desc').textContent=descs[mode];
+  document.getElementById('out').value='';
+  document.getElementById('err').textContent='';
+}));
+function setErr(e){document.getElementById('err').textContent=e||'';}
+function encode(){
+  const v=document.getElementById('in').value;
+  if(!v){setErr('请输入内容');return;}
+  let out='';
+  try{
+    if(mode==='base64'){out=btoa(unescape(encodeURIComponent(v)));}
+    else if(mode==='url'){out=encodeURIComponent(v);}
+    else if(mode==='html'){out=v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+    else if(mode==='unicode'){out=v.split('').map(c=>{const cp=c.codePointAt(0);return cp>0xffff?'\\u{'+cp.toString(16)+'}':'\\u'+cp.toString(16).padStart(4,'0');}).join('');}
+    document.getElementById('out').value=out;setErr('');
+  }catch(e){setErr('编码失败：'+e.message);}
+}
+function decode(){
+  const v=document.getElementById('in').value;
+  if(!v){setErr('请输入内容');return;}
+  let out='';
+  try{
+    if(mode==='base64'){out=decodeURIComponent(escape(atob(v.replace(/\s/g,''))));}
+    else if(mode==='url'){out=decodeURIComponent(v);}
+    else if(mode==='html'){const ta=document.createElement('textarea');ta.innerHTML=v;out=ta.value;}
+    else if(mode==='unicode'){out=v.replace(/\\u\{([0-9a-fA-F]+)\}/g,(m,h)=>String.fromCodePoint(parseInt(h,16))).replace(/\\u([0-9a-fA-F]{4})/g,(m,h)=>String.fromCharCode(parseInt(h,16)));}
+    document.getElementById('out').value=out;setErr('');
+  }catch(e){setErr('解码失败：内容可能不是有效的'+mode+'格式');}
+}
+function clearIn(){document.getElementById('in').value='';document.getElementById('out').value='';document.getElementById('err').textContent='';}
+</script>
+</body>
+</html>

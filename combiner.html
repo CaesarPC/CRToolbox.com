@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>域名组合器 · Cr专属工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 20px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer}
+.btn:hover{background:#69ff94}
+.btn:disabled{background:#555;cursor:not-allowed;color:#999}
+.btn-ghost{background:#44475a;color:#e6e6e6}.btn-ghost:hover{background:#6272a4}
+.wrap{max-width:1000px;margin:20px auto;padding:0 16px}
+.bar{background:#282a36;border-radius:8px;padding:10px 16px;margin-bottom:14px;font-size:12.5px;color:#ffb86c;border-left:4px solid #ffb86c}
+.panel{background:#282a36;border-radius:12px;padding:18px 20px;margin-bottom:16px;border:1px solid #44475a}
+.panel h2{margin:0 0 12px;font-size:15px;color:#50fa7b}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.row label{font-size:13px;color:#bdc3c7;width:70px}
+.row input[type=text]{flex:1;min-width:180px;padding:9px 12px;font-size:14px;border-radius:8px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6}
+.row input:focus{border-color:#50fa7b;outline:none}
+.row input[type=number]{width:90px;padding:9px 12px;font-size:14px;border-radius:8px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6}
+.tlds{display:flex;gap:8px;flex-wrap:wrap}
+.tlds label{background:#1e1e2e;border:1px solid #44475a;border-radius:8px;padding:6px 12px;font-size:13px;color:#bdc3c7;cursor:pointer}
+.tlds label:has(input:checked){border-color:#50fa7b;color:#50fa7b;background:#1e1e2e}
+.tlds input{accent-color:#50fa7b;margin-right:4px}
+.cnt{font-size:12px;color:#6272a4;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:#282a36;border-radius:8px;overflow:hidden}
+th{background:#44475a;color:#50fa7b;padding:10px 12px;text-align:left;font-size:13px;position:sticky;top:0}
+td{padding:9px 12px;border-top:1px solid #3a3d4d;font-size:13px;vertical-align:top}
+tr:hover td{background:#2f3142}
+td.dom a{color:#8be9fd;text-decoration:none;font-weight:600}
+td.dom a:hover{text-decoration:underline;color:#50fa7b}
+.k-free{color:#50fa7b;font-weight:700}.k-taken{color:#ff5555;font-weight:700}.k-wait{color:#ffb86c}
+.empty{color:#6272a4;text-align:center;padding:40px;font-size:15px}
+.foot{color:#6272a4;font-size:12px;margin-top:16px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hd">
+  <div><h1>🧬 域名组合器</h1><div class="st">输入要求，组合域名，查哪些后缀有空闲</div></div>
+  <a class="btn btn-ghost" href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div class="bar">⚠️ 判定方式：DNS 解析探测。域名<b>有解析记录 = 已占用</b>，<b>无解析记录 = 可能空闲</b>。此方式与本地 HTTP 探测逻辑不同，结果仅供参考。</div>
+  <div class="panel">
+    <h2>组合设置</h2>
+    <div class="row">
+      <label>关键词/前缀</label>
+      <input type="text" id="kw" placeholder="可输入多个，用逗号分隔，如：caesar, doubao, fan">
+    </div>
+    <div class="row">
+      <label>固定位数</label>
+      <input type="number" id="len" min="0" max="5" value="0" placeholder="0=不补位">
+      <span style="font-size:12px;color:#6272a4">（关键词不足该位数时，用字符补足，0=不补位）</span>
+    </div>
+    <div class="row">
+      <label>补位字符</label>
+      <input type="text" id="chars" value="abc123" placeholder="补位用的字符，如 abc123" style="max-width:160px">
+    </div>
+    <div class="row">
+      <label>后缀</label>
+      <div class="tlds" id="tlds"></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="btn" onclick="run()">🔍 生成并查询</button>
+      <button class="btn btn-ghost" onclick="clearAll()">清空结果</button>
+      <span id="status" style="font-size:13px;color:#bdc3c7"></span>
+    </div>
+  </div>
+  <div class="cnt" id="cnt"></div>
+  <div id="tbl"><div class="empty">填写上方设置，点「生成并查询」开始。最多一次查 60 个域名。</div></div>
+</div>
+<div class="foot">Cr专属工具箱 · 域名组合器 · DNS 解析探测（Cloudflare DoH）</div>
+<script>
+const TLD=['.cc','.com','.net','.org','.io','.xyz','.top'];
+const tldBox=document.getElementById('tlds');
+TLD.forEach(t=>{const l=document.createElement('label');l.innerHTML='<input type="checkbox" value="'+t+'" checked>'+t;tldBox.appendChild(l);});
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+// 用关键词+补位生成域名主体
+function genBodies(){
+  const kw=(document.getElementById('kw').value||'').split(/[,，\s]+/).map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const len=parseInt(document.getElementById('len').value)||0;
+  const chars=(document.getElementById('chars').value||'abc123');
+  if(!kw.length){alert('请先输入关键词/前缀');return null;}
+  let bodies=kw;
+  if(len>0){
+    bodies=[];
+    for(const k of kw){
+      if(k.length>=len){bodies.push(k);}
+      else{
+        // 补位到 len 位（用补位字符组合，控制数量）
+        const need=len-k.length;
+        // 简单补位：在末尾追加补位字符的组合
+        if(need<=2){for(let i=0;i<chars.length;i++){bodies.push(k+chars[i]);if(need===2){for(let j=0;j<chars.length;j++){bodies.push(k+chars[i]+chars[j]);}}}}
+        else{bodies.push(k);} // 补位超过2位不暴力展开
+      }
+    }
+  }
+  return bodies;
+}
+async function checkDNS(dom){
+  try{
+    const url='https://cloudflare-dns.com/dns-query?name='+encodeURIComponent(dom)+'&type=A';
+    const r=await fetch(url,{headers:{'accept':'application/dns-json'}});
+    if(!r.ok)return 'ERR';
+    const j=await r.json();
+    if(j.Answer&&j.Answer.length)return 'TAKEN';
+    if(j.Status===0)return 'FREE';
+    return 'ERR';
+  }catch(e){return 'ERR';}
+}
+const CONC=8;
+async function run(){
+  const bodies=genBodies();if(!bodies)return;
+  const tlds=[...document.querySelectorAll('#tlds input:checked')].map(i=>i.value);
+  if(!tlds.length){alert('请至少选一个后缀');return;}
+  let doms=[];
+  for(const b of bodies){for(const t of tlds){doms.push(b+t);}}
+  // 去重
+  doms=[...new Set(doms)];
+  if(doms.length>60){alert('一次最多查 60 个，当前 '+doms.length+' 个，请减少关键词/后缀');return;}
+  const btn=document.getElementById('btn');btn.disabled=true;
+  const cnt=document.getElementById('cnt');
+  cnt.textContent='正在查询 '+doms.length+' 个域名...（DNS 探测）';
+  const box=document.getElementById('tbl');
+  box.innerHTML='<table><thead><tr><th style="width:30%">域名</th><th style="width:20%">状态</th></tr></thead><tbody></tbody></table>';
+  const tbody=box.querySelector('tbody');
+  let done=0;
+  for(let i=0;i<doms.length;i+=CONC){
+    const chunk=doms.slice(i,i+CONC);
+    const res=await Promise.all(chunk.map(d=>checkDNS(d)));
+    res.forEach((st,k)=>{
+      const d=chunk[k];
+      const kind=st==='FREE'?'可能空闲':(st==='TAKEN'?'已占用':'查询失败');
+      const cls=st==='FREE'?'k-free':(st==='TAKEN'?'k-taken':'k-wait');
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td class="dom">'+esc(d)+'</td><td class="'+cls+'">'+kind+'</td>';
+      tbody.appendChild(tr);
+    });
+    done+=chunk.length;
+    cnt.textContent='已查询 '+done+'/'+doms.length+' 个...';
+  }
+  const free=document.querySelectorAll('.k-free').length;
+  const taken=document.querySelectorAll('.k-taken').length;
+  cnt.textContent='查询完成：'+doms.length+' 个。可能空闲 '+free+' · 已占用 '+taken;
+  btn.disabled=false;
+}
+function clearAll(){
+  document.getElementById('tbl').innerHTML='<div class="empty">结果已清空。</div>';
+  document.getElementById('cnt').textContent='';
+}
+</script>
+</body>
+</html>

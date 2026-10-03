@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站查找器 · Cr专属工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
+.btn{background:#44475a;color:#e6e6e6;border:none;padding:8px 16px;font-size:13px;font-weight:700;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{background:#6272a4}
+.wrap{max-width:1100px;margin:20px auto;padding:0 16px}
+.bar{background:#282a36;border-radius:8px;padding:10px 16px;margin-bottom:14px;font-size:12.5px;color:#ffb86c;border-left:4px solid #ffb86c}
+.search{display:flex;gap:8px;margin-bottom:14px}
+.search input{flex:1;padding:10px 14px;font-size:15px;border-radius:8px;border:1px solid #44475a;background:#282a36;color:#e6e6e6}
+.search input:focus{border-color:#50fa7b;outline:none}
+.cnt{font-size:12px;color:#6272a4;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;background:#282a36;border-radius:8px;overflow:hidden}
+th{background:#44475a;color:#50fa7b;padding:10px 12px;text-align:left;font-size:13px;position:sticky;top:0}
+td{padding:9px 12px;border-top:1px solid #3a3d4d;font-size:13px;vertical-align:top}
+tr:hover td{background:#2f3142}
+td.dom a{color:#8be9fd;text-decoration:none;font-weight:600}
+td.dom a:hover{text-decoration:underline;color:#50fa7b}
+td.kind{width:60px;text-align:center;font-weight:700}
+.k-occ{color:#50fa7b}.k-reg{color:#ffb86c}
+td.st{width:56px;text-align:center;font-weight:700}
+.empty{color:#6272a4;text-align:center;padding:40px;font-size:15px}
+.foot{color:#6272a4;font-size:12px;margin-top:16px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hd">
+  <div><h1>🔍 网站查找器</h1><div class="st" id="msg">加载中...</div></div>
+  <a class="btn" href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div class="bar">⚠️ 探测结果可能含风险网站，点击访问前请确保设备装有杀毒软件，风险自担。</div>
+  <div class="search">
+    <input id="kw" placeholder="搜索域名包含的关键词/字母，如 c" oninput="render()">
+  </div>
+  <div class="cnt" id="cnt"></div>
+  <div id="tbl"><div class="empty">正在加载云端数据...</div></div>
+</div>
+<div class="foot">Cr专属工具箱 · 网站查找器 · 数据来自本地扫描，持续同步更新</div>
+<script>
+let doms=[];
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function stColor(st){if(st<300)return '#50fa7b';if(st<400)return '#ffb86c';return '#ff5555'}
+function render(){
+  const kw=(document.getElementById('kw').value||'').toLowerCase();
+  const box=document.getElementById('tbl');
+  let list=doms;
+  if(kw){list=doms.filter(d=>d.domain.toLowerCase().includes(kw));}
+  document.getElementById('cnt').textContent='当前存活 '+doms.length+' 条'+(kw?(' · 过滤结果 '+list.length+' 条'):'');
+  if(!list.length){box.innerHTML='<div class="empty">'+(!doms.length?'暂无数据':'没有匹配「'+esc(kw)+'」的域名')+'</div>';return}
+  let rows='';
+  for(const it of list){
+    const link='http://'+esc(it.domain)+'/';
+    rows+='<tr><td class="dom"><a href="'+link+'" target="_blank">'+esc(it.domain)+'</a></td>'
+        +'<td class="kind '+(it.kind==='占用'?'k-occ':'k-reg')+'">'+esc(it.kind)+'</td>'
+        +'<td class="st" style="color:'+stColor(it.status)+'">'+esc(it.status)+'</td></tr>';
+  }
+  box.innerHTML='<table><thead><tr><th style="width:22%">域名（点击进入）</th><th style="width:12%">状态</th><th style="width:8%">HTTP</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function load(){
+  fetch('data.json').then(r=>r.json()).then(j=>{
+    doms=j;document.getElementById('msg').textContent='数据已同步 · 共 '+doms.length+' 条';
+    render();
+  }).catch(()=>{document.getElementById('msg').textContent='云端数据加载失败';document.getElementById('tbl').innerHTML='<div class="empty">加载失败，请稍后刷新</div>';});
+}
+load();
+</script>
+</body>
+</html>

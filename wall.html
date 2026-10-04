@@ -5,23 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>留言墙 - Cr专属工具箱</title>
 <style>
-body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh;overflow-x:hidden}
 .hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .hd h1{margin:0;font-size:22px;color:#50fa7b}
 .hd a{color:#8be9fd;font-size:13px;text-decoration:none}
-.wrap{max-width:760px;margin:22px auto;padding:0 16px}
+.wrap{max-width:820px;margin:22px auto;padding:0 16px}
 .box{background:#282a36;border-radius:12px;padding:20px;border:1px solid #44475a;margin-bottom:18px}
 .box h2{margin:0 0 12px;font-size:16px;color:#50fa7b}
 input,textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:6px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;font-size:14px;font-family:inherit}
-textarea{min-height:90px;resize:vertical}
+textarea{min-height:80px;resize:vertical}
 .btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 22px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:6px}
 .btn:hover{background:#69ff94}
 .msg{font-size:13px;color:#ff5555;margin-top:8px;min-height:18px}
+.small{font-size:12px;color:#6272a4;margin-top:8px}
+/* 管理员控制面板 */
+.admin-panel{display:none;background:#2d2130;border:1px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.admin-panel h3{margin:0 0 10px;font-size:14px;color:#ffd700}
+.admin-panel label{font-size:12.5px;color:#e6e6e6;margin-right:14px;cursor:pointer}
+.admin-panel select{margin-left:4px;background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:6px;padding:4px 8px}
+/* 置顶区 */
+.pin-zone{display:none;margin-bottom:16px}
+.pin-zone .ph{font-size:13px;color:#ffd700;font-weight:bold;margin-bottom:8px}
+.pin-item{background:#2d2130;border:1px solid #ffd700;border-radius:10px;padding:14px 16px;margin-bottom:10px;box-shadow:0 0 12px rgba(255,215,0,.08)}
+.pin-item .nm{font-weight:bold;color:#ffd700;font-size:14px}
+.pin-item .tm{font-size:11px;color:#6272a4;margin-left:8px}
+.pin-item .ct{margin-top:8px;font-size:15px;line-height:1.6;word-break:break-word;white-space:pre-wrap}
+.pin-item .badge{display:inline-block;background:#ffd700;color:#1e1e2e;font-size:11px;font-weight:bold;border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.pin-item .pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
+/* 弹幕舞台 */
+.stage{position:relative;height:420px;overflow:hidden;background:#1a1a24;border-radius:12px;border:1px solid #44475a;margin-bottom:14px}
+.dm{position:absolute;white-space:nowrap;will-change:transform;animation:dmMove linear infinite;max-width:80%;overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:6px 14px;border-radius:20px;background:rgba(40,42,54,.85);border:1px solid #44475a;color:#e6e6e6}
+.dm .nm{color:#8be9fd;font-weight:bold;margin-right:6px}
+.dm.admin{background:rgba(255,215,0,.12);border-color:#ffd700;color:#ffe97a;font-weight:bold}
+.dm.admin .nm{color:#ffd700}
+.dm.bold{font-weight:bold}
+@keyframes dmMove{from{transform:translateX(100vw)}to{transform:translateX(-120%)}}
+/* 留言列表(非弹幕模式备用) */
+.list{display:none}
 .item{background:#1e1e2e;border:1px solid #44475a;border-radius:10px;padding:14px 16px;margin-bottom:12px}
 .item .nm{font-weight:bold;color:#50fa7b;font-size:14px}
 .item .tm{font-size:11px;color:#6272a4;margin-left:8px}
 .item .ct{margin-top:8px;font-size:14px;line-height:1.6;word-break:break-word;white-space:pre-wrap}
-.empty{color:#6272a4;text-align:center;padding:30px;font-size:14px}
+.item.admin{border-color:#ffd700;background:#2d2130}
+.item.admin .nm{color:#ffd700}
+.badge{display:inline-block;background:#ffd700;color:#1e1e2e;font-size:11px;font-weight:bold;border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
+.toggle{color:#8be9fd;cursor:pointer;font-size:12.5px;text-decoration:underline;margin-left:10px}
+.empty{color:#6272a4;text-align:center;padding:40px;font-size:14px}
 </style>
 </head>
 <body>
@@ -30,18 +60,43 @@ textarea{min-height:90px;resize:vertical}
   <a href="index.html">← 返回工具箱</a>
 </div>
 <div class="wrap">
+  <!-- 管理员控制面板（仅 Server 登录可见） -->
+  <div class="admin-panel" id="adminPanel">
+    <h3>👑 管理员控制</h3>
+    <label>弹幕模式 <select id="dmMode"><option value="on">开启</option><option value="off">关闭(列表模式)</option></select></label>
+    <label>字体粗细 <select id="dmBold"><option value="normal">正常</option><option value="bold">加粗</option><option value="heavy">特粗</option></select></label>
+    <label>弹幕位置 <select id="dmPos"><option value="top">顶部</option><option value="mid">中部</option><option value="bottom">底部</option><option value="full">全屏随机</option></select></label>
+    <label>弹幕速度 <select id="dmSpeed"><option value="fast">快</option><option value="mid" selected>中</option><option value="slow">慢</option></select></label>
+  </div>
   <div class="box">
     <h2>✍️ 写留言</h2>
     <input id="w-name" placeholder="你的名字（可不填，默认匿名）" maxlength="20">
-    <textarea id="w-content" placeholder="想说点什么？留言会公开显示给所有访客。（最长500字）"></textarea>
+    <textarea id="w-content" placeholder="想说点什么？留言会以弹幕形式公开显示给所有访客。（最长500字）"></textarea>
     <div class="msg" id="w-msg"></div>
     <button class="btn" onclick="doPost()">💬 发布留言</button>
+    <div class="small">站长 Server 发布的留言会带金色 👑 管理员标识，并可被置顶。</div>
   </div>
-  <div id="list"></div>
+  <!-- 置顶留言区 -->
+  <div class="pin-zone" id="pinZone">
+    <div class="ph">📌 置顶公告</div>
+    <div id="pinList"></div>
+  </div>
+  <!-- 弹幕舞台 -->
+  <div class="stage" id="stage"></div>
+  <!-- 备用列表 -->
+  <div class="list" id="list"></div>
+  <div style="text-align:center;margin:6px 0"><span class="toggle" onclick="loadWall()">🔄 刷新弹幕</span></div>
 </div>
 <script>
 var apiUrl = localStorage.getItem('cr_api_url') || '';
+var TOKEN_KEY = 'cr_token';
+var USER_KEY = 'cr_user';
+var isAdmin = false;
+var items = [];
+var dmSeq = 0;
 
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+function getUsername() { return localStorage.getItem(USER_KEY) || ''; }
 function post(path, data, cb) {
   fetch(apiUrl + path, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -53,33 +108,111 @@ function get(path, cb) {
   fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
     .catch(function () { cb({ ok: false, msg: '后端未连接' }); });
 }
-
-function loadWall() {
-  get('/api/wall', function (j) {
-    var list = document.getElementById('list');
-    if (!j.ok || !j.list || !j.list.length) {
-      list.innerHTML = '<div class="empty">还没有留言，来抢沙发吧 🛋️</div>';
-      return;
-    }
-    var html = '';
-    j.list.forEach(function (x) {
-      html += '<div class="item"><span class="nm">' + esc(x.name) + '</span>' +
-        '<span class="tm">' + esc(x.time) + '</span>' +
-        '<div class="ct">' + esc(x.content) + '</div></div>';
-    });
-    list.innerHTML = html;
-  });
-}
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+/* 管理员控制面板 */
+function setupAdmin() {
+  if (getUsername() === 'Server') {
+    isAdmin = true;
+    document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('adminPanel').querySelector('select').value =
+      localStorage.getItem('cr_dm_mode') || 'on';
+  }
+}
+
+/* 生成弹幕 */
+function spawnDm(item) {
+  var stage = document.getElementById('stage');
+  var bold = document.getElementById('dmBold').value || 'normal';
+  var pos = document.getElementById('dmPos').value || 'full';
+  var speed = document.getElementById('dmSpeed').value || 'mid';
+  var dur = speed === 'fast' ? 6 : speed === 'slow' ? 16 : 10;
+  var el = document.createElement('div');
+  var bCls = item.admin ? 'admin' : '';
+  if (bold === 'bold') bCls += ' bold';
+  if (bold === 'heavy') bCls += ' heavy';
+  el.className = 'dm ' + bCls;
+  el.innerHTML = '<span class="nm">' + esc(item.name) +
+    (item.admin ? ' 👑' : '') + '</span>' + esc(item.content);
+  var top;
+  if (pos === 'top') top = 8 + Math.random() * 60;
+  else if (pos === 'mid') top = 40 + Math.random() * 30;
+  else if (pos === 'bottom') top = 82 + Math.random() * 10;
+  else top = 4 + Math.random() * 88;
+  el.style.top = top + '%';
+  el.style.animationDuration = dur + 's';
+  el.style.animationDelay = (Math.random() * 3) + 's';
+  stage.appendChild(el);
+  setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, (dur + 5) * 1000);
+}
+
+function loadWall() {
+  get('/api/wall', function (j) {
+    if (!j.ok || !j.list) return;
+    items = j.list;
+    // 置顶区
+    var pins = items.filter(function (x) { return x.pinned; });
+    var pinZone = document.getElementById('pinZone');
+    var pinList = document.getElementById('pinList');
+    if (pins.length) {
+      pinZone.style.display = 'block';
+      var h = '';
+      pins.forEach(function (x) {
+        h += '<div class="pin-item"><span class="nm">' + esc(x.name) +
+          (x.admin ? ' <span class="badge">👑 管理员</span>' : '') + '</span>' +
+          '<span class="tm">' + esc(x.time) + '</span>' +
+          (isAdmin ? '<button class="pin-btn" onclick="togglePin(' + x.id + ',false)">取消置顶</button>' : '') +
+          '<div class="ct">' + esc(x.content) + '</div></div>';
+      });
+      pinList.innerHTML = h;
+    } else {
+      pinZone.style.display = 'none';
+    }
+    // 弹幕模式
+    var mode = document.getElementById('dmMode').value || 'on';
+    if (mode === 'off') {
+      document.getElementById('stage').style.display = 'none';
+      var listEl = document.getElementById('list');
+      listEl.style.display = 'block';
+      var hh = '';
+      items.forEach(function (x) {
+        hh += '<div class="item' + (x.admin ? ' admin' : '') + '"><span class="nm">' + esc(x.name) +
+          (x.admin ? ' <span class="badge">👑 管理员</span>' : '') + '</span>' +
+          '<span class="tm">' + esc(x.time) + '</span>' +
+          (isAdmin ? '<button class="pin-btn" onclick="togglePin(' + x.id + ',' + (x.pinned ? 'false' : 'true') + ')">' + (x.pinned ? '取消置顶' : '置顶') + '</button>' : '') +
+          '<div class="ct">' + esc(x.content) + '</div></div>';
+      });
+      listEl.innerHTML = hh || '<div class="empty">还没有留言，来抢沙发吧 🛋️</div>';
+      return;
+    }
+    document.getElementById('stage').style.display = 'block';
+    document.getElementById('list').style.display = 'none';
+    document.getElementById('stage').innerHTML = '';
+    // 弹幕: 置顶的固定展示在顶部区域，其余滚动
+    items.forEach(function (x) {
+      if (x.pinned) return;   // 置顶的已在 pinZone
+      spawnDm(x);
+    });
+  });
+}
+
+function togglePin(id, pinned) {
+  if (!isAdmin) { alert('仅管理员可操作'); return; }
+  post('/api/wall/pin', { token: getToken(), id: id, pinned: pinned }, function (j) {
+    if (j.ok) loadWall(); else alert(j.msg || '操作失败');
+  });
+}
+
 function doPost() {
   var content = document.getElementById('w-content').value.trim();
   if (!content) { document.getElementById('w-msg').textContent = '留言内容不能为空'; return; }
   document.getElementById('w-msg').textContent = '发布中...';
   post('/api/wall', {
     name: document.getElementById('w-name').value.trim(),
-    content: content
+    content: content,
+    token: getToken()
   }, function (j) {
     if (j.ok) {
       document.getElementById('w-msg').textContent = '✅ 留言成功！';
@@ -91,14 +224,23 @@ function doPost() {
   });
 }
 
-/* 启动：先读后端地址 */
+/* 启动 */
 fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
   .then(function (r) { return r.json(); })
   .then(function (cfg) {
     if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
+    setupAdmin();
     loadWall();
   })
-  .catch(function () { loadWall(); });
+  .catch(function () { setupAdmin(); loadWall(); });
+
+/* 设置变化实时生效 */
+['dmMode', 'dmBold', 'dmPos', 'dmSpeed'].forEach(function (id) {
+  document.getElementById(id).addEventListener('change', function () {
+    localStorage.setItem('cr_dm_' + id.replace('dm', '').toLowerCase(), this.value);
+    loadWall();
+  });
+});
 </script>
 <script src="https://CaesarPC.github.io/website-finder/clip.js"></script>
 </body>

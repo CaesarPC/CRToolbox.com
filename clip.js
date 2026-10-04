@@ -68,11 +68,17 @@
   }
 
   /* ---------- 界面 ---------- */
-  var CSS = '.cr-ubar{position:fixed;bottom:18px;left:18px;z-index:99999;font-family:Segoe UI,Arial,sans-serif;display:flex;align-items:center;gap:6px;background:#1e1e2e;border:1px solid #44475a;border-radius:50px;padding:6px 12px;box-shadow:0 2px 10px rgba(0,0,0,.4);}' +
-    '.cr-ubar .cr-btn{background:transparent;color:#e6e6e6;border:1px solid #44475a;border-radius:50px;padding:5px 12px;cursor:pointer;font-size:12px;}' +
-    '.cr-ubar .cr-btn:hover{border-color:#50fa7b;color:#50fa7b;}' +
-    '.cr-ubar .cr-name{color:#50fa7b;font-size:13px;font-weight:bold;}' +
-    '.cr-ubar .cr-crown{color:#ffd700;font-size:13px;}' +
+  var CSS = '.cr-ubar{position:fixed;bottom:18px;left:18px;z-index:99999;font-family:Segoe UI,Arial,sans-serif;}' +
+    '.cr-fab{width:44px;height:44px;border-radius:50%;background:#1e1e2e;color:#50fa7b;border:2px solid #50fa7b;cursor:pointer;font-size:20px;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;}' +
+    '.cr-fab:hover{background:#50fa7b;color:#1e1e2e;}' +
+    '.cr-fab.admin{border-color:#ffd700;color:#ffd700;}' +
+    '.cr-menu{display:none;position:absolute;bottom:52px;left:0;background:#1e1e2e;border:1px solid #44475a;border-radius:12px;padding:10px;min-width:170px;box-shadow:0 6px 24px rgba(0,0,0,.6);flex-direction:column;gap:6px;}' +
+    '.cr-menu.on{display:flex;}' +
+    '.cr-menu .cr-head{padding:6px 10px 8px;border-bottom:1px solid #44475a;margin-bottom:6px;}' +
+    '.cr-menu .cr-name{color:#50fa7b;font-size:13px;font-weight:bold;}' +
+    '.cr-menu .cr-crown{color:#ffd700;font-size:14px;margin-right:4px;}' +
+    '.cr-menu .cr-btn{background:transparent;color:#e6e6e6;border:1px solid #44475a;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px;text-align:left;}' +
+    '.cr-menu .cr-btn:hover{border-color:#50fa7b;color:#50fa7b;}' +
     '.cr-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100000;display:none;align-items:center;justify-content:center;}' +
     '.cr-modal.on{display:flex;}' +
     '.cr-box{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:12px;padding:22px;width:320px;max-width:90vw;}' +
@@ -91,15 +97,19 @@
   root.className = 'cr-ubar';
   root.innerHTML =
     '<style>' + CSS + '</style>' +
-    '<span id="cr-crown" class="cr-crown" style="display:none">👑</span>' +
-    '<span class="cr-name" id="cr-name"></span>' +
+    '<button class="cr-fab" id="cr-fab">👤</button>' +
+    '<div class="cr-menu" id="cr-menu">' +
+    '<div class="cr-head"><span id="cr-crown" class="cr-crown" style="display:none">👑</span><span class="cr-name" id="cr-name">游客模式</span></div>' +
     '<button class="cr-btn" id="cr-login">登录 / 注册</button>' +
     '<button class="cr-btn" id="cr-note" style="display:none">📝 备忘录</button>' +
-    '<button class="cr-btn" id="cr-logout" style="display:none">退出</button>' +
+    '<button class="cr-btn" id="cr-logout" style="display:none">🚪 退出登录</button>' +
+    '</div>' +
     '<div class="cr-modal" id="cr-modal"><div class="cr-box" id="cr-box"></div></div>' +
     '<button class="cr-fb" id="cr-feedback">📮 意见反馈</button>';
 
   (document.body || document.documentElement).appendChild(root);
+  var fab = document.getElementById('cr-fab');
+  var menu = document.getElementById('cr-menu');
   var nameEl = document.getElementById('cr-name');
   var loginBtn = document.getElementById('cr-login');
   var noteBtn = document.getElementById('cr-note');
@@ -107,20 +117,31 @@
   var modal = document.getElementById('cr-modal');
   var box = document.getElementById('cr-box');
 
+  fab.onclick = function (e) {
+    e.stopPropagation();
+    menu.classList.toggle('on');
+  };
+  document.addEventListener('click', function (e) {
+    if (!menu.contains(e.target) && e.target !== fab) menu.classList.remove('on');
+  });
+
   function refresh() {
     var u = getUsername();
     var crown = document.getElementById('cr-crown');
     if (u) {
       nameEl.textContent = u;
-      if (u === 'Server') crown.style.display = 'inline-block';
-      else crown.style.display = 'none';
+      fab.textContent = u === 'Server' ? '👑' : '👤';
+      if (u === 'Server') { crown.style.display = 'inline-block'; fab.classList.add('admin'); }
+      else { crown.style.display = 'none'; fab.classList.remove('admin'); }
       loginBtn.style.display = 'none';
-      noteBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'inline-block';
+      noteBtn.style.display = 'block';
+      logoutBtn.style.display = 'block';
     } else {
       nameEl.textContent = '游客模式';
+      fab.textContent = '👤';
+      fab.classList.remove('admin');
       crown.style.display = 'none';
-      loginBtn.style.display = 'inline-block';
+      loginBtn.style.display = 'block';
       noteBtn.style.display = 'none';
       logoutBtn.style.display = 'none';
     }
@@ -220,6 +241,7 @@
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     refresh();
+    menu.classList.remove('on');
   };
 
   /* 意见反馈 */

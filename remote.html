@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>远程控制 · Cr工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:20px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .back{color:#8be9fd;text-decoration:none;font-size:14px}
+.wrap{max-width:720px;margin:24px auto;padding:0 16px}
+.box{background:#282a36;border-radius:12px;padding:22px 24px;border:1px solid #44475a;margin-bottom:16px}
+.box h2{margin:0 0 10px;font-size:17px;color:#50fa7b}
+.box p{margin:0 0 8px;font-size:13.5px;color:#c8ccd4;line-height:1.7}
+.status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;margin:12px 0;font-size:14px}
+.status.on{background:#1e3a2a;border:1px solid #50fa7b;color:#69ff94}
+.status.off{background:#3a1e1e;border:1px solid #ff5555;color:#ff6b6b}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.on{background:#50fa7b;box-shadow:0 0 8px #50fa7b}
+.dot.off{background:#ff5555;box-shadow:0 0 8px #ff5555}
+.urlbox{background:#1e1e2e;border-radius:8px;padding:14px 16px;font-family:Consolas,monospace;font-size:14px;color:#8be9fd;word-break:break-all;margin:8px 0;border:1px solid #44475a}
+.btn{display:inline-block;background:#50fa7b;color:#1e1e2e;border:none;padding:10px 24px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer;text-decoration:none;margin-top:10px}
+.btn:hover{background:#69ff94}
+.btn.disabled{background:#44475a;color:#6272a4;pointer-events:none}
+.pin{display:inline-block;background:#44475a;color:#ffb86c;border-radius:6px;padding:2px 10px;font-weight:700;font-size:15px;letter-spacing:2px}
+.tip{font-size:12px;color:#6272a4;line-height:1.6;margin-top:10px}
+.foot{color:#6272a4;font-size:12px;margin-top:20px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>📱 远程控制 · 投屏入口</h1>
+  <a class="back" href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div class="box">
+    <h2>使用说明</h2>
+    <p>此页面是<b>固定入口</b>，链接永远不变。电脑端启动远程控制服务后，页面会自动读取最新可用地址。手机/平板直接用浏览器打开，输入密码即可操作电脑。</p>
+    <div class="status off" id="stBox">
+      <span class="dot off" id="dot"></span>
+      <span id="stText">正在检测服务状态...</span>
+    </div>
+    <div id="content" style="display:none">
+      <p>当前可用地址（点击即可进入）：</p>
+      <div class="urlbox" id="urlBox">加载中...</div>
+      <p>连接密码：<span class="pin" id="pinBox">-</span></p>
+      <a class="btn" id="goBtn" href="#" target="_blank">🎯 进入投屏页面</a>
+      <p class="tip">提示：进入后点「连接」并输入上方密码。若地址打不开，说明电脑端公网服务已关闭或网络波动，请让电脑端重新启动公网服务。</p>
+    </div>
+    <div id="offHint" style="display:none">
+      <p style="color:#ff6b6b">⚠️ 电脑端服务当前不在线或未更新地址。</p>
+      <p class="tip">请在电脑上启动「远程控制服务端」和「公网访问」，启动后约 30 秒内此页面会自动更新。</p>
+    </div>
+  </div>
+  <div class="foot">Cr专属工具箱 · 远程控制固定入口</div>
+</div>
+<script>
+async function load(){
+  try{
+    var r = await fetch('https://CaesarPC.github.io/website-finder/remote_status.json?t='+Date.now());
+    var d = await r.json();
+    var online = d && d.online;
+    var url = d && d.url;
+    var pin = d && d.pin;
+    var box = document.getElementById('stBox');
+    var dot = document.getElementById('dot');
+    var st = document.getElementById('stText');
+    if(online && url){
+      box.className='status on'; dot.className='dot on';
+      st.textContent='电脑端服务在线';
+      document.getElementById('content').style.display='block';
+      document.getElementById('offHint').style.display='none';
+      document.getElementById('urlBox').textContent=url;
+      document.getElementById('pinBox').textContent=pin||'-';
+      document.getElementById('goBtn').href=url;
+    } else {
+      box.className='status off'; dot.className='dot off';
+      st.textContent='电脑端服务不在线';
+      document.getElementById('content').style.display='none';
+      document.getElementById('offHint').style.display='block';
+    }
+  }catch(e){
+    var box=document.getElementById('stBox');
+    document.getElementById('stText').textContent='状态读取失败(网络错误)';
+    document.getElementById('offHint').style.display='block';
+  }
+}
+load();
+setInterval(load, 20000);
+</script>
+</body>
+</html>

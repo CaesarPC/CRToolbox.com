@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本分享 - Cr专属工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd a{color:#8be9fd;font-size:13px;text-decoration:none}
+.wrap{max-width:860px;margin:22px auto;padding:0 16px}
+.box{background:#282a36;border-radius:12px;padding:20px;border:1px solid #44475a;margin-bottom:18px}
+.box h2{margin:0 0 12px;font-size:16px;color:#50fa7b}
+input,textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:6px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;font-size:14px;font-family:inherit}
+textarea{min-height:220px;resize:vertical;font-family:Consolas,monospace}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 22px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:6px}
+.btn:hover{background:#69ff94}
+.msg{font-size:13px;color:#ff5555;margin-top:8px;min-height:18px}
+.result{display:none;background:#1e1e2e;border:1px solid #50fa7b;border-radius:8px;padding:14px;margin-top:12px}
+.result a{color:#50fa7b;word-break:break-all}
+.ct{background:#1e1e2e;border:1px solid #44475a;border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;font-family:Consolas,monospace;font-size:14px;line-height:1.6}
+.meta{font-size:12px;color:#6272a4;margin-bottom:10px}
+.back{display:inline-block;margin-top:14px;color:#8be9fd;text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>📋 文本分享</h1>
+  <a href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div id="viewBox" class="box" style="display:none">
+    <h2 id="vTitle"></h2>
+    <div class="meta" id="vTime"></div>
+    <div class="ct" id="vContent"></div>
+    <a class="back" href="paste.html">← 我也要分享</a>
+  </div>
+  <div id="newBox" class="box">
+    <h2>✍️ 创建新分享</h2>
+    <input id="p-title" placeholder="标题（可不填）" maxlength="60">
+    <textarea id="p-content" placeholder="粘贴要分享的文字、代码、链接、文章...（最多20000字）"></textarea>
+    <div class="msg" id="p-msg"></div>
+    <button class="btn" onclick="doShare()">🔗 生成分享链接</button>
+    <div class="result" id="p-result">
+      分享链接：<a id="p-link" href="#" target="_blank"></a>
+      <br><span style="font-size:12px;color:#6272a4">打开链接即可查看内容，也可复制链接发给别人。</span>
+    </div>
+  </div>
+</div>
+<script>
+var apiUrl = localStorage.getItem('cr_api_url') || '';
+
+function post(path, data, cb) {
+  fetch(apiUrl + path, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function (r) { return r.json(); }).then(cb)
+    .catch(function () { cb({ ok: false, msg: '后端未连接（站长电脑可能关机）' }); });
+}
+
+function get(path, cb) {
+  fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
+    .catch(function () { cb({ ok: false, msg: '后端未连接' }); });
+}
+
+function doShare() {
+  var content = document.getElementById('p-content').value.trim();
+  if (!content) { document.getElementById('p-msg').textContent = '内容不能为空'; return; }
+  document.getElementById('p-msg').textContent = '提交中...';
+  post('/api/paste', { title: document.getElementById('p-title').value.trim(), content: content }, function (j) {
+    if (j.ok) {
+      document.getElementById('p-msg').textContent = '';
+      var link = location.origin + location.pathname.replace(/paste\.html$/, '') + 'paste.html?code=' + j.code;
+      document.getElementById('p-link').href = link;
+      document.getElementById('p-link').textContent = link;
+      document.getElementById('p-result').style.display = 'block';
+    } else {
+      document.getElementById('p-msg').textContent = j.msg || '提交失败';
+    }
+  });
+}
+
+/* 读取分享 */
+(function () {
+  var m = location.search.match(/[?&]code=([0-9a-f]{8})/);
+  if (!m) return;
+  // 读后端地址
+  fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (cfg) {
+      if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
+      get('/api/paste?code=' + m[1], function (j) {
+        if (j.ok) {
+          document.getElementById('newBox').style.display = 'none';
+          document.getElementById('viewBox').style.display = 'block';
+          document.getElementById('vTitle').textContent = j.title || '分享内容';
+          document.getElementById('vTime').textContent = '发布于 ' + j.time;
+          document.getElementById('vContent').textContent = j.content;
+        } else {
+          document.getElementById('p-msg').textContent = j.msg || '分享加载失败';
+        }
+      });
+    });
+})();
+</script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js"></script>
+</body>
+</html>

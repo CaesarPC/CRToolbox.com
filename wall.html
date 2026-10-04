@@ -34,12 +34,11 @@ textarea{min-height:80px;resize:vertical}
 .pin-item .pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
 /* 弹幕舞台 */
 .stage{position:relative;height:420px;overflow:hidden;background:#1a1a24;border-radius:12px;border:1px solid #44475a;margin-bottom:14px}
-.dm{position:absolute;white-space:nowrap;will-change:transform;animation:dmMove linear infinite;max-width:80%;overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:6px 14px;border-radius:20px;background:rgba(40,42,54,.85);border:1px solid #44475a;color:#e6e6e6}
+.dm{position:absolute;left:0;top:0;white-space:nowrap;max-width:80%;overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:6px 14px;border-radius:20px;background:rgba(40,42,54,.85);border:1px solid #44475a;color:#e6e6e6;will-change:transform}
 .dm .nm{color:#8be9fd;font-weight:bold;margin-right:6px}
 .dm.admin{background:rgba(255,215,0,.12);border-color:#ffd700;color:#ffe97a;font-weight:bold}
 .dm.admin .nm{color:#ffd700}
 .dm.bold{font-weight:bold}
-@keyframes dmMove{from{transform:translateX(100vw)}to{transform:translateX(-120%)}}
 /* 留言列表(非弹幕模式备用) */
 .list{display:none}
 .item{background:#1e1e2e;border:1px solid #44475a;border-radius:10px;padding:14px 16px;margin-bottom:12px}
@@ -122,7 +121,7 @@ function setupAdmin() {
   }
 }
 
-/* 生成弹幕 */
+/* 生成弹幕：rAF 一帧帧驱动，从右侧屏幕外滑到左侧完全消失 */
 function spawnDm(item) {
   var stage = document.getElementById('stage');
   var bold = document.getElementById('dmBold').value || 'normal';
@@ -131,21 +130,35 @@ function spawnDm(item) {
   var dur = speed === 'fast' ? 6 : speed === 'slow' ? 16 : 10;
   var el = document.createElement('div');
   var bCls = item.admin ? 'admin' : '';
-  if (bold === 'bold') bCls += ' bold';
-  if (bold === 'heavy') bCls += ' heavy';
+  if (bold === 'bold' || bold === 'heavy') bCls += ' bold';
   el.className = 'dm ' + bCls;
   el.innerHTML = '<span class="nm">' + esc(item.name) +
-    (item.admin ? ' 👑' : '') + '</span>' + esc(item.content);
+    (item.admin ? ' \uD83D\uDC51' : '') + '</span>' + esc(item.content);
   var top;
-  if (pos === 'top') top = 8 + Math.random() * 60;
-  else if (pos === 'mid') top = 40 + Math.random() * 30;
-  else if (pos === 'bottom') top = 82 + Math.random() * 10;
-  else top = 4 + Math.random() * 88;
+  if (pos === 'top') top = 6 + Math.random() * 14;
+  else if (pos === 'mid') top = 42 + Math.random() * 16;
+  else if (pos === 'bottom') top = 80 + Math.random() * 12;
+  else top = 3 + Math.random() * 90;
   el.style.top = top + '%';
-  el.style.animationDuration = dur + 's';
-  el.style.animationDelay = (Math.random() * 3) + 's';
   stage.appendChild(el);
-  setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, (dur + 5) * 1000);
+  var stageW = stage.clientWidth || window.innerWidth;
+  var elW = el.offsetWidth || 200;
+  var startX = stageW + 20;
+  var endX = -elW - 20;
+  var dist = startX - endX;
+  var pxPerMs = dist / (dur * 1000);
+  var t0 = performance.now();
+  el.style.transform = 'translateX(' + startX + 'px)';
+  function frame(now) {
+    var dx = (now - t0) * pxPerMs;
+    if (dx >= dist) {
+      if (el.parentNode) el.parentNode.removeChild(el);
+      return;
+    }
+    el.style.transform = 'translateX(' + (startX - dx) + 'px)';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 function loadWall() {
@@ -242,6 +255,6 @@ fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-
   });
 });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v2"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v3"></script>
 </body>
 </html>

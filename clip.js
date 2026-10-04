@@ -82,7 +82,9 @@
     '.cr-box .cr-ok{background:#50fa7b;color:#1e1e2e;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;font-weight:bold;}' +
     '.cr-box .cr-cancel{background:#44475a;color:#e6e6e6;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;}' +
     '.cr-msg{font-size:12px;color:#ff5555;margin-top:6px;min-height:16px;}' +
-    '.cr-note{font-size:12px;color:#6272a4;margin-top:6px;}';
+    '.cr-note{font-size:12px;color:#6272a4;margin-top:6px;}' +
+    '.cr-fb{position:fixed;bottom:18px;right:18px;z-index:99998;background:#1e1e2e;color:#50fa7b;border:1px solid #50fa7b;border-radius:50px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:bold;box-shadow:0 2px 10px rgba(0,0,0,.4);}' +
+    '.cr-fb:hover{background:#50fa7b;color:#1e1e2e;}';
 
   var root = document.createElement('div');
   root.className = 'cr-ubar';
@@ -92,7 +94,8 @@
     '<button class="cr-btn" id="cr-login">登录 / 注册</button>' +
     '<button class="cr-btn" id="cr-note" style="display:none">📝 备忘录</button>' +
     '<button class="cr-btn" id="cr-logout" style="display:none">退出</button>' +
-    '<div class="cr-modal" id="cr-modal"><div class="cr-box" id="cr-box"></div></div>';
+    '<div class="cr-modal" id="cr-modal"><div class="cr-box" id="cr-box"></div></div>' +
+    '<button class="cr-fb" id="cr-feedback">📮 意见反馈</button>';
 
   (document.body || document.documentElement).appendChild(root);
   var nameEl = document.getElementById('cr-name');
@@ -211,6 +214,36 @@
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     refresh();
+  };
+
+  /* 意见反馈 */
+  var fbBtn = document.getElementById('cr-feedback');
+  fbBtn.onclick = function () {
+    var page = (location.pathname || '/').split('/').pop() || 'index.html';
+    showBox(
+      '<h3>📮 意见反馈</h3>' +
+      '<input id="f-name" placeholder="你的名字（可不填）" autocomplete="off">' +
+      '<textarea id="f-content" placeholder="写下你的意见、建议或遇到的问题..." style="min-height:120px"></textarea>' +
+      '<div class="cr-msg" id="f-msg"></div>' +
+      '<div class="cr-row">' +
+      '<button class="cr-ok" id="f-go">提交</button>' +
+      '<button class="cr-cancel" id="f-close">关闭</button>' +
+      '</div>' +
+      '<div class="cr-note">提交后会自动同步到站长后台，谢谢你的反馈！</div>'
+    );
+    document.getElementById('f-go').onclick = function () {
+      var content = document.getElementById('f-content').value.trim();
+      if (!content) return err('f-msg', '意见内容不能为空');
+      post('/api/feedback', {
+        name: document.getElementById('f-name').value.trim(),
+        content: content,
+        page: page
+      }, function (j) {
+        if (j.ok) { alert('✅ 感谢反馈！已提交到站长后台'); hideBox(); }
+        else err('f-msg', j.msg || '提交失败（可能已掉线）');
+      });
+    };
+    document.getElementById('f-close').onclick = hideBox;
   };
 
   /* 启动 */

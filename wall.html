@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>留言墙 - Cr专属工具箱</title>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd a{color:#8be9fd;font-size:13px;text-decoration:none}
+.wrap{max-width:760px;margin:22px auto;padding:0 16px}
+.box{background:#282a36;border-radius:12px;padding:20px;border:1px solid #44475a;margin-bottom:18px}
+.box h2{margin:0 0 12px;font-size:16px;color:#50fa7b}
+input,textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:6px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;font-size:14px;font-family:inherit}
+textarea{min-height:90px;resize:vertical}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 22px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:6px}
+.btn:hover{background:#69ff94}
+.msg{font-size:13px;color:#ff5555;margin-top:8px;min-height:18px}
+.item{background:#1e1e2e;border:1px solid #44475a;border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.item .nm{font-weight:bold;color:#50fa7b;font-size:14px}
+.item .tm{font-size:11px;color:#6272a4;margin-left:8px}
+.item .ct{margin-top:8px;font-size:14px;line-height:1.6;word-break:break-word;white-space:pre-wrap}
+.empty{color:#6272a4;text-align:center;padding:30px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>💬 公开留言墙</h1>
+  <a href="index.html">← 返回工具箱</a>
+</div>
+<div class="wrap">
+  <div class="box">
+    <h2>✍️ 写留言</h2>
+    <input id="w-name" placeholder="你的名字（可不填，默认匿名）" maxlength="20">
+    <textarea id="w-content" placeholder="想说点什么？留言会公开显示给所有访客。（最长500字）"></textarea>
+    <div class="msg" id="w-msg"></div>
+    <button class="btn" onclick="doPost()">💬 发布留言</button>
+  </div>
+  <div id="list"></div>
+</div>
+<script>
+var apiUrl = localStorage.getItem('cr_api_url') || '';
+
+function post(path, data, cb) {
+  fetch(apiUrl + path, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function (r) { return r.json(); }).then(cb)
+    .catch(function () { cb({ ok: false, msg: '后端未连接（站长电脑可能关机）' }); });
+}
+function get(path, cb) {
+  fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
+    .catch(function () { cb({ ok: false, msg: '后端未连接' }); });
+}
+
+function loadWall() {
+  get('/api/wall', function (j) {
+    var list = document.getElementById('list');
+    if (!j.ok || !j.list || !j.list.length) {
+      list.innerHTML = '<div class="empty">还没有留言，来抢沙发吧 🛋️</div>';
+      return;
+    }
+    var html = '';
+    j.list.forEach(function (x) {
+      html += '<div class="item"><span class="nm">' + esc(x.name) + '</span>' +
+        '<span class="tm">' + esc(x.time) + '</span>' +
+        '<div class="ct">' + esc(x.content) + '</div></div>';
+    });
+    list.innerHTML = html;
+  });
+}
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function doPost() {
+  var content = document.getElementById('w-content').value.trim();
+  if (!content) { document.getElementById('w-msg').textContent = '留言内容不能为空'; return; }
+  document.getElementById('w-msg').textContent = '发布中...';
+  post('/api/wall', {
+    name: document.getElementById('w-name').value.trim(),
+    content: content
+  }, function (j) {
+    if (j.ok) {
+      document.getElementById('w-msg').textContent = '✅ 留言成功！';
+      document.getElementById('w-content').value = '';
+      loadWall();
+    } else {
+      document.getElementById('w-msg').textContent = j.msg || '发布失败';
+    }
+  });
+}
+
+/* 启动：先读后端地址 */
+fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
+  .then(function (r) { return r.json(); })
+  .then(function (cfg) {
+    if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
+    loadWall();
+  })
+  .catch(function () { loadWall(); });
+</script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js"></script>
+</body>
+</html>

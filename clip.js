@@ -68,10 +68,11 @@
   }
 
   /* ---------- 界面 ---------- */
-  var CSS = '.cr-ubar{position:fixed;top:10px;right:10px;z-index:99999;font-family:Segoe UI,Arial,sans-serif;}' +
-    '.cr-ubar .cr-btn{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:13px;margin-left:6px;}' +
+  var CSS = '.cr-ubar{position:fixed;bottom:18px;left:18px;z-index:99999;font-family:Segoe UI,Arial,sans-serif;display:flex;align-items:center;gap:6px;background:#1e1e2e;border:1px solid #44475a;border-radius:50px;padding:6px 12px;box-shadow:0 2px 10px rgba(0,0,0,.4);}' +
+    '.cr-ubar .cr-btn{background:transparent;color:#e6e6e6;border:1px solid #44475a;border-radius:50px;padding:5px 12px;cursor:pointer;font-size:12px;}' +
     '.cr-ubar .cr-btn:hover{border-color:#50fa7b;color:#50fa7b;}' +
     '.cr-ubar .cr-name{color:#50fa7b;font-size:13px;font-weight:bold;}' +
+    '.cr-ubar .cr-crown{color:#ffd700;font-size:13px;}' +
     '.cr-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100000;display:none;align-items:center;justify-content:center;}' +
     '.cr-modal.on{display:flex;}' +
     '.cr-box{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:12px;padding:22px;width:320px;max-width:90vw;}' +
@@ -90,6 +91,7 @@
   root.className = 'cr-ubar';
   root.innerHTML =
     '<style>' + CSS + '</style>' +
+    '<span id="cr-crown" class="cr-crown" style="display:none">👑</span>' +
     '<span class="cr-name" id="cr-name"></span>' +
     '<button class="cr-btn" id="cr-login">登录 / 注册</button>' +
     '<button class="cr-btn" id="cr-note" style="display:none">📝 备忘录</button>' +
@@ -107,13 +109,17 @@
 
   function refresh() {
     var u = getUsername();
+    var crown = document.getElementById('cr-crown');
     if (u) {
       nameEl.textContent = u;
+      if (u === 'Server') crown.style.display = 'inline-block';
+      else crown.style.display = 'none';
       loginBtn.style.display = 'none';
       noteBtn.style.display = 'inline-block';
       logoutBtn.style.display = 'inline-block';
     } else {
       nameEl.textContent = '游客模式';
+      crown.style.display = 'none';
       loginBtn.style.display = 'inline-block';
       noteBtn.style.display = 'none';
       logoutBtn.style.display = 'none';

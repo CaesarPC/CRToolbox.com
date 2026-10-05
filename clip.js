@@ -18,7 +18,7 @@
   function getUsername() { return localStorage.getItem(USER_KEY) || ''; }
 
   function post(path, data, cb) {
-    if (!apiUrl) return cb && cb({ ok: false, msg: '后端未连接' });
+    if (!apiUrl) return cb && cb({ ok: false, msg: '服务暂不可用' });
     fetch(apiUrl + path, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -29,7 +29,7 @@
   }
 
   function get(path, cb) {
-    if (!apiUrl) return cb && cb({ ok: false, msg: '后端未连接' });
+    if (!apiUrl) return cb && cb({ ok: false, msg: '服务暂不可用' });
     fetch(apiUrl + path)
       .then(function (r) { return r.json(); })
       .then(function (j) { cb && cb(j); })

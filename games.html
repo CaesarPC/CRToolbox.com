@@ -182,11 +182,18 @@ function bindPad(padId, handler){
   var pad=document.getElementById(padId);
   if(!pad)return;
   pad.querySelectorAll('.dk').forEach(function(b){
-    b.addEventListener('click',function(e){
+    var last=0;
+    function fire(e){
       e.preventDefault();
+      var now=Date.now();
+      if(now-last<350)return;   /* 防双触发：触屏 touchstart+click 只执行一次 */
+      last=now;
       handler(b.getAttribute('data-dir'));
-    });
-    b.addEventListener('touchstart',function(e){e.preventDefault();}, {passive:false});
+    }
+    /* iOS/Android 触屏：touchstart 直接触发（preventDefault 不再抑制事件） */
+    b.addEventListener('touchstart', fire, {passive:false});
+    /* 桌面鼠标：click 触发 */
+    b.addEventListener('click', fire);
   });
 }
 

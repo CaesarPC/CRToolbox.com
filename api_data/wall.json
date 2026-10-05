@@ -1,1 +1,20 @@
-[{"id": 1791181435758, "name": "玩家小明", "content": "云端留言测试", "time": "2026-10-05 14:23", "admin": false, "pinned": false}]
+[
+ {
+  "id": 1791186331721,
+  "ts": 1791186331721,
+  "who": "Server",
+  "name": "Server验证",
+  "content": "刷屏防御全账号生效验证",
+  "time": "2026-10-05 15:45",
+  "admin": true,
+  "pinned": false
+ },
+ {
+  "id": 1791181435758,
+  "name": "玩家小明",
+  "content": "云端留言测试",
+  "time": "2026-10-05 14:23",
+  "admin": false,
+  "pinned": false
+ }
+]

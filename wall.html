@@ -430,11 +430,9 @@ function togglePin(id, pinned) {
 function doPost() {
   var content = document.getElementById('w-content').value.trim();
   if (!content) { document.getElementById('w-msg').textContent = '留言内容不能为空'; return; }
-  var cp = prompt('请输入更改密码（发布留言需要验证）：');
-  if (cp === null) return;
   document.getElementById('w-msg').textContent = '发布中...';
   var name = document.getElementById('w-name').value.trim();
-  post('/api/wall', { name: name, content: content, token: getToken(), changePassword: cp }, function (j) {
+  post('/api/wall', { name: name, content: content, token: getToken() }, function (j) {
     if (j.ok) {
       document.getElementById('w-msg').textContent = '✅ 留言成功！';
       document.getElementById('w-content').value = '';

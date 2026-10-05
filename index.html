@@ -39,6 +39,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 <body>
 <div class="hd">
   <div><h1>⚒️ Cr专属工具箱</h1><div class="st" id="msg">个人工具集 · 免费使用</div></div>
+  <div id="userBar" style="font-size:13px;color:#bdc3c7"></div>
 </div>
 <div class="wrap">
   <div class="intro">
@@ -106,6 +107,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
       <p>给站长或访客们留言，所有内容公开可见。你的支持是本站更新的动力！</p>
       <span class="go">去留言</span>
     </a>
+    <a class="card" id="adminCard" href="admin.html" style="display:none;border-color:#ffd700">
+      <div class="ic">👑</div>
+      <h3 style="color:#ffd700">后台管理</h3>
+      <p>Server 管理员专属：留言管理、用户管理、意见反馈、访问监控。</p>
+      <span class="go">进入后台</span>
+    </a>
   </div>
   <div class="foot">Cr专属工具箱 · 免责声明：所有工具仅供参考，不对结果网站及使用后果负责</div>
 </div>
@@ -142,9 +149,27 @@ function disagree(){
 function comingSoon(){alert('该工具尚未上线，敬请期待！');}
 window.addEventListener('load',function(){
   if(localStorage.getItem('Cr工具箱_已同意条款')!=='1'){showModal();}
+  /* 访问上报 */
+  if(window.CrGH && window.CrGH.visitLog){
+    try{ window.CrGH.visitLog({page:location.pathname.split('/').pop()||'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
+  }
+  /* 用户状态显示 */
+  var u = localStorage.getItem('cr_user');
+  var bar = document.getElementById('userBar');
+  if(u){
+    if(u === 'Server'){
+      bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
+      document.getElementById('adminCard').style.display = 'block';
+    } else {
+      bar.innerHTML = '👤 <b style="color:#50fa7b">' + u + '</b>';
+    }
+  } else {
+    bar.innerHTML = '<a href="wall.html" style="color:#8be9fd">登录/注册</a>';
+  }
 });
 </script>
 
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005d"></script>
 <script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v7"></script>
 </body>
 </html>

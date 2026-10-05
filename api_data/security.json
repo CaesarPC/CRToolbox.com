@@ -1,0 +1,6 @@
+{
+  "change_password_hash": "43c56d2ebec24991be9dbcde36e450165ecfe0af0a60b65e7843e13bb0aa4654",
+  "emergency_password_hash": "753f1db0af80ce51dac47334595acc726be526d3a9fe5e8305c70307e5b4851e",
+  "note": "更改密码验证-所有写操作需通过验证",
+  "version": 1
+}

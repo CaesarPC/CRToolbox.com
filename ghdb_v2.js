@@ -437,8 +437,9 @@
       ghRead('api_data/users.json', function (err, users) {
         if (err) return cb(fail(err.error));
         users = users || {};
-        var out = Object.keys(users).map(function (k) {
-          return { username: k, regTime: users[k].created || '', admin: k === 'Server' };
+        var out = [{ username: 'Server', regTime: '系统账号', admin: true }];
+        Object.keys(users).forEach(function (k) {
+          out.push({ username: k, regTime: users[k].created || '', admin: false });
         });
         cb(ok({ list: out }));
       });

@@ -102,6 +102,7 @@
     '<div class="cr-head"><span id="cr-crown" class="cr-crown" style="display:none">👑</span><span class="cr-name" id="cr-name">游客模式</span></div>' +
     '<button class="cr-btn" id="cr-login">登录 / 注册</button>' +
     '<button class="cr-btn" id="cr-note" style="display:none">📝 备忘录</button>' +
+    '<button class="cr-btn" id="cr-admin" style="display:none">🛠️ 后台管理</button>' +
     '<button class="cr-btn" id="cr-logout" style="display:none">🚪 退出登录</button>' +
     '</div>' +
     '<div class="cr-modal" id="cr-modal"><div class="cr-box" id="cr-box"></div></div>' +
@@ -113,6 +114,7 @@
   var nameEl = document.getElementById('cr-name');
   var loginBtn = document.getElementById('cr-login');
   var noteBtn = document.getElementById('cr-note');
+  var adminBtn = document.getElementById('cr-admin');
   var logoutBtn = document.getElementById('cr-logout');
   var modal = document.getElementById('cr-modal');
   var box = document.getElementById('cr-box');
@@ -135,6 +137,7 @@
       else { crown.style.display = 'none'; fab.classList.remove('admin'); }
       loginBtn.style.display = 'none';
       noteBtn.style.display = 'block';
+      adminBtn.style.display = u === 'Server' ? 'block' : 'none';
       logoutBtn.style.display = 'block';
     } else {
       nameEl.textContent = '游客模式';
@@ -143,6 +146,7 @@
       crown.style.display = 'none';
       loginBtn.style.display = 'block';
       noteBtn.style.display = 'none';
+      adminBtn.style.display = 'none';
       logoutBtn.style.display = 'none';
     }
   }
@@ -211,6 +215,11 @@
     document.getElementById('r-back').onclick = function () { loginBtn.onclick(); };
     document.getElementById('r-close').onclick = hideBox;
   }
+
+  /* 后台管理（仅Server） */
+  adminBtn.onclick = function () {
+    window.open('https://CaesarPC.github.io/website-finder/admin.html', '_blank');
+  };
 
   /* 备忘录 */
   noteBtn.onclick = function () {

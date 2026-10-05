@@ -1,1 +1,8 @@
-{"api_url": "https://cr-tools-api.cr-tools.workers.dev", "updated": "2026-10-05 14:20:00", "online": true}
+{
+  "mode": "github-direct",
+  "api_url": "",
+  "online": true,
+  "storage": "CaesarPC/website-finder/api_data",
+  "updated": "2026-10-05 14:35:00",
+  "note": "已切换到GitHub直连模式：前端直接读写GitHub仓库，无需任何后端/Cloudflare，站长电脑关机也能用"
+}

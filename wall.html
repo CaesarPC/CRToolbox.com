@@ -122,25 +122,70 @@ function setupAdmin() {
 }
 
 /* 生成弹幕：rAF 一帧帧驱动，从右侧屏幕外滑到左侧完全消失 */
+/* ===== 轨道制弹幕 ===== */
+var DM_TRACK_H = 34;       // 每条轨道高度(px)，弹幕高度约33px
+var DM_TRACKS = [];        // 轨道占用状态: true=占用
+var DM_PENDING = [];       // 排队中的弹幕
+var DM_SPAWNED = {};       // 已生成的弹幕id(去重，供增量刷新)
+
+function dmTrackCount() {
+  var stage = document.getElementById('stage');
+  return Math.max(1, Math.floor((stage.clientHeight || 420) / DM_TRACK_H));
+}
+function dmFreeTrack(from, to) {
+  var n = dmTrackCount();
+  if (DM_TRACKS.length !== n) DM_TRACKS = new Array(n).fill(false);
+  for (var i = from; i <= to && i < n; i++) if (!DM_TRACKS[i]) return i;
+  return -1;
+}
+function dmPickRange(pos) {
+  var n = dmTrackCount();
+  if (pos === 'top') return [0, Math.floor(n * 0.3)];
+  if (pos === 'mid') return [Math.floor(n * 0.35), Math.floor(n * 0.65)];
+  if (pos === 'bottom') return [Math.floor(n * 0.7), n - 1];
+  return [0, n - 1];
+}
+function dmSpawnPending() {
+  // 轨道释放后，把排队中的弹幕按序放入空闲轨道
+  for (var k = 0; k < DM_PENDING.length; k++) {
+    var it = DM_PENDING[k];
+    var rng = dmPickRange(it._pos);
+    var idx = dmFreeTrack(rng[0], rng[1]);
+    if (idx >= 0) {
+      DM_PENDING.splice(k, 1);
+      spawnDm(it);
+      k--;
+    }
+  }
+}
+
+/* 生成弹幕：轨道分配 + rAF 平滑滚动，右进左出 */
 function spawnDm(item) {
   var stage = document.getElementById('stage');
+  if (!stage || !item) return;
   var bold = document.getElementById('dmBold').value || 'normal';
   var pos = document.getElementById('dmPos').value || 'full';
   var speed = document.getElementById('dmSpeed').value || 'mid';
   var dur = speed === 'fast' ? 6 : speed === 'slow' ? 16 : 10;
+  var rng = dmPickRange(pos);
+  var idx = dmFreeTrack(rng[0], rng[1]);
+  if (idx < 0) {
+    item._pos = pos;
+    DM_PENDING.push(item);          // 无空轨道 → 排队
+    return;
+  }
+  DM_TRACKS[idx] = true;
+  if (item.id !== undefined) DM_SPAWNED[item.id] = true;
+
   var el = document.createElement('div');
   var bCls = item.admin ? 'admin' : '';
   if (bold === 'bold' || bold === 'heavy') bCls += ' bold';
   el.className = 'dm ' + bCls;
   el.innerHTML = '<span class="nm">' + esc(item.name) +
     (item.admin ? ' \uD83D\uDC51' : '') + '</span>' + esc(item.content);
-  var top;
-  if (pos === 'top') top = 6 + Math.random() * 14;
-  else if (pos === 'mid') top = 42 + Math.random() * 16;
-  else if (pos === 'bottom') top = 80 + Math.random() * 12;
-  else top = 3 + Math.random() * 90;
-  el.style.top = top + '%';
+  el.style.top = (idx * DM_TRACK_H + 2) + 'px';
   stage.appendChild(el);
+
   var stageW = stage.clientWidth || window.innerWidth;
   var elW = el.offsetWidth || 200;
   var startX = stageW + 20;
@@ -153,6 +198,8 @@ function spawnDm(item) {
     var dx = (now - t0) * pxPerMs;
     if (dx >= dist) {
       if (el.parentNode) el.parentNode.removeChild(el);
+      DM_TRACKS[idx] = false;      // 释放轨道
+      dmSpawnPending();            // 唤醒排队的
       return;
     }
     el.style.transform = 'translateX(' + (startX - dx) + 'px)';
@@ -202,12 +249,19 @@ function loadWall() {
     }
     document.getElementById('stage').style.display = 'block';
     document.getElementById('list').style.display = 'none';
-    document.getElementById('stage').innerHTML = '';
-    // 弹幕: 置顶的固定展示在顶部区域，其余滚动
+    // 弹幕: 增量追加，只生成新出现的，不打断已在滚动的
+    var newCount = 0;
     items.forEach(function (x) {
       if (x.pinned) return;   // 置顶的已在 pinZone
+      if (x.id !== undefined && DM_SPAWNED[x.id]) return;  // 已生成过
       spawnDm(x);
+      newCount++;
     });
+    if (newCount === 0 && DM_PENDING.length === 0 && document.querySelectorAll('.dm').length === 0) {
+      // 完全没有弹幕时给个空提示
+      var st = document.getElementById('stage');
+      st.innerHTML = '<div style="color:#6272a4;text-align:center;padding-top:180px;font-size:14px">弹幕飞走啦，来发一条吧 ✈️</div>';
+    }
   });
 }
 
@@ -237,6 +291,23 @@ function doPost() {
   });
 }
 
+
+/* 自动轮询：每8秒增量刷新弹幕（不打断正在滚动的） */
+setInterval(function () {
+  if (document.getElementById('dmMode').value === 'off') { loadWall(); return; }
+  // 仅拉列表并增量生成新弹幕
+  get('/api/wall', function (j) {
+    if (!j.ok || !j.list) return;
+    var stage = document.getElementById('stage');
+    if (!stage || stage.style.display === 'none') return;
+    j.list.forEach(function (x) {
+      if (x.pinned) return;
+      if (x.id !== undefined && DM_SPAWNED[x.id]) return;
+      spawnDm(x);
+    });
+  });
+}, 8000);
+
 /* 启动 */
 fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
   .then(function (r) { return r.json(); })
@@ -255,6 +326,6 @@ fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-
   });
 });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v3"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v4"></script>
 </body>
 </html>

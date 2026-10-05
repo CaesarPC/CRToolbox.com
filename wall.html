@@ -87,7 +87,7 @@ textarea{min-height:80px;resize:vertical}
   <div style="text-align:center;margin:6px 0"><span class="toggle" onclick="loadWall()">🔄 刷新弹幕</span></div>
 </div>
 <script>
-var apiUrl = localStorage.getItem('cr_api_url') || '';
+var apiUrl = '';   // 兼容旧变量，不再使用
 var TOKEN_KEY = 'cr_token';
 var USER_KEY = 'cr_user';
 var isAdmin = false;
@@ -97,34 +97,22 @@ var dmSeq = 0;
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 function getUsername() { return localStorage.getItem(USER_KEY) || ''; }
 function post(path, data, cb) {
-  fetch(apiUrl + path, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).then(function (r) { return r.json(); }).then(cb)
-    .catch(function () { cb({ ok: false, msg: '后端未连接（站长电脑可能关机）' }); });
+  window.CrGH && CrGH.route('POST', path, data, cb);
 }
 /* ===== 云端存储（GitHub 仓库当数据库） ===== */
 
-/* 读取云端留言列表 */
+/* 读取云端留言列表（直连 GitHub） */
 function cloudGetWall(cb) {
-  var u = 'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/' + CLOUD_WALL;
-  fetch(u, { cache: 'no-store' }).then(function (r) {
-    if (!r.ok) throw new Error('http ' + r.status);
-    return r.json();
-  }).then(function (j) {
-    cb(j && Array.isArray(j.list) ? j : { ok: true, list: [] });
-  }).catch(function () { cb({ ok: false }); });
+  window.CrGH && CrGH.wallGet(function (j) {
+    cb(j && j.ok ? j : { ok: true, list: [] });
+  });
 }
 
-/* 写入云端：通过本地后端代理（后端自动同步到云端），token不暴露在前端 */
+/* 写入云端：直连 GitHub（站长关机也能用） */
 function cloudSaveWall(list, cb) {
-  if (apiUrl) {
-    post('/api/wall/sync', { list: list }, function (j) {
-      cb(j.ok ? { ok: true } : { ok: false, msg: j.msg || '同步失败' });
-    });
-  } else {
-    cb({ ok: false, msg: '电脑后端未连接，无法同步云端（留言已保存在本地待同步）' });
-  }
+  window.CrGH && CrGH.wallSync({ list: list, token: getToken() }, function (j) {
+    cb(j.ok ? { ok: true } : { ok: false, msg: j.msg || '同步失败' });
+  });
 }
 function b64encode(str) {
   if (typeof btoa === 'function') return btoa(unescape(encodeURIComponent(str)));
@@ -136,8 +124,7 @@ function b64encode(str) {
 }
 
 function get(path, cb) {
-  fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
-    .catch(function () { cb({ ok: false, msg: '后端未连接' }); });
+  window.CrGH && CrGH.route('GET', path, null, cb);
 }
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -357,14 +344,18 @@ setInterval(function () {
 }, 8000);
 
 /* 启动 */
-fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
-  .then(function (r) { return r.json(); })
-  .then(function (cfg) {
-    if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
-    setupAdmin();
-    loadWall();
-  })
-  .catch(function () { setupAdmin(); loadWall(); });
+(function () {
+  if (!window.CrGH) {
+    var s = document.createElement('script');
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb.js?v=20261005v1';
+    s.onload = function () { setupAdmin(); loadWall(); };
+    s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
+    (document.head || document.body).appendChild(s);
+    return;
+  }
+  setupAdmin();
+  loadWall();
+})();
 
 /* 设置变化实时生效 */
 ['dmMode', 'dmBold', 'dmPos', 'dmSpeed'].forEach(function (id) {
@@ -374,6 +365,6 @@ fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-
   });
 });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v5"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v6"></script>
 </body>
 </html>

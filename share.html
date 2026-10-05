@@ -91,6 +91,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
     <textarea id="p-content" placeholder="使用说明 / 玩法介绍 / 代码..."></textarea>
     <label>下载/分享链接（可选）</label>
     <input id="p-link" placeholder="https://...">
+    <label>上传文件（可选，单文件≤1MB，支持 zip/mcworld/js/txt 等）</label>
+    <input type="file" id="p-file" style="padding:6px;font-size:12px">
+    <div id="p-file-info" style="font-size:12px;color:#6272a4;margin-top:4px"></div>
     <label>标签（逗号分隔）</label>
     <input id="p-tags" placeholder="红石,生存,存档">
     <label>分类</label>
@@ -193,6 +196,7 @@ function loadList() {
         (p.desc ? '<div class="desc">' + esc(p.desc) + '</div>' : '') +
         (p.tags ? '<div class="tags">' + p.tags.split(/[,，]/).map(function (t) { return t.trim(); }).filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
         (p.link ? '<a class="lnk" href="' + esc(p.link) + '" target="_blank" rel="noopener">🔗 ' + esc(p.link) + '</a>' : '') +
+        (p.fileUrl ? '<a class="lnk" href="' + esc(p.fileUrl) + '" download="' + esc(p.fileName || 'download') + '" style="margin-left:10px;background:#50fa7b22;padding:4px 10px;border-radius:6px">📥 下载 ' + esc(p.fileName || '文件') + '</a>' : '') +
         (p.content ? '<details style="margin-top:8px"><summary style="font-size:13px;color:#8be9fd;cursor:pointer">展开详情</summary><div style="font-size:13px;color:#e6e6e6;white-space:pre-wrap;margin-top:8px">' + esc(p.content) + '</div></details>' : '') +
         '<div class="cmt">' +
         '<div style="font-size:13px;color:#6272a4;margin-bottom:8px">💬 评论（' + (p.comments || []).length + '）</div>' +
@@ -228,20 +232,44 @@ function doPublish() {
   var link = document.getElementById('p-link').value.trim();
   var tags = document.getElementById('p-tags').value.trim();
   var cat = document.getElementById('p-cat').value;
+  var fileInput = document.getElementById('p-file');
+  var file = fileInput.files && fileInput.files[0];
   if (!title) { document.getElementById('pubMsg').textContent = '标题不能为空'; return; }
-  document.getElementById('pubMsg').textContent = '发布中...';
-  post('/api/projects', { token: getToken(), title: title, desc: desc, content: content, link: link, tags: tags, category: cat },
-    function (j) {
+  if (file && file.size > 1024 * 1024) { document.getElementById('pubMsg').textContent = '文件不能超过 1MB'; return; }
+
+  function createProject(extra) {
+    var data = { token: getToken(), title: title, desc: desc, content: content, link: link, tags: tags, category: cat };
+    if (extra) for (var k in extra) data[k] = extra[k];
+    post('/api/projects', data, function (j) {
       if (j.ok) {
         document.getElementById('pubMsg').textContent = '✅ ' + j.msg;
         ['p-title', 'p-desc', 'p-content', 'p-link', 'p-tags'].forEach(function (i) { document.getElementById(i).value = ''; });
+        fileInput.value = '';
+        document.getElementById('p-file-info').textContent = '';
         setTimeout(closePub, 800);
         loadList();
       } else {
         document.getElementById('pubMsg').textContent = j.msg || '发布失败';
-        if (!j.ok && String(j.msg).indexOf('登录') >= 0) setTimeout(closePub, 1200);
       }
     });
+  }
+
+  if (file) {
+    document.getElementById('pubMsg').textContent = '上传文件中...';
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var base64 = e.target.result.split(',')[1];
+      window.CrGH.uploadFile(file.name, base64, function (err, result) {
+        if (err) { document.getElementById('pubMsg').textContent = '文件上传失败：' + (err.error || ''); return; }
+        createProject({ fileUrl: result.url, fileName: result.name });
+      });
+    };
+    reader.onerror = function () { document.getElementById('pubMsg').textContent = '文件读取失败'; };
+    reader.readAsDataURL(file);
+  } else {
+    document.getElementById('pubMsg').textContent = '发布中...';
+    createProject();
+  }
 }
 
 function doComment(id) {

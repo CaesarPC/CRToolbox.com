@@ -656,19 +656,6 @@
       if (p === 'admin/visits') return adminVisitsList({ token: q.token }, cb);
       return cb(fail('接口不存在: ' + p));
     }
-    /* ---- 写操作统一验证+解锁写token（login/register/visit/log 除外） ---- */
-    var WRITE_OPS = ['wall','wall/pin','wall/sync','note','feedback','projects','projects/comment','projects/del','admin/user/reset','admin/user/delete','admin/user/setrole'];
-    if (WRITE_OPS.indexOf(p) >= 0) {
-      var cp = data && data.changePassword;
-      var done = false;
-      verifyAndUnlock(cp, function (pass, msg) {
-        if (done) return; done = true;
-        if (!pass) return cb(fail(msg));
-        dispatchWrite();
-      });
-      return;
-    }
-    function dispatchWrite() {
     switch (p) {
       case 'wall': return wallPost(data, cb);
       case 'wall/pin': return wallPin(data, cb);
@@ -686,7 +673,6 @@
       case 'visit/log': return visitLog(data, cb);
       default: return cb(fail('接口不存在: ' + p));
     }
-    }
   }
 
   /* 写函数包装：直接调用 CrGH.wallPost() 等也必须先验证更改密码并解锁写token */
@@ -703,14 +689,14 @@
   window.CrGH = {
     token: TOKEN,
     route: route,
-    wallGet: wallGet, wallPost: withWriteLock(wallPost), wallPin: withWriteLock(wallPin), wallSync: withWriteLock(wallSync),
+    wallGet: wallGet, wallPost: wallPost, wallPin: wallPin, wallSync: wallSync,
     login: doLogin, register: doRegister,
-    noteGet: noteGet, notePost: withWriteLock(notePost),
-    feedbackPost: withWriteLock(feedbackPost),
+    noteGet: noteGet, notePost: notePost,
+    feedbackPost: feedbackPost,
     report: report,
-    projectsList: projectsList, projectCreate: withWriteLock(projectCreate),
-    projectComment: withWriteLock(projectComment), projectDel: withWriteLock(projectDel),
-    adminUsersList: adminUsersList, adminUserReset: withWriteLock(adminUserReset), adminUserDelete: withWriteLock(adminUserDelete), adminUserSetRole: withWriteLock(adminUserSetRole),
+    projectsList: projectsList, projectCreate: projectCreate,
+    projectComment: projectComment, projectDel: projectDel,
+    adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete, adminUserSetRole: adminUserSetRole,
     adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
     visitLog: visitLog,
     verifyAndUnlock: verifyAndUnlock

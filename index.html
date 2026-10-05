@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cr专属工具箱</title>
+<title>Cr工具站</title>
 <style>
+*{box-sizing:border-box}
 body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
 .hd{background:#282a36;padding:20px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .hd h1{margin:0;font-size:24px;color:#50fa7b;letter-spacing:1px}
@@ -13,15 +14,23 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 .intro{background:#282a36;border-radius:10px;padding:16px 20px;margin-bottom:20px;border-left:4px solid #50fa7b}
 .intro h2{margin:0 0 6px;font-size:16px;color:#50fa7b}
 .intro p{margin:0;font-size:13px;color:#bdc3c7;line-height:1.6}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.card{background:#282a36;border-radius:12px;padding:20px;border:1px solid #44475a;transition:.15s;cursor:pointer;display:block;text-decoration:none;color:inherit}
+/* 分区标题 */
+.sec{margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+.sec .line{flex:1;height:1px;background:#44475a}
+.sec h2{margin:0;font-size:18px;color:#f1fa8c;white-space:nowrap}
+.sec .cnt{font-size:12px;color:#6272a4;background:#44475a;padding:2px 8px;border-radius:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.card{background:#282a36;border-radius:12px;padding:18px;border:1px solid #44475a;transition:.15s;cursor:pointer;display:block;text-decoration:none;color:inherit}
 .card:hover{transform:translateY(-3px);border-color:#50fa7b;box-shadow:0 6px 20px rgba(80,250,123,.12)}
-.card .ic{width:52px;height:52px;border-radius:10px;background:#1e1e2e;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px}
-.card h3{margin:0 0 6px;font-size:17px;color:#50fa7b}
-.card p{margin:0;font-size:12.5px;color:#bdc3c7;line-height:1.55}
-.card .go{display:inline-block;margin-top:12px;font-size:13px;color:#8be9fd;font-weight:600}
+.card .ic{width:44px;height:44px;border-radius:10px;background:#1e1e2e;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px}
+.card h3{margin:0 0 5px;font-size:16px;color:#50fa7b}
+.card p{margin:0;font-size:12px;color:#bdc3c7;line-height:1.5}
+.card .go{display:inline-block;margin-top:10px;font-size:12px;color:#8be9fd;font-weight:600}
 .card .go::after{content:' →'}
-.foot{color:#6272a4;font-size:12px;margin-top:24px;text-align:center}
+.card.admin{border-color:#ffd700}
+.card.admin h3{color:#ffd700}
+.foot{color:#6272a4;font-size:12px;margin-top:30px;text-align:center;padding-bottom:20px}
+/* 免责弹窗 */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;z-index:99}
 .mbox{background:#282a36;border:2px solid #ff5555;border-radius:12px;padding:26px 30px;max-width:520px;width:94%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.5);max-height:92vh;overflow-y:auto}
 .mbox h3{color:#ff5555;margin:0 0 14px;font-size:18px}
@@ -38,94 +47,120 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 </head>
 <body>
 <div class="hd">
-  <div><h1>⚒️ Cr专属工具箱</h1><div class="st" id="msg">个人工具集 · 免费使用</div></div>
+  <div><h1>🛠️ Cr工具站</h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
   <div id="userBar" style="font-size:13px;color:#bdc3c7"></div>
 </div>
 <div class="wrap">
   <div class="intro">
-    <h2>使用前必读</h2>
-    <p>本工具箱包含一系列探测与测试类工具。使用前请务必阅读并同意<b>使用条款与免责声明</b>。所有工具仅用于个人学习与技术研究。</p>
+    <h2>欢迎使用 Cr工具站</h2>
+    <p>一个免费的在线工具集合站，包含实用工具、休闲小游戏、社区交流三大板块。所有工具纯本地处理或云端存储，无需注册即可使用大部分功能。</p>
   </div>
+
+  <!-- 工具区 -->
+  <div class="sec"><h2>🔧 实用工具</h2><span class="cnt">5个工具</span><div class="line"></div></div>
   <div class="grid">
     <a class="card" href="finder.html">
       <div class="ic">🔍</div>
       <h3>网站查找器</h3>
-      <p>多顶级域域名占用状态扫描器。探测域名是否被占用（能连上=占用，连不上=可能可注册）。结果可能包含风险网站，点击访问风险自担。</p>
+      <p>多顶级域域名占用状态扫描，探测域名是否被注册。</p>
       <span class="go">进入工具</span>
     </a>
     <a class="card" href="combiner.html">
       <div class="ic">🧬</div>
       <h3>域名组合器</h3>
-      <p>按你的要求组合域名，搭配不同后缀，用 DNS 探测哪些后缀有空闲、哪些已占用。</p>
+      <p>按关键词组合域名，搭配不同后缀，探测哪些可注册。</p>
       <span class="go">进入工具</span>
     </a>
     <a class="card" href="codec.html">
       <div class="ic">🔐</div>
-      <h3>编码解码工具</h3>
-      <p>Base64、URL、HTML 实体、Unicode 的编码与解码，纯本地处理，不上传服务器。</p>
+      <h3>编码解码</h3>
+      <p>Base64、URL、HTML实体、Unicode编码解码，纯本地。</p>
       <span class="go">进入工具</span>
     </a>
     <a class="card" href="file-convert.html">
       <div class="ic">📦</div>
-      <h3>文件转换器</h3>
-      <p>图片格式转换（PNG/JPG/WebP）、CSV↔JSON、文件 SHA-256 哈希校验。全部本地处理。</p>
+      <h3>文件转换</h3>
+      <p>图片格式转换、CSV↔JSON、文件哈希校验，全部本地。</p>
       <span class="go">进入工具</span>
     </a>
     <a class="card" href="tools.html">
       <div class="ic">🧰</div>
-      <h3>实用工具</h3>
-      <p>计算器、二维码、密码生成、单位换算、时间戳、JSON格式化、图片压缩、骰子、大转盘、今日一言。全部纯本地处理。</p>
+      <h3>更多工具</h3>
+      <p>计算器、二维码、密码生成、单位换算、时间戳、JSON格式化等。</p>
       <span class="go">进入工具</span>
     </a>
+  </div>
+
+  <!-- 休闲区 -->
+  <div class="sec"><h2>🎮 休闲娱乐</h2><span class="cnt">1个分区</span><div class="line"></div></div>
+  <div class="grid">
     <a class="card" href="games.html">
       <div class="ic">🎮</div>
-      <h3>小游戏</h3>
-      <p>贪吃蛇、2048、扫雷、俄罗斯方块、五子棋、生命游戏、粒子沙盒、双摆模拟、π计算器。</p>
-      <span class="go">进入游戏</span>
+      <h3>小游戏合集</h3>
+      <p>贪吃蛇、2048、扫雷、俄罗斯方块、五子棋、生命游戏、粒子沙盒、双摆模拟等。支持触屏虚拟按键。</p>
+      <span class="go">开始游戏</span>
     </a>
-    <a class="card" href="software.html">
-      <div class="ic">📥</div>
-      <h3>软件下载</h3>
-      <p>钢4工具箱、钢4存档守护、鼠标宏V3、网络测速等本地工具，提供可执行程序下载。</p>
-      <span class="go">进入下载</span>
-    </a>
-    <a class="card" href="paste.html">
-      <div class="ic">📋</div>
-      <h3>文本分享</h3>
-      <p>粘贴文字、代码、链接生成专属分享链接，发给别人即可查看内容。公开分享，即时同步。</p>
-      <span class="go">去分享</span>
+  </div>
+
+  <!-- 社区区 -->
+  <div class="sec"><h2>💬 社区交流</h2><span class="cnt">3个分区</span><div class="line"></div></div>
+  <div class="grid">
+    <a class="card" href="wall.html">
+      <div class="ic">💬</div>
+      <h3>公开留言墙</h3>
+      <p>给站长或访客留言，弹幕滚动展示，所有内容公开可见。</p>
+      <span class="go">去留言</span>
     </a>
     <a class="card" href="share.html">
       <div class="ic">📦</div>
       <h3>开源专区</h3>
-      <p>发布你的作品（存档、脚本、工具、创意），与访客们分享交流。发布需登录，浏览免费。</p>
+      <p>发布你的作品（存档、脚本、工具、创意），支持文件上传下载，与社区分享交流。</p>
       <span class="go">去分享</span>
     </a>
-    <a class="card" href="wall.html">
-      <div class="ic">💬</div>
-      <h3>公开留言墙</h3>
-      <p>给站长或访客们留言，所有内容公开可见。你的支持是本站更新的动力！</p>
-      <span class="go">去留言</span>
+    <a class="card" href="paste.html">
+      <div class="ic">📋</div>
+      <h3>文本分享</h3>
+      <p>粘贴文字、代码、链接生成专属分享链接，发给别人即可查看。</p>
+      <span class="go">去分享</span>
     </a>
-    <a class="card" id="adminCard" href="admin.html" style="display:none;border-color:#ffd700">
+  </div>
+
+  <!-- 下载区 -->
+  <div class="sec"><h2>📥 软件下载</h2><span class="cnt">1个分区</span><div class="line"></div></div>
+  <div class="grid">
+    <a class="card" href="software.html">
+      <div class="ic">📥</div>
+      <h3>本地软件</h3>
+      <p>钢4工具箱、钢4存档守护、鼠标宏、网络测速等本地工具，提供可执行程序下载。</p>
+      <span class="go">进入下载</span>
+    </a>
+  </div>
+
+  <!-- 管理区（Server专属） -->
+  <div class="sec" id="adminSec" style="display:none"><h2>👑 管理中心</h2><span class="cnt">Server专属</span><div class="line"></div></div>
+  <div class="grid" id="adminGrid" style="display:none">
+    <a class="card admin" id="adminCard" href="admin.html">
       <div class="ic">👑</div>
-      <h3 style="color:#ffd700">后台管理</h3>
-      <p>Server 管理员专属：留言管理、用户管理、意见反馈、访问监控。</p>
+      <h3>后台管理</h3>
+      <p>留言管理、用户管理、意见反馈、访问监控、半管理员权限设置。</p>
       <span class="go">进入后台</span>
     </a>
   </div>
-  <div class="foot">Cr专属工具箱 · 免责声明：所有工具仅供参考，不对结果网站及使用后果负责</div>
+
+  <div class="foot">Cr工具站 · 免费在线工具 · 免责声明：所有工具仅供参考，不对使用后果负责</div>
 </div>
+
+<!-- 免责弹窗 -->
 <div class="modal" id="modal">
   <div class="mbox">
     <h3>⚠️ 使用条款与免责声明</h3>
     <div class="terms">
-      <p><b>1.</b> 本工具箱提供一系列<b>域名探测、网络测试类工具</b>，仅用于个人学习、技术研究与测试用途。</p>
+      <p><b>1.</b> 本工具站提供一系列<b>域名探测、网络测试类工具</b>，仅用于个人学习、技术研究与测试用途。</p>
       <p><b>2.</b> 部分工具为<b>测试项目</b>，可能不稳定、存在漏洞或功能不完整，使用前请知悉。</p>
-      <p><b>3.</b> 探测结果可能指向<b>病毒、恶意软件、钓鱼或非法网站</b>。点击任何结果链接、下载任何文件、进行任何访问，风险完全由使用者自担。</p>
-      <p><b>4.</b> 使用者须确保设备<b>装有杀毒软件</b>，使用工具时保持警惕：不下载陌生可执行文件(.exe)、不输入账号密码、不透露个人信息。</p>
-      <p><b>5.</b> 本工具箱免费提供，不对任何直接或间接损失负责。本工具不用于任何非法用途，使用者须遵守所在地区法律法规。</p>
-      <p><b>6.</b> 同意以上条款后方可使用本工具箱；不同意则无法使用任何工具。</p>
+      <p><b>3.</b> 探测结果可能指向<b>病毒、恶意软件、钓鱼或非法网站</b>。点击任何结果链接、下载任何文件，风险完全由使用者自担。</p>
+      <p><b>4.</b> 使用者须确保设备<b>装有杀毒软件</b>，使用工具时保持警惕：不下载陌生可执行文件、不输入账号密码。</p>
+      <p><b>5.</b> 本工具站免费提供，不对任何直接或间接损失负责。使用者须遵守所在地区法律法规。</p>
+      <p><b>6.</b> 同意以上条款后方可使用；不同意则无法使用任何工具。</p>
     </div>
     <label class="remember"><input type="checkbox" id="remember"> 记住我的同意，下次不再提示</label>
     <div class="mbtns">
@@ -134,27 +169,30 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
     </div>
   </div>
 </div>
+
 <script>
 function showModal(){document.getElementById('modal').style.display='flex'}
 function closeModal(){document.getElementById('modal').style.display='none'}
 function agree(){
-  if(document.getElementById('remember').checked){localStorage.setItem('Cr工具箱_已同意条款','1');}
-  closeModal();document.getElementById('msg').textContent='已同意条款 · 欢迎使用';
+  if(document.getElementById('remember').checked){localStorage.setItem('Cr工具站_已同意条款','1');}
+  closeModal();document.getElementById('msg').textContent='已同意条款 · 欢迎使用 Cr工具站';
 }
 function disagree(){
   closeModal();
-  document.getElementById('msg').textContent='已拒绝条款，工具不可用（需同意免责声明）';
-  document.querySelectorAll('.card a,.card').forEach(a=>{a.style.pointerEvents='none';a.style.opacity=.4});
+  document.getElementById('msg').textContent='已拒绝条款，工具不可用';
+  document.querySelectorAll('.card').forEach(a=>{a.style.pointerEvents='none';a.style.opacity=.4});
 }
-function comingSoon(){alert('该工具尚未上线，敬请期待！');}
 function refreshUserBar(){
   var u = localStorage.getItem('cr_user');
   var bar = document.getElementById('userBar');
-  var adminCard = document.getElementById('adminCard');
-  adminCard.style.display = 'none';
+  var adminSec = document.getElementById('adminSec');
+  var adminGrid = document.getElementById('adminGrid');
+  adminSec.style.display = 'none';
+  adminGrid.style.display = 'none';
   if(u === 'Server'){
     bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
-    adminCard.style.display = 'block';
+    adminSec.style.display = 'flex';
+    adminGrid.style.display = 'grid';
   } else if(u){
     bar.innerHTML = '🥈 <b style="color:#50fa7b">' + u + '</b>';
   } else {
@@ -162,7 +200,7 @@ function refreshUserBar(){
   }
 }
 window.addEventListener('load',function(){
-  if(localStorage.getItem('Cr工具箱_已同意条款')!=='1'){showModal();}
+  if(localStorage.getItem('Cr工具站_已同意条款')!=='1'){showModal();}
   if(window.CrGH && window.CrGH.visitLog){
     try{ window.CrGH.visitLog({page:location.pathname.split('/').pop()||'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
   }
@@ -171,8 +209,7 @@ window.addEventListener('load',function(){
 window.addEventListener('pageshow',function(){ refreshUserBar(); });
 setInterval(refreshUserBar, 2000);
 </script>
-
-<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005g"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005h"></script>
 <script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v8"></script>
 </body>
 </html>

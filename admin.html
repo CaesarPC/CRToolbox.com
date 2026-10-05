@@ -110,6 +110,7 @@ function fetchT(url, ms) {
 
 /* 云端文件多源读取：jsDelivr CDN(国内快) -> raw 兜底 */
 var CLOUD_SOURCES = [
+  'https://CaesarPC.github.io/website-finder/' + CLOUD_WALL,
   'https://cdn.jsdelivr.net/gh/' + CLOUD_REPO + '@main/' + CLOUD_WALL,
   'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/' + CLOUD_WALL
 ];
@@ -204,6 +205,7 @@ document.getElementById('btnLogin').onclick = function () {
   if (!pass) { msgEl.textContent = '请输入密码'; return; }
   msgEl.textContent = '验证中...';
   var authSources = [
+    'https://CaesarPC.github.io/website-finder/api_data/auth.json',
     'https://cdn.jsdelivr.net/gh/' + CLOUD_REPO + '@main/api_data/auth.json',
     'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/api_data/auth.json'
   ];

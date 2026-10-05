@@ -51,6 +51,13 @@ textarea{min-height:80px;resize:vertical}
 .pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
 .toggle{color:#8be9fd;cursor:pointer;font-size:12.5px;text-decoration:underline;margin-left:10px}
 .empty{color:#6272a4;text-align:center;padding:40px;font-size:14px}
+/* 67 专属彩蛋 */
+.egg67{background:linear-gradient(135deg,#2d1b4e,#1a1a2e);border:2px solid #ff79c6;border-radius:14px;padding:18px;margin-bottom:16px;text-align:center}
+.egg67 h3{color:#ff79c6;font-size:17px;margin-bottom:10px}
+.egg67-big{font-size:42px;font-weight:900;color:#ff79c6;text-shadow:0 0 20px rgba(255,121,198,.6),0 0 40px rgba(255,121,198,.3);letter-spacing:6px;margin-bottom:10px;animation:egg67pulse 2s ease-in-out infinite}
+@keyframes egg67pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.egg67 canvas{width:100%;max-width:800px;height:200px;border-radius:10px;background:#12121e;border:1px solid #44475a}
+.egg67-tip{color:#bd93f9;font-size:13px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -66,6 +73,13 @@ textarea{min-height:80px;resize:vertical}
     <label>字体粗细 <select id="dmBold"><option value="normal">正常</option><option value="bold">加粗</option><option value="heavy">特粗</option></select></label>
     <label>弹幕位置 <select id="dmPos"><option value="top">顶部</option><option value="mid">中部</option><option value="bottom">底部</option><option value="full" selected>全屏随机</option></select></label>
     <label>弹幕速度 <select id="dmSpeed"><option value="fast">快</option><option value="mid" selected>中</option><option value="slow">慢</option></select></label>
+  </div>
+  <!-- 67 用户专属彩蛋（仅用户 67 登录可见） -->
+  <div class="egg67" id="egg67" style="display:none">
+    <h3>🎉 67 专属彩蛋 · 67676767</h3>
+    <div class="egg67-big">67676767</div>
+    <canvas id="egg67Canvas" width="800" height="300"></canvas>
+    <div class="egg67-tip">欢迎回来，67！这里是你的专属空间 ✨</div>
   </div>
   <div class="box">
     <h2>✍️ 写留言</h2>
@@ -137,6 +151,55 @@ function setupAdmin() {
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('adminPanel').querySelector('select').value =
       localStorage.getItem('cr_dm_mode') || 'on';
+  }
+}
+
+/* ===== 67 用户专属彩蛋：67 雪花特效 ===== */
+var EGG67_FLAKES = [];
+var EGG67_COLORS = ['#ff79c6','#bd93f9','#50fa7b','#8be9fd','#ffb86c','#ff5555','#f1fa8c'];
+var EGG67_FONTS = ['Arial','Georgia','Courier New','Impact','Comic Sans MS','Trebuchet MS'];
+function egg67Spawn() {
+  var c = document.getElementById('egg67Canvas');
+  if (!c) return;
+  EGG67_FLAKES.push({
+    x: Math.random() * c.width,
+    y: -30,
+    size: 14 + Math.random() * 28,
+    speed: 0.8 + Math.random() * 2.2,
+    drift: (Math.random() - 0.5) * 1.5,
+    rot: Math.random() * 360,
+    rotSpeed: (Math.random() - 0.5) * 4,
+    color: EGG67_COLORS[Math.floor(Math.random() * EGG67_COLORS.length)],
+    font: EGG67_FONTS[Math.floor(Math.random() * EGG67_FONTS.length)],
+    bold: Math.random() > 0.5
+  });
+}
+function egg67Loop() {
+  var c = document.getElementById('egg67Canvas');
+  if (!c || c.style.display === 'none') return;
+  var ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  if (Math.random() < 0.15 && EGG67_FLAKES.length < 80) egg67Spawn();
+  EGG67_FLAKES = EGG67_FLAKES.filter(function (f) { return f.y < c.height + 40; });
+  EGG67_FLAKES.forEach(function (f) {
+    f.y += f.speed;
+    f.x += f.drift;
+    f.rot += f.rotSpeed;
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.rot * Math.PI / 180);
+    ctx.font = (f.bold ? 'bold ' : '') + f.size + 'px ' + f.font;
+    ctx.fillStyle = f.color;
+    ctx.globalAlpha = 0.85;
+    ctx.fillText('67', -f.size, 0);
+    ctx.restore();
+  });
+  requestAnimationFrame(egg67Loop);
+}
+function setupEgg67() {
+  if (getUsername() === '67') {
+    document.getElementById('egg67').style.display = 'block';
+    setTimeout(egg67Loop, 300);
   }
 }
 
@@ -411,13 +474,14 @@ setInterval(function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005c';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005d';
     s.onload = function () { setupAdmin(); loadWall(); };
     s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
     (document.head || document.body).appendChild(s);
     return;
   }
   setupAdmin();
+  setupEgg67();
   loadWall();
 })();
 

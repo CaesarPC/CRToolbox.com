@@ -35,6 +35,53 @@
     } catch (e) { return ''; }
   }
   var TOKEN = _token();
+  /* ---------- 写 token（加密存储，需更改密码解密；未解密时写操作不可用） ----------
+   * 底层保护：前端 TOKEN 未来替换为只读 token 后，黑客即使拿到也只能读不能写。
+   * 读写 token 用更改密码 XOR 加密后存在 api_data/security.json，
+   * 写操作时需先验证更改密码并解密出 WRITE_TOKEN 临时使用。
+   */
+  var WRITE_TOKEN = '';
+  var SECURITY_CACHE = null;
+  function sha256hex(str) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
+      .then(function (buf) {
+        return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      });
+  }
+  function xorDecrypt(b64ct, password) {
+    return sha256hex(password).then(function (hex) {
+      var key = new Uint8Array(32);
+      for (var i = 0; i < 32; i++) key[i] = parseInt(hex.substr(i * 2, 2), 16);
+      var ct = Uint8Array.from(atob(b64ct), function (c) { return c.charCodeAt(0); });
+      var pt = new Uint8Array(ct.length);
+      for (var j = 0; j < ct.length; j++) pt[j] = ct[j] ^ key[j % 32];
+      return new TextDecoder().decode(pt);
+    });
+  }
+  function loadSecurity(cb) {
+    if (SECURITY_CACHE) return cb(SECURITY_CACHE);
+    ghRead('api_data/security.json', function (err, sec) {
+      if (err || !sec) return cb(null);
+      SECURITY_CACHE = sec;
+      cb(sec);
+    });
+  }
+  function verifyAndUnlock(pwd, cb) {
+    if (!pwd) return cb(false, '请输入更改密码');
+    loadSecurity(function (sec) {
+      if (!sec) return cb(false, '安全配置读取失败');
+      sha256hex(String(pwd)).then(function (h) {
+        var isChange = h === sec.change_password_hash;
+        var isEmergency = h === sec.emergency_password_hash;
+        if (!isChange && !isEmergency) return cb(false, '更改密码错误');
+        var encField = isEmergency ? 'encrypted_write_token_emergency' : 'encrypted_write_token';
+        xorDecrypt(sec[encField], String(pwd)).then(function (tok) {
+          WRITE_TOKEN = tok;
+          cb(true, isEmergency ? '应急密码验证通过，写权限已解锁' : '更改密码验证通过，写权限已解锁');
+        });
+      });
+    });
+  }
 
   /* ---------- UTF-8 安全 base64 ---------- */
   function b64e(str) {
@@ -53,7 +100,9 @@
   /* ---------- GitHub Contents API ---------- */
   function ghHeaders(json) {
     var h = { 'Accept': 'application/vnd.github+json' };
-    if (TOKEN) h['Authorization'] = 'Bearer ' + TOKEN;
+    // 写操作（json=true）优先用解密后的读写 token；未解密则回退到默认 token
+    var tok = (json && WRITE_TOKEN) ? WRITE_TOKEN : TOKEN;
+    if (tok) h['Authorization'] = 'Bearer ' + tok;
     if (json) h['Content-Type'] = 'application/json';
     return h;
   }
@@ -607,12 +656,12 @@
       if (p === 'admin/visits') return adminVisitsList({ token: q.token }, cb);
       return cb(fail('接口不存在: ' + p));
     }
-    /* ---- 写操作统一更改密码验证（login/register/visit/log 除外） ---- */
+    /* ---- 写操作统一验证+解锁写token（login/register/visit/log 除外） ---- */
     var WRITE_OPS = ['wall','wall/pin','wall/sync','note','feedback','projects','projects/comment','projects/del','admin/user/reset','admin/user/delete','admin/user/setrole'];
     if (WRITE_OPS.indexOf(p) >= 0) {
       var cp = data && data.changePassword;
       var done = false;
-      verifyChangePassword(cp, function (pass, msg) {
+      verifyAndUnlock(cp, function (pass, msg) {
         if (done) return; done = true;
         if (!pass) return cb(fail(msg));
         dispatchWrite();
@@ -652,6 +701,7 @@
     projectComment: projectComment, projectDel: projectDel,
     adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete, adminUserSetRole: adminUserSetRole,
     adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
-    visitLog: visitLog
+    visitLog: visitLog,
+    verifyAndUnlock: verifyAndUnlock
   };
 })();

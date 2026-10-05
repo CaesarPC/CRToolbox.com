@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>开源专区 - Cr专属工具箱</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:16px 20px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:20px;color:#50fa7b}
+.hd a{color:#8be9fd;font-size:13px;text-decoration:none}
+.wrap{max-width:900px;margin:20px auto;padding:0 16px}
+.toolbar{background:#282a36;border:1px solid #44475a;border-radius:10px;padding:14px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toolbar input,.toolbar select{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:6px;padding:8px 10px;font-size:13px}
+.toolbar input{flex:1;min-width:150px}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:9px 18px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer}
+.btn:hover{background:#69ff94}
+.btn.ghost{background:#44475a;color:#e6e6e6}
+.btn.danger{background:#ff5555;color:#fff}
+.card{background:#282a36;border:1px solid #44475a;border-radius:10px;padding:16px;margin-bottom:14px}
+.card .t{font-size:16px;font-weight:700;color:#f1fa8c;margin-bottom:4px}
+.card .meta{font-size:12px;color:#6272a4;margin-bottom:8px}
+.card .desc{font-size:13.5px;color:#e6e6e6;margin-bottom:10px}
+.card .tags span{display:inline-block;background:#44475a;color:#8be9fd;border-radius:4px;padding:2px 8px;font-size:12px;margin-right:6px}
+.card .lnk{display:inline-block;color:#8be9fd;text-decoration:none;font-size:13px;margin:4px 0}
+.card .op{text-align:right;margin-top:8px}
+.cat-tag{display:inline-block;background:#50fa7b22;color:#50fa7b;border:1px solid #50fa7b55;border-radius:4px;padding:2px 8px;font-size:12px;margin-left:6px}
+/* 评论区 */
+.cmt{margin-top:12px;border-top:1px solid #44475a;padding-top:10px}
+.cmt .c-row{font-size:12.5px;margin-bottom:6px}
+.cmt .c-name{color:#8be9fd;font-weight:700}
+.cmt .c-time{color:#6272a4;margin-left:8px}
+.cmt .c-text{color:#e6e6e6;margin-left:4px}
+.cmt .c-input{display:flex;gap:8px;margin-top:10px}
+.cmt .c-input input{flex:1;background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:6px;padding:8px 10px;font-size:13px}
+/* 发布弹窗 */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;align-items:center;justify-content:center;padding:16px}
+.ov.on{display:flex}
+.modal{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:22px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal h3{margin:0 0 14px;color:#50fa7b;font-size:17px}
+.modal label{display:block;font-size:12.5px;color:#6272a4;margin:10px 0 4px}
+.modal input,.modal textarea,.modal select{width:100%;background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:6px;padding:9px 10px;font-size:13px;font-family:inherit}
+.modal textarea{min-height:70px;resize:vertical}
+.modal .row{display:flex;gap:10px;margin-top:16px}
+.modal .row .btn{flex:1}
+.msg{font-size:13px;color:#ff5555;margin-top:8px;min-height:16px}
+.empty{text-align:center;color:#6272a4;padding:30px 0;font-size:14px}
+.uinfo{font-size:12.5px;color:#8be9fd}
+.notice{background:#2d2130;border:1px solid #ffd70055;color:#ffd700;border-radius:8px;padding:10px 14px;font-size:12.5px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>📦 开源专区</h1>
+  <div>
+    <span class="uinfo" id="uinfo">未登录</span>
+    <a href="javascript:;" id="loginLink" style="margin-left:10px">登录</a>
+    <a href="index.html" style="margin-left:14px">← 返回工具箱</a>
+  </div>
+</div>
+<div class="wrap">
+  <div class="notice">📢 这里是 Cr 社区的分享广场：发布你的作品（存档、脚本、工具、创意），或给别人的项目评论交流。<b>发布和评论需要登录</b>，浏览无需登录。数据存云端，站长关机也能用。</div>
+
+  <div class="toolbar">
+    <input id="q" placeholder="🔍 搜索标题/描述/标签...">
+    <select id="cat">
+      <option value="">全部分类</option>
+      <option>游戏</option>
+      <option>编程</option>
+      <option>工具</option>
+      <option>创意</option>
+      <option>其他</option>
+    </select>
+    <button class="btn" onclick="doSearch()">搜索</button>
+    <button class="btn ghost" onclick="openPublish()">✏️ 发布作品</button>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<!-- 发布弹窗 -->
+<div class="ov" id="pubOv">
+  <div class="modal">
+    <h3>✏️ 发布作品</h3>
+    <label>标题（必填）</label>
+    <input id="p-title" placeholder="例如：红石刷铁机存档 v2">
+    <label>一句话简介</label>
+    <input id="p-desc" placeholder="这是什么，适合谁">
+    <label>详细内容</label>
+    <textarea id="p-content" placeholder="使用说明 / 玩法介绍 / 代码..."></textarea>
+    <label>下载/分享链接（可选）</label>
+    <input id="p-link" placeholder="https://...">
+    <label>标签（逗号分隔）</label>
+    <input id="p-tags" placeholder="红石,生存,存档">
+    <label>分类</label>
+    <select id="p-cat">
+      <option>游戏</option>
+      <option>编程</option>
+      <option>工具</option>
+      <option>创意</option>
+      <option>其他</option>
+    </select>
+    <div class="msg" id="pubMsg"></div>
+    <div class="row">
+      <button class="btn" id="pubGo">发布</button>
+      <button class="btn ghost" onclick="closePub()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- 登录弹窗 -->
+<div class="ov" id="loginOv">
+  <div class="modal" style="max-width:380px">
+    <h3 id="loginTitle">🔑 登录</h3>
+    <input id="lg-user" placeholder="用户名" autocomplete="off">
+    <input id="lg-pass" type="password" placeholder="密码" autocomplete="off">
+    <div id="lg-msg" class="msg"></div>
+    <div class="row">
+      <button class="btn" id="lgGo">登录</button>
+      <button class="btn ghost" id="lgToReg">注册新账号</button>
+      <button class="btn ghost" onclick="closeLogin()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var apiUrl = localStorage.getItem('cr_api_url') || '';
+var TOKEN_KEY = 'cr_token';
+var USER_KEY = 'cr_user';
+var curUser = localStorage.getItem(USER_KEY) || '';
+var projects = [];
+
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+function post(path, data, cb) {
+  fetch(apiUrl + path, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function (r) { return r.json(); }).then(cb)
+    .catch(function () { cb({ ok: false, msg: '服务暂不可用（云端后端未部署或离线）' }); });
+}
+function get(path, cb) {
+  fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
+    .catch(function () { cb({ ok: false, msg: '服务暂不可用' }); });
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function updUserUI() {
+  var u = localStorage.getItem(USER_KEY) || '';
+  curUser = u;
+  document.getElementById('uinfo').textContent = u ? '👤 ' + u + (u === 'Server' ? ' 👑' : '') : '未登录';
+  document.getElementById('loginLink').textContent = u ? '退出' : '登录';
+}
+
+/* ---- 独立登录/注册弹窗（不依赖 clip.js） ---- */
+function openLogin() { document.getElementById('loginOv').classList.add('on'); setLoginMode(true); }
+function closeLogin() { document.getElementById('loginOv').classList.remove('on'); }
+function setLoginMode(isLogin) {
+  document.getElementById('loginTitle').textContent = isLogin ? '🔑 登录' : '📝 注册新账号';
+  document.getElementById('lg-msg').textContent = '';
+  document.getElementById('lg-pass').value = '';
+  document.getElementById('lgGo').textContent = isLogin ? '登录' : '注册';
+  document.getElementById('lgToReg').textContent = isLogin ? '注册新账号' : '← 返回登录';
+}
+document.getElementById('lgToReg').onclick = function () {
+  var isLogin = document.getElementById('loginTitle').textContent.indexOf('登录') >= 0;
+  setLoginMode(!isLogin);
+};
+document.getElementById('lgGo').onclick = function () {
+  var u = document.getElementById('lg-user').value.trim();
+  var p = document.getElementById('lg-pass').value;
+  var isLogin = document.getElementById('loginTitle').textContent.indexOf('登录') >= 0;
+  if (!u || !p) { document.getElementById('lg-msg').textContent = '请输入用户名和密码'; return; }
+  post('/api/' + (isLogin ? 'login' : 'register'), { username: u, password: p }, function (j) {
+    if (j.ok) {
+      localStorage.setItem(TOKEN_KEY, j.token);
+      localStorage.setItem(USER_KEY, j.username);
+      closeLogin(); updUserUI(); loadList();
+    } else document.getElementById('lg-msg').textContent = j.msg || '操作失败';
+  });
+};
+
+function loadList() {
+  var q = encodeURIComponent(document.getElementById('q').value.trim());
+  var cat = document.getElementById('cat').value;
+  var url = '/api/projects?q=' + q + '&cat=' + encodeURIComponent(cat);
+  get(url, function (j) {
+    var el = document.getElementById('list');
+    if (!j.ok || !j.list) { el.innerHTML = '<div class="empty">加载失败：' + esc(j.msg || '') + '<br>（需要先部署云端后端）</div>'; return; }
+    projects = j.list;
+    if (!projects.length) { el.innerHTML = '<div class="empty">还没有作品，来发布第一个吧！🚀</div>'; return; }
+    var h = '';
+    projects.forEach(function (p) {
+      h += '<div class="card">' +
+        '<div class="t">' + esc(p.title) + '<span class="cat-tag">' + esc(p.category) + '</span></div>' +
+        '<div class="meta">👤 ' + esc(p.author) + (p.author === 'Server' ? ' 👑' : '') + ' · 🕐 ' + esc(p.created) + '</div>' +
+        (p.desc ? '<div class="desc">' + esc(p.desc) + '</div>' : '') +
+        (p.tags ? '<div class="tags">' + p.tags.split(/[,，]/).map(function (t) { return t.trim(); }).filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
+        (p.link ? '<a class="lnk" href="' + esc(p.link) + '" target="_blank" rel="noopener">🔗 ' + esc(p.link) + '</a>' : '') +
+        (p.content ? '<details style="margin-top:8px"><summary style="font-size:13px;color:#8be9fd;cursor:pointer">展开详情</summary><div style="font-size:13px;color:#e6e6e6;white-space:pre-wrap;margin-top:8px">' + esc(p.content) + '</div></details>' : '') +
+        '<div class="cmt">' +
+        '<div style="font-size:13px;color:#6272a4;margin-bottom:8px">💬 评论（' + (p.comments || []).length + '）</div>' +
+        (p.comments || []).map(function (c) {
+          return '<div class="c-row"><span class="c-name">' + esc(c.user) + (c.user === 'Server' ? ' 👑' : '') + '</span><span class="c-time">' + esc(c.time) + '</span><span class="c-text">' + esc(c.text) + '</span></div>';
+        }).join('') +
+        '<div class="c-input">' +
+        '<input id="cm-' + p.id + '" placeholder="' + (curUser ? '说点什么...' : '登录后才能评论') + '" ' + (curUser ? '' : 'disabled') + '>' +
+        '<button class="btn ghost" style="padding:8px 14px" onclick="doComment(' + p.id + ')">评论</button>' +
+        '</div></div>' +
+        '<div class="op">' +
+        (p.author === curUser || curUser === 'Server' ? '<button class="btn danger" style="padding:6px 12px;font-size:12px" onclick="delProject(' + p.id + ')">🗑 删除</button>' : '') +
+        '</div>' +
+        '</div>';
+    });
+    el.innerHTML = h;
+  });
+}
+
+function doSearch() { loadList(); }
+
+function openPublish() {
+  if (!curUser) { alert('发布必须登录，请先登录'); return; }
+  document.getElementById('pubOv').classList.add('on');
+  document.getElementById('pubMsg').textContent = '';
+}
+function closePub() { document.getElementById('pubOv').classList.remove('on'); }
+
+function doPublish() {
+  var title = document.getElementById('p-title').value.trim();
+  var desc = document.getElementById('p-desc').value.trim();
+  var content = document.getElementById('p-content').value.trim();
+  var link = document.getElementById('p-link').value.trim();
+  var tags = document.getElementById('p-tags').value.trim();
+  var cat = document.getElementById('p-cat').value;
+  if (!title) { document.getElementById('pubMsg').textContent = '标题不能为空'; return; }
+  document.getElementById('pubMsg').textContent = '发布中...';
+  post('/api/projects', { token: getToken(), title: title, desc: desc, content: content, link: link, tags: tags, category: cat },
+    function (j) {
+      if (j.ok) {
+        document.getElementById('pubMsg').textContent = '✅ ' + j.msg;
+        ['p-title', 'p-desc', 'p-content', 'p-link', 'p-tags'].forEach(function (i) { document.getElementById(i).value = ''; });
+        setTimeout(closePub, 800);
+        loadList();
+      } else {
+        document.getElementById('pubMsg').textContent = j.msg || '发布失败';
+        if (!j.ok && String(j.msg).indexOf('登录') >= 0) setTimeout(closePub, 1200);
+      }
+    });
+}
+
+function doComment(id) {
+  if (!curUser) { alert('登录后才能评论'); return; }
+  var inp = document.getElementById('cm-' + id);
+  var text = inp.value.trim();
+  if (!text) return;
+  post('/api/projects/comment', { token: getToken(), id: id, text: text }, function (j) {
+    if (j.ok) { inp.value = ''; loadList(); }
+    else alert(j.msg || '评论失败');
+  });
+}
+
+function delProject(id) {
+  if (!confirm('确定删除这个作品？')) return;
+  post('/api/projects/del', { token: getToken(), id: id }, function (j) {
+    if (j.ok) { loadList(); }
+    else alert(j.msg || '删除失败');
+  });
+}
+
+/* 登录入口 */
+document.getElementById('loginLink').onclick = function () {
+  if (curUser) { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); updUserUI(); loadList(); return; }
+  openLogin();
+};
+
+/* 启动：读云端后端地址 + 拉取列表 */
+fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
+  .then(function (r) { return r.json(); })
+  .then(function (cfg) {
+    if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
+    updUserUI();
+    loadList();
+  })
+  .catch(function () { updUserUI(); loadList(); });
+
+document.getElementById('pubGo').onclick = doPublish;
+document.getElementById('q').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
+</script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v3"></script>
+</body>
+</html>

@@ -241,19 +241,12 @@ function spawnDm(item) {
 }
 
 function loadWall() {
-  cloudGetWall(function (cj) {
-    if (cj.ok) {
-      renderWall(cj.list);
-      // 本地后端在线时也同步一份最新数据
-      get('/api/wall', function (lj) {
-        if (lj.ok && lj.list && lj.list.length > cj.list.length) renderWall(lj.list);
-      });
-      return;
-    }
-    // 云端不可用→退回本地后端
-    get('/api/wall', function (j) {
-      if (!j.ok || !j.list) return;
-      renderWall(j.list);
+  // 云端后端(Worker/本地)优先：读写同源，数据一致
+  get('/api/wall', function (j) {
+    if (j.ok && j.list) { renderWall(j.list); return; }
+    // 云端后端不可用 → 兜底 GitHub 云端只读数据
+    cloudGetWall(function (cj) {
+      if (cj.ok && cj.list) renderWall(cj.list);
     });
   });
 }
@@ -338,25 +331,28 @@ function doPost() {
       document.getElementById('w-content').value = '';
       loadWall();
     } else {
-      document.getElementById('w-msg').textContent = (j.msg || '发布失败') + '（电脑未开机？）';
+      document.getElementById('w-msg').textContent = (j.msg || '发布失败') + '（服务暂不可用，稍后重试）';
     }
   });
 }
 
 
+function spawnNew(list) {
+  var stage = document.getElementById('stage');
+  if (!stage || stage.style.display === 'none') return;
+  list.forEach(function (x) {
+    if (x.pinned) return;
+    if (x.id !== undefined && DM_SPAWNED[x.id]) return;
+    spawnDm(x);
+  });
+}
 /* 自动轮询：每8秒增量刷新弹幕（不打断正在滚动的） */
 setInterval(function () {
   if (document.getElementById('dmMode').value === 'off') { loadWall(); return; }
-  // 仅拉列表并增量生成新弹幕
-  cloudGetWall(function (j) {
-    if (!j.ok || !j.list) return;
-    var stage = document.getElementById('stage');
-    if (!stage || stage.style.display === 'none') return;
-    j.list.forEach(function (x) {
-      if (x.pinned) return;
-      if (x.id !== undefined && DM_SPAWNED[x.id]) return;
-      spawnDm(x);
-    });
+  // 仅拉列表并增量生成新弹幕（优先云端后端，兜底GitHub只读）
+  get('/api/wall', function (j) {
+    if (!j.ok || !j.list) { cloudGetWall(function (c2) { if (c2.ok && c2.list) spawnNew(c2.list); }); return; }
+    spawnNew(j.list);
   });
 }, 8000);
 

@@ -7,85 +7,91 @@
 <style>
 *{box-sizing:border-box}
 body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
-.hd{background:#282a36;padding:16px 24px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:50}
-.hd h1{margin:0;font-size:20px;color:#50fa7b}
-.hd .st{font-size:12px;color:#bdc3c7;margin-top:2px}
-/* 分类标签 */
-.tabs{display:flex;gap:4px;background:#282a36;padding:0 24px;border-bottom:1px solid #44475a;overflow-x:auto}
-.tab{padding:10px 18px;font-size:13px;color:#bdc3c7;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
-.tab:hover{color:#e6e6e6}
-.tab.active{color:#50fa7b;border-bottom-color:#50fa7b;font-weight:700}
-/* 工具按钮区 */
-.toolbar{padding:14px 24px;display:flex;flex-wrap:wrap;gap:8px;min-height:56px}
-.tbtn{background:#282a36;border:1px solid #44475a;color:#e6e6e6;padding:8px 14px;font-size:12.5px;border-radius:8px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:6px}
-.tbtn:hover{border-color:#50fa7b;background:#1e1e2e;transform:translateY(-1px)}
-.tbtn .ic{font-size:15px}
-/* 模块区 */
-.module-area{padding:0 24px 30px}
-.module-hint{font-size:12px;color:#6272a4;margin-bottom:10px}
-.modules{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
-/* 单个模块 */
-.mod{background:#282a36;border:1px solid #44475a;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;animation:modIn .25s ease}
-@keyframes modIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.mod-hd{background:#1e1e2e;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #44475a}
-.mod-hd .title{font-size:13px;font-weight:700;color:#50fa7b;display:flex;align-items:center;gap:6px}
-.mod-hd .close{background:none;border:none;color:#ff5555;font-size:16px;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1}
-.mod-hd .close:hover{background:#ff555522}
-.mod-hd .open-new{background:none;border:none;color:#8be9fd;font-size:11px;cursor:pointer;margin-right:6px}
-.mod-hd .open-new:hover{text-decoration:underline}
-.mod-body{flex:1;min-height:400px;background:#fff;position:relative}
-.mod-body iframe{width:100%;height:100%;border:none;display:block;min-height:400px}
-.mod-body .loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#1e1e2e;color:#6272a4;font-size:13px}
-.empty-state{text-align:center;padding:60px 20px;color:#6272a4}
-.empty-state .big{font-size:48px;margin-bottom:12px}
-.empty-state p{font-size:14px;margin:4px 0}
-.foot{color:#6272a4;font-size:11px;text-align:center;padding:16px;border-top:1px solid #44475a}
-/* 免责弹窗 */
+.hd{background:#282a36;padding:20px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:24px;color:#50fa7b;letter-spacing:1px}
+.hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
+.wrap{max-width:1000px;margin:26px auto;padding:0 16px}
+.intro{background:#282a36;border-radius:10px;padding:16px 20px;margin-bottom:20px;border-left:4px solid #50fa7b}
+.intro h2{margin:0 0 6px;font-size:16px;color:#50fa7b}
+.intro p{margin:0;font-size:13px;color:#bdc3c7;line-height:1.6}
+.sec{margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+.sec .line{flex:1;height:1px;background:#44475a}
+.sec h2{margin:0;font-size:18px;color:#f1fa8c;white-space:nowrap}
+.sec .cnt{font-size:12px;color:#6272a4;background:#44475a;padding:2px 8px;border-radius:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.card{background:#282a36;border-radius:12px;padding:18px;border:1px solid #44475a;transition:.15s;cursor:pointer;display:block;text-decoration:none;color:inherit}
+.card:hover{transform:translateY(-3px);border-color:#50fa7b;box-shadow:0 6px 20px rgba(80,250,123,.12)}
+.card .ic{width:44px;height:44px;border-radius:10px;background:#1e1e2e;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px}
+.card h3{margin:0 0 5px;font-size:16px;color:#50fa7b}
+.card p{margin:0;font-size:12px;color:#bdc3c7;line-height:1.5}
+.card .go{display:inline-block;margin-top:10px;font-size:12px;color:#8be9fd;font-weight:600}
+.card .go::after{content:' →'}
+.card.admin{border-color:#ffd700}
+.card.admin h3{color:#ffd700}
+.foot{color:#6272a4;font-size:12px;margin-top:30px;text-align:center;padding-bottom:20px}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;z-index:99}
-.mbox{background:#282a36;border:2px solid #ff5555;border-radius:12px;padding:24px 28px;max-width:480px;width:94%;text-align:center;max-height:90vh;overflow-y:auto}
-.mbox h3{color:#ff5555;margin:0 0 12px;font-size:17px}
-.terms{text-align:left;max-height:260px;overflow-y:auto;margin:6px 0 10px;padding:10px 12px;background:#1e1e2e;border-radius:8px;border:1px solid #44475a}
-.terms p{font-size:12px;color:#c8ccd4;line-height:1.7;margin:0 0 6px}
+.mbox{background:#282a36;border:2px solid #ff5555;border-radius:12px;padding:26px 30px;max-width:520px;width:94%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.5);max-height:92vh;overflow-y:auto}
+.mbox h3{color:#ff5555;margin:0 0 14px;font-size:18px}
+.terms{text-align:left;max-height:300px;overflow-y:auto;margin:6px 0 12px;padding:10px 12px;background:#1e1e2e;border-radius:8px;border:1px solid #44475a}
+.terms p{font-size:12.5px;color:#c8ccd4;line-height:1.7;margin:0 0 8px;text-align:left}
 .terms p b{color:#ffb86c}
-.remember{display:flex;align-items:center;gap:6px;font-size:12px;color:#bdc3c7;cursor:pointer;justify-content:center}
-.remember input{width:13px;height:13px;accent-color:#50fa7b}
-.mbtns{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:9px 20px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer}
+.remember{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#bdc3c7;cursor:pointer;justify-content:center;margin-top:4px}
+.remember input{width:14px;height:14px;accent-color:#50fa7b;cursor:pointer}
+.mbtns{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 22px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer}
 .btn:hover{background:#69ff94}
 .btn-red{background:#ff5555;color:#fff}.btn-red:hover{background:#ff6e6e}
 </style>
 </head>
 <body>
 <div class="hd">
-  <div><h1>🛠️ Cr工具站</h1><div class="st">免费在线工具站 · 点击工具即在下方展开模块</div></div>
-  <div id="userBar" style="font-size:12px;color:#bdc3c7"></div>
+  <div><h1>🛠️ Cr工具站</h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
+  <div id="userBar" style="font-size:13px;color:#bdc3c7"></div>
 </div>
-
-<!-- 分类标签 -->
-<div class="tabs" id="tabs">
-  <div class="tab active" data-cat="tools">🔧 实用工具</div>
-  <div class="tab" data-cat="fun">🎮 休闲娱乐</div>
-  <div class="tab" data-cat="community">💬 社区交流</div>
-  <div class="tab" data-cat="download">📥 软件下载</div>
-</div>
-
-<!-- 工具按钮区 -->
-<div class="toolbar" id="toolbar"></div>
-
-<!-- 模块区 -->
-<div class="module-area">
-  <div class="module-hint" id="moduleHint">已打开 0/3 个模块 · 最多同时开3个，多了自动关最早的</div>
-  <div class="modules" id="modules"></div>
-  <div class="empty-state" id="emptyState">
-    <div class="big">📦</div>
-    <p>还没有打开任何模块</p>
-    <p>点击上方工具按钮，即可在这里展开使用</p>
+<div class="wrap">
+  <div class="intro">
+    <h2>欢迎使用 Cr工具站</h2>
+    <p>一个免费的在线工具集合站，包含实用工具、休闲小游戏、社区交流三大板块。所有工具纯本地处理或云端存储，无需注册即可使用大部分功能。</p>
   </div>
+
+  <div class="sec"><h2>🔧 实用工具</h2><span class="cnt">5个工具</span><div class="line"></div></div>
+  <div class="grid">
+    <a class="card" href="finder.html"><div class="ic">🔍</div><h3>网站查找器</h3><p>多顶级域域名占用状态扫描，探测域名是否被注册。</p><span class="go">进入工具</span></a>
+    <a class="card" href="combiner.html"><div class="ic">🧬</div><h3>域名组合器</h3><p>按关键词组合域名，搭配不同后缀，探测哪些可注册。</p><span class="go">进入工具</span></a>
+    <a class="card" href="codec.html"><div class="ic">🔐</div><h3>编码解码</h3><p>Base64、URL、HTML实体、Unicode编码解码，纯本地。</p><span class="go">进入工具</span></a>
+    <a class="card" href="file-convert.html"><div class="ic">📦</div><h3>文件转换</h3><p>图片格式转换、CSV↔JSON、文件哈希校验，全部本地。</p><span class="go">进入工具</span></a>
+    <a class="card" href="tools.html"><div class="ic">🧰</div><h3>更多工具</h3><p>二维码、密码生成、单位换算、时间戳、JSON格式化、图片压缩等。</p><span class="go">进入工具</span></a>
+  </div>
+
+  <div class="sec"><h2>🎮 休闲娱乐</h2><span class="cnt">5个工具</span><div class="line"></div></div>
+  <div class="grid">
+    <a class="card" href="games.html"><div class="ic">🎮</div><h3>小游戏合集</h3><p>贪吃蛇、2048、扫雷、俄罗斯方块、五子棋、生命游戏、粒子沙盒、双摆模拟等。支持触屏虚拟按键。</p><span class="go">开始游戏</span></a>
+    <a class="card" href="tools.html#calculator"><div class="ic">🔢</div><h3>计算器</h3><p>科学计算器，支持基础运算和函数计算。</p><span class="go">开始计算</span></a>
+    <a class="card" href="tools.html#dice"><div class="ic">🎲</div><h3>骰子</h3><p>虚拟骰子，支持多面骰和同时掷多个。</p><span class="go">掷骰子</span></a>
+    <a class="card" href="tools.html#wheel"><div class="ic">🎡</div><h3>大转盘</h3><p>自定义选项的幸运大转盘，帮你做决定。</p><span class="go">转一下</span></a>
+    <a class="card" href="tools.html#quote"><div class="ic">💬</div><h3>今日一言</h3><p>每日一句励志名言或有趣句子，刷新换一句。</p><span class="go">看一句</span></a>
+  </div>
+
+  <div class="sec"><h2>💬 社区交流</h2><span class="cnt">3个分区</span><div class="line"></div></div>
+  <div class="grid">
+    <a class="card" href="wall.html"><div class="ic">💬</div><h3>公开留言墙</h3><p>给站长或访客留言，弹幕滚动展示，所有内容公开可见。</p><span class="go">去留言</span></a>
+    <a class="card" href="share.html"><div class="ic">📦</div><h3>开源专区</h3><p>发布你的作品（存档、脚本、工具、创意），支持文件上传下载，与社区分享交流。</p><span class="go">去分享</span></a>
+    <a class="card" href="paste.html"><div class="ic">📋</div><h3>文本分享</h3><p>粘贴文字、代码、链接生成专属分享链接，发给别人即可查看。</p><span class="go">去分享</span></a>
+  </div>
+
+  <div class="sec"><h2>📥 软件下载</h2><span class="cnt">1个分区</span><div class="line"></div></div>
+  <div class="grid">
+    <a class="card" href="software.html"><div class="ic">📥</div><h3>本地软件</h3><p>钢4工具箱、钢4存档守护、鼠标宏、网络测速等本地工具，提供可执行程序下载。</p><span class="go">进入下载</span></a>
+  </div>
+
+  <div class="sec" id="adminSec" style="display:none"><h2>👑 管理中心</h2><span class="cnt">Server专属</span><div class="line"></div></div>
+  <div class="grid" id="adminGrid" style="display:none">
+    <a class="card admin" href="admin.html"><div class="ic">👑</div><h3>后台管理</h3><p>留言管理、用户管理、意见反馈、访问监控、半管理员权限设置。</p><span class="go">进入后台</span></a>
+  </div>
+
+  <div class="foot">Cr工具站 · 免费在线工具 · 免责声明：所有工具仅供参考，不对使用后果负责</div>
 </div>
 
-<div class="foot">Cr工具站 · 免费在线工具 · 免责声明：所有工具仅供参考，不对使用后果负责</div>
-
-<!-- 免责弹窗 -->
 <div class="modal" id="modal">
   <div class="mbox">
     <h3>⚠️ 使用条款与免责声明</h3>
@@ -105,157 +111,45 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 </div>
 
 <script>
-/* ---- 工具定义 ---- */
-var TOOLS = {
-  tools: [
-    {id:'finder', name:'网站查找器', icon:'🔍', url:'finder.html'},
-    {id:'combiner', name:'域名组合器', icon:'🧬', url:'combiner.html'},
-    {id:'codec', name:'编码解码', icon:'🔐', url:'codec.html'},
-    {id:'fileconvert', name:'文件转换', icon:'📦', url:'file-convert.html'},
-    {id:'moretools', name:'更多工具', icon:'🧰', url:'tools.html'},
-  ],
-  fun: [
-    {id:'games', name:'小游戏合集', icon:'🎮', url:'games.html'},
-    {id:'calculator', name:'计算器', icon:'🔢', url:'tools.html#calculator'},
-    {id:'dice', name:'骰子', icon:'🎲', url:'tools.html#dice'},
-    {id:'wheel', name:'大转盘', icon:'🎡', url:'tools.html#wheel'},
-    {id:'quote', name:'今日一言', icon:'💬', url:'tools.html#quote'},
-  ],
-  community: [
-    {id:'wall', name:'公开留言墙', icon:'💬', url:'wall.html'},
-    {id:'share', name:'开源专区', icon:'📦', url:'share.html'},
-    {id:'paste', name:'文本分享', icon:'📋', url:'paste.html'},
-  ],
-  download: [
-    {id:'software', name:'本地软件', icon:'📥', url:'software.html'},
-  ]
-};
-
-var MAX_MODULES = 3;
-var openModules = [];  // [{id, name, icon, url, el}]
-var currentCat = 'tools';
-
-/* ---- 渲染工具按钮 ---- */
-function renderToolbar(){
-  var tb = document.getElementById('toolbar');
-  var list = TOOLS[currentCat] || [];
-  tb.innerHTML = list.map(function(t){
-    return '<button class="tbtn" data-id="'+t.id+'"><span class="ic">'+t.icon+'</span>'+t.name+'</button>';
-  }).join('');
-  tb.querySelectorAll('.tbtn').forEach(function(btn){
-    btn.onclick = function(){ openModule(btn.dataset.id); };
-  });
-}
-
-/* ---- 分类切换 ---- */
-document.querySelectorAll('.tab').forEach(function(tab){
-  tab.onclick = function(){
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-    tab.classList.add('active');
-    currentCat = tab.dataset.cat;
-    renderToolbar();
-  };
-});
-
-/* ---- 模块管理 ---- */
-function openModule(id){
-  // 找工具定义
-  var tool = null;
-  for(var cat in TOOLS){
-    var found = TOOLS[cat].find(function(t){return t.id===id});
-    if(found){tool=found;break;}
-  }
-  if(!tool) return;
-
-  // 如果已经打开，就聚焦（不重复开）
-  var existing = openModules.find(function(m){return m.id===id});
-  if(existing){
-    existing.el.style.outline = '2px solid #50fa7b';
-    setTimeout(function(){existing.el.style.outline=''},800);
-    existing.el.scrollIntoView({behavior:'smooth',block:'nearest'});
-    return;
-  }
-
-  // 超过上限，关最早的
-  if(openModules.length >= MAX_MODULES){
-    var oldest = openModules.shift();
-    if(oldest && oldest.el && oldest.el.parentNode) oldest.el.parentNode.removeChild(oldest.el);
-  }
-
-  // 创建模块
-  var mod = document.createElement('div');
-  mod.className = 'mod';
-  mod.innerHTML =
-    '<div class="mod-hd">'+
-      '<span class="title">'+tool.icon+' '+tool.name+'</span>'+
-      '<span>'+
-        '<button class="open-new" title="新窗口打开">↗</button>'+
-        '<button class="close" title="关闭">✕</button>'+
-      '</span>'+
-    '</div>'+
-    '<div class="mod-body">'+
-      '<div class="loading">加载中...</div>'+
-      '<iframe src="'+tool.url+'" style="display:none" onload="this.style.display=\'block\';this.previousElementSibling.style.display=\'none\'"></iframe>'+
-    '</div>';
-
-  mod.querySelector('.close').onclick = function(){ closeModule(id); };
-  mod.querySelector('.open-new').onclick = function(){ window.open(tool.url,'_blank'); };
-
-  document.getElementById('modules').appendChild(mod);
-  document.getElementById('emptyState').style.display = 'none';
-
-  openModules.push({id:id, name:tool.name, icon:tool.icon, url:tool.url, el:mod});
-  updateHint();
-}
-
-function closeModule(id){
-  var idx = openModules.findIndex(function(m){return m.id===id});
-  if(idx >= 0){
-    var m = openModules[idx];
-    if(m.el && m.el.parentNode) m.el.parentNode.removeChild(m.el);
-    openModules.splice(idx,1);
-  }
-  if(openModules.length === 0){
-    document.getElementById('emptyState').style.display = 'block';
-  }
-  updateHint();
-}
-
-function updateHint(){
-  document.getElementById('moduleHint').textContent =
-    '已打开 '+openModules.length+'/'+MAX_MODULES+' 个模块 · 最多同时开'+MAX_MODULES+'个，多了自动关最早的';
-}
-
-/* ---- 用户栏 ---- */
-function refreshUserBar(){
-  var u = localStorage.getItem('cr_user');
-  var bar = document.getElementById('userBar');
-  if(u === 'Server'){
-    bar.innerHTML = '👑 <b style="color:#ffd700">Server</b> · <a href="admin.html" style="color:#8be9fd">后台</a>';
-  } else if(u){
-    bar.innerHTML = '🥈 <b style="color:#50fa7b">'+u+'</b>';
-  } else {
-    bar.innerHTML = '<a href="wall.html" style="color:#8be9fd">登录/注册</a>';
-  }
-}
-
-/* ---- 免责弹窗 ---- */
 function showModal(){document.getElementById('modal').style.display='flex'}
 function closeModal(){document.getElementById('modal').style.display='none'}
 function agree(){
   if(document.getElementById('remember').checked){localStorage.setItem('Cr工具站_已同意条款','1');}
-  closeModal();
+  closeModal();document.getElementById('msg').textContent='已同意条款 · 欢迎使用 Cr工具站';
 }
 function disagree(){
   closeModal();
-  document.querySelectorAll('.tbtn').forEach(function(b){b.style.pointerEvents='none';b.style.opacity=.4});
+  document.getElementById('msg').textContent='已拒绝条款，工具不可用';
+  document.querySelectorAll('.card').forEach(a=>{a.style.pointerEvents='none';a.style.opacity=.4});
 }
-
-/* ---- 启动 ---- */
-renderToolbar();
-if(localStorage.getItem('Cr工具站_已同意条款')!=='1'){showModal();}
-refreshUserBar();
-setInterval(refreshUserBar, 3000);
+function refreshUserBar(){
+  var u = localStorage.getItem('cr_user');
+  var bar = document.getElementById('userBar');
+  var adminSec = document.getElementById('adminSec');
+  var adminGrid = document.getElementById('adminGrid');
+  adminSec.style.display = 'none';
+  adminGrid.style.display = 'none';
+  if(u === 'Server'){
+    bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
+    adminSec.style.display = 'flex';
+    adminGrid.style.display = 'grid';
+  } else if(u){
+    bar.innerHTML = '🥈 <b style="color:#50fa7b">' + u + '</b>';
+  } else {
+    bar.innerHTML = '<a href="wall.html" style="color:#8be9fd">登录/注册</a>';
+  }
+}
+window.addEventListener('load',function(){
+  if(localStorage.getItem('Cr工具站_已同意条款')!=='1'){showModal();}
+  if(window.CrGH && window.CrGH.visitLog){
+    try{ window.CrGH.visitLog({page:location.pathname.split('/').pop()||'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
+  }
+  refreshUserBar();
+});
+window.addEventListener('pageshow',function(){ refreshUserBar(); });
+setInterval(refreshUserBar, 2000);
 </script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005h"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v8"></script>
 </body>
 </html>

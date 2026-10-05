@@ -81,7 +81,8 @@
   </div>
 </div>
 
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v4"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb.js?v=20261005v1"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v6"></script>
 <script>
 var CLOUD_REPO = 'CaesarPC/website-finder';
 var CLOUD_WALL = 'api_data/wall.json';
@@ -125,22 +126,18 @@ function cloudGet(cb) {
       if (!r.ok) throw 0;
       return r.json();
     }).then(function (j) {
-      cb(j && Array.isArray(j.list) ? j.list : []);
+      // 兼容两种格式：数组 或 {list:[...]}
+      cb(Array.isArray(j) ? j : (j && Array.isArray(j.list) ? j.list : []));
     }).catch(function () { next(); });
   }
   next();
 }
-/* 写入云端：通过本地后端代理同步 */
+/* 写入云端：直连 GitHub（站长关机也能用） */
 function cloudSave(list, cb) {
-  var apiUrl = localStorage.getItem('cr_api_url') || '';
-  if (!apiUrl) { cb(false, '电脑后端未连接'); return; }
-  fetch(apiUrl + '/api/wall/sync', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ list: list, token: localStorage.getItem('cr_token') })
-  }).then(function (r) { return r.json(); }).then(function (j) {
+  if (!window.CrGH) { cb(false, '数据层未加载'); return; }
+  window.CrGH.wallSync({ list: list, token: localStorage.getItem('cr_token') }, function (j) {
     cb(j.ok, j.msg || '');
-  }).catch(function () { cb(false, '后端连接失败'); });
+  });
 }
 
 function renderStats() {

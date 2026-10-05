@@ -4,12 +4,19 @@
  *   1. 访问上报（每次打开页面自动记录 IP/时间/来源/页面）
  *   2. 右上角用户栏：游客模式 / 注册 / 登录 / 退出
  *   3. 登录后备忘录：保存/读取自己的备忘录
- * 后端地址自动从 api_config.json 读取（由本地后端动态推送）
- * 后端不在线时全部静默降级，不影响网页正常使用
+ * 数据层：直接读写 GitHub 仓库（ghdb.js），站长电脑关机也能用
  * ========================================================= */
+
+/* 动态加载云端数据层（ghdb.js），确保在任何页面都可用 */
 (function () {
-  var CFG_URL = 'https://CaesarPC.github.io/website-finder/api_config.json';
-  var apiUrl = localStorage.getItem('cr_api_url') || '';
+  if (window.CrGH) return;
+  var s = document.createElement('script');
+  s.src = 'https://CaesarPC.github.io/website-finder/ghdb.js?v=20261005v1';
+  s.async = false;
+  (document.head || document.body).appendChild(s);
+})();
+
+(function () {
   var TOKEN_KEY = 'cr_token';
   var USER_KEY = 'cr_username';
 
@@ -18,52 +25,18 @@
   function getUsername() { return localStorage.getItem(USER_KEY) || ''; }
 
   function post(path, data, cb) {
-    if (!apiUrl) return cb && cb({ ok: false, msg: '服务暂不可用' });
-    fetch(apiUrl + path, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify(data)
-    }).then(function (r) { return r.json(); })
-      .then(function (j) { cb && cb(j); })
-      .catch(function () { cb && cb({ ok: false, msg: '网络错误' }); });
+    window.CrGH && CrGH.route('POST', path, data, cb);
   }
 
   function get(path, cb) {
-    if (!apiUrl) return cb && cb({ ok: false, msg: '服务暂不可用' });
-    fetch(apiUrl + path)
-      .then(function (r) { return r.json(); })
-      .then(function (j) { cb && cb(j); })
-      .catch(function () { cb && cb({ ok: false, msg: '网络错误' }); });
+    window.CrGH && CrGH.route('GET', path, null, cb);
   }
 
-  /* ---------- 读取后端地址 ---------- */
-  function loadApiConfig() {
-    fetch(CFG_URL, { cache: 'no-store' })
-      .then(function (r) { return r.json(); })
-      .then(function (cfg) {
-        if (cfg && cfg.api_url && cfg.online) {
-          apiUrl = cfg.api_url;
-          localStorage.setItem('cr_api_url', apiUrl);
-        }
-        doReport();
-      })
-      .catch(function () { doReport(); }); // 后端配置读不到就静默
-  }
-
-  /* ---------- 访问上报 ---------- */
+  /* ---------- 访问上报（直连 GitHub，静默失败） ---------- */
   function doReport() {
     var page = (location.pathname || '/').split('/').pop() || 'index.html';
-    if (!apiUrl) return;
-    var data = { page: page };
-    var fd = new FormData();
-    // 用 fetch 上报（静默失败）
     try {
-      fetch(apiUrl + '/api/report?page=' + encodeURIComponent(page), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{}',
-        keepalive: true
-      }).catch(function () {});
+      window.CrGH && CrGH.report(function () {});
     } catch (e) {}
   }
 
@@ -285,5 +258,5 @@
 
   /* 启动 */
   refresh();
-  loadApiConfig();
+  doReport();
 })();

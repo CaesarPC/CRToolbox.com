@@ -11,7 +11,7 @@
 (function () {
   if (window.CrGH) return;
   var s = document.createElement('script');
-  s.src = 'https://CaesarPC.github.io/website-finder/ghdb.js?v=20261005v2';
+  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js';
   s.async = false;
   (document.head || document.body).appendChild(s);
 })();

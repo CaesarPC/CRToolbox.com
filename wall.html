@@ -38,6 +38,8 @@ textarea{min-height:80px;resize:vertical}
 .dm .nm{color:#8be9fd;font-weight:bold;margin-right:6px}
 .dm.admin{background:rgba(255,215,0,.12);border-color:#ffd700;color:#ffe97a;font-weight:bold}
 .dm.admin .nm{color:#ffd700}
+.dm.mod{background:rgba(255,215,0,.08);border-color:#ffd700;color:#f0e68c}
+.dm.mod .nm{color:#ffd700}
 .dm.bold{font-weight:bold}
 /* 留言列表(非弹幕模式备用) */
 .list{display:none}
@@ -47,6 +49,8 @@ textarea{min-height:80px;resize:vertical}
 .item .ct{margin-top:8px;font-size:14px;line-height:1.6;word-break:break-word;white-space:pre-wrap}
 .item.admin{border-color:#ffd700;background:#2d2130}
 .item.admin .nm{color:#ffd700}
+.item.mod{border-color:#ffd700;background:#2a2530}
+.item.mod .nm{color:#ffd700}
 .badge{display:inline-block;background:#ffd700;color:#1e1e2e;font-size:11px;font-weight:bold;border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:middle}
 .pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
 .toggle{color:#8be9fd;cursor:pointer;font-size:12.5px;text-decoration:underline;margin-left:10px}
@@ -319,11 +323,11 @@ function spawnDm(item) {
   if (item.id !== undefined) DM_SPAWNED[item.id] = true;
 
   var el = document.createElement('div');
-  var bCls = item.admin ? 'admin' : '';
+  var bCls = item.admin ? 'admin' : (item.mod ? 'mod' : '');
   if (bold === 'bold' || bold === 'heavy') bCls += ' bold';
   el.className = 'dm ' + bCls;
   el.innerHTML = '<span class="nm">' + esc(item.name) +
-    (item.admin ? ' \uD83D\uDC51' : '') + '</span>' + esc(item.content);
+    (item.admin ? ' \uD83D\uDC51' : (item.mod ? ' \uD83E\uDD48' : '')) + '</span>' + esc(item.content);
   el.style.top = (idx * DM_TRACK_H + 2) + 'px';
   stage.appendChild(el);
 
@@ -373,7 +377,7 @@ function renderWall(list) {
       var h = '';
       pins.forEach(function (x) {
         h += '<div class="pin-item"><span class="nm">' + esc(x.name) +
-          (x.admin ? ' <span class="badge">👑 管理员</span>' : '') + '</span>' +
+          (x.admin ? ' <span class="badge">👑 管理员</span>' : (x.mod ? ' <span class="badge">🥈 半管理员</span>' : '')) + '</span>' +
           '<span class="tm">' + esc(x.time) + '</span>' +
           (isAdmin ? '<button class="pin-btn" onclick="togglePin(' + x.id + ',false)">取消置顶</button>' : '') +
           '<div class="ct">' + esc(x.content) + '</div></div>';
@@ -390,8 +394,8 @@ function renderWall(list) {
       listEl.style.display = 'block';
       var hh = '';
       items.forEach(function (x) {
-        hh += '<div class="item' + (x.admin ? ' admin' : '') + '"><span class="nm">' + esc(x.name) +
-          (x.admin ? ' <span class="badge">👑 管理员</span>' : '') + '</span>' +
+        hh += '<div class="item' + (x.admin ? ' admin' : (x.mod ? ' mod' : '')) + '"><span class="nm">' + esc(x.name) +
+          (x.admin ? ' <span class="badge">👑 管理员</span>' : (x.mod ? ' <span class="badge">🥈 半管理员</span>' : '')) + '</span>' +
           '<span class="tm">' + esc(x.time) + '</span>' +
           (isAdmin ? '<button class="pin-btn" onclick="togglePin(' + x.id + ',' + (x.pinned ? 'false' : 'true') + ')">' + (x.pinned ? '取消置顶' : '置顶') + '</button>' : '') +
           '<div class="ct">' + esc(x.content) + '</div></div>';
@@ -474,7 +478,7 @@ setInterval(function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005e';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005f';
     s.onload = function () { setupAdmin(); setupEgg67(); loadWall(); };
     s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
     (document.head || document.body).appendChild(s);

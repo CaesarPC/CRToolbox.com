@@ -126,6 +126,25 @@
   function ok(obj) { var o = obj || {}; o.ok = true; return o; }
   function fail(msg) { return { ok: false, msg: msg }; }
 
+  /* ---------- 更改密码验证（所有写操作必须通过） ---------- */
+  var SECURITY_CACHE = null;
+  function verifyChangePassword(pwd, cb) {
+    if (!pwd) return cb(false, '请输入更改密码');
+    function check(sec) {
+      sha256(String(pwd)).then(function (h) {
+        if (h === sec.change_password_hash) return cb(true, '更改密码验证通过');
+        if (h === sec.emergency_password_hash) return cb(true, '应急密码验证通过');
+        cb(false, '更改密码错误');
+      });
+    }
+    if (SECURITY_CACHE) return check(SECURITY_CACHE);
+    ghRead('api_data/security.json', function (err, sec) {
+      if (err || !sec) return cb(false, '安全配置读取失败');
+      SECURITY_CACHE = sec;
+      check(sec);
+    });
+  }
+
   /* 会话查询 */
   function usernameByToken(token, cb) {
     if (!token) return cb('');
@@ -157,7 +176,7 @@
         var now = Date.now();
         var recent = list.filter(function (x) {
           var t = Number(x.ts) || (x.id ? Number(x.id) : 0);
-          return (x.who || x.name) === who && (now - t) < 600000;   // 10分钟内的发言
+          return (x.who || x.name) === who && (now - t) < 600000;
         });
         if (recent.length >= 5) return cb(fail('发言太频繁了，请 10 分钟后再试试'));
         var same = recent.filter(function (x) { return (x.content || '') === content; }).length;
@@ -173,23 +192,20 @@
           mod: false,
           pinned: false
         };
-        /* 如果发布者是注册用户，查其角色是否为半管理员 */
         if (username && username !== 'Server') {
           ghRead('api_data/users.json', function (e3, users) {
             if (!e3 && users && users[username] && users[username].role === 'mod') {
               item.mod = true;
             }
             list.unshift(item);
-            var trimmed = list.slice(0, 300);
-            ghWrite('api_data/wall.json', trimmed, function (e2) {
+            ghWrite('api_data/wall.json', list.slice(0, 300), function (e2) {
               if (e2) return cb(fail(e2.error));
               cb(ok({ msg: '留言成功', id: item.id }));
             });
           });
         } else {
           list.unshift(item);
-          var trimmed = list.slice(0, 300);
-          ghWrite('api_data/wall.json', trimmed, function (e2) {
+          ghWrite('api_data/wall.json', list.slice(0, 300), function (e2) {
             if (e2) return cb(fail(e2.error));
             cb(ok({ msg: '留言成功', id: item.id }));
           });
@@ -591,6 +607,19 @@
       if (p === 'admin/visits') return adminVisitsList({ token: q.token }, cb);
       return cb(fail('接口不存在: ' + p));
     }
+    /* ---- 写操作统一更改密码验证（login/register/visit/log 除外） ---- */
+    var WRITE_OPS = ['wall','wall/pin','wall/sync','note','feedback','projects','projects/comment','projects/del','admin/user/reset','admin/user/delete','admin/user/setrole'];
+    if (WRITE_OPS.indexOf(p) >= 0) {
+      var cp = data && data.changePassword;
+      var done = false;
+      verifyChangePassword(cp, function (pass, msg) {
+        if (done) return; done = true;
+        if (!pass) return cb(fail(msg));
+        dispatchWrite();
+      });
+      return;
+    }
+    function dispatchWrite() {
     switch (p) {
       case 'wall': return wallPost(data, cb);
       case 'wall/pin': return wallPin(data, cb);
@@ -607,6 +636,7 @@
       case 'admin/user/setrole': return adminUserSetRole(data, cb);
       case 'visit/log': return visitLog(data, cb);
       default: return cb(fail('接口不存在: ' + p));
+    }
     }
   }
 

@@ -170,14 +170,30 @@
           content: content,
           time: nowStr(),
           admin: username === 'Server',
+          mod: false,
           pinned: false
         };
-        list.unshift(item);
-        var trimmed = list.slice(0, 300);
-        ghWrite('api_data/wall.json', trimmed, function (e2) {
-          if (e2) return cb(fail(e2.error));
-          cb(ok({ msg: '留言成功', id: item.id }));
-        });
+        /* 如果发布者是注册用户，查其角色是否为半管理员 */
+        if (username && username !== 'Server') {
+          ghRead('api_data/users.json', function (e3, users) {
+            if (!e3 && users && users[username] && users[username].role === 'mod') {
+              item.mod = true;
+            }
+            list.unshift(item);
+            var trimmed = list.slice(0, 300);
+            ghWrite('api_data/wall.json', trimmed, function (e2) {
+              if (e2) return cb(fail(e2.error));
+              cb(ok({ msg: '留言成功', id: item.id }));
+            });
+          });
+        } else {
+          list.unshift(item);
+          var trimmed = list.slice(0, 300);
+          ghWrite('api_data/wall.json', trimmed, function (e2) {
+            if (e2) return cb(fail(e2.error));
+            cb(ok({ msg: '留言成功', id: item.id }));
+          });
+        }
       });
     });
   }
@@ -268,7 +284,7 @@
       if (users[username]) return cb(fail('用户名已被注册'));
       var salt = randToken();
       sha256(password + '::' + salt).then(function (hash) {
-        users[username] = { salt: salt, hash: hash, created: nowStr() };
+        users[username] = { salt: salt, hash: hash, created: nowStr(), role: 'user' };
         ghWrite('api_data/users.json', users, function (e2) {
           if (e2) return cb(fail(e2.error));
           var token = randToken();
@@ -437,9 +453,9 @@
       ghRead('api_data/users.json', function (err, users) {
         if (err) return cb(fail(err.error));
         users = users || {};
-        var out = [{ username: 'Server', regTime: '系统账号', admin: true }];
+        var out = [{ username: 'Server', regTime: '系统账号', admin: true, role: 'admin' }];
         Object.keys(users).forEach(function (k) {
-          out.push({ username: k, regTime: users[k].created || '', admin: false });
+          out.push({ username: k, regTime: users[k].created || '', admin: false, role: users[k].role || 'user' });
         });
         cb(ok({ list: out }));
       });
@@ -488,6 +504,26 @@
             }
           });
           cb(ok({ msg: '用户已删除' }));
+        });
+      });
+    });
+  }
+  function adminUserSetRole(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      var target = String(data.username || '').trim();
+      var role = String(data.role || '').trim();
+      if (!target || !role) return cb(fail('用户名和角色不能为空'));
+      if (target === 'Server') return cb(fail('不能修改 Server 角色'));
+      if (role !== 'user' && role !== 'mod') return cb(fail('角色只能是 user 或 mod'));
+      ghRead('api_data/users.json', function (err, users) {
+        if (err) return cb(fail(err.error));
+        users = users || {};
+        if (!users[target]) return cb(fail('用户不存在'));
+        users[target].role = role;
+        ghWrite('api_data/users.json', users, function (e2) {
+          if (e2) return cb(fail(e2.error));
+          cb(ok({ msg: role === 'mod' ? '已升级为半管理员' : '已降级为普通用户' }));
         });
       });
     });
@@ -568,6 +604,7 @@
       case 'projects/del': return projectDel(data, cb);
       case 'admin/user/reset': return adminUserReset(data, cb);
       case 'admin/user/delete': return adminUserDelete(data, cb);
+      case 'admin/user/setrole': return adminUserSetRole(data, cb);
       case 'visit/log': return visitLog(data, cb);
       default: return cb(fail('接口不存在: ' + p));
     }
@@ -583,7 +620,7 @@
     report: report,
     projectsList: projectsList, projectCreate: projectCreate,
     projectComment: projectComment, projectDel: projectDel,
-    adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete,
+    adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete, adminUserSetRole: adminUserSetRole,
     adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
     visitLog: visitLog
   };

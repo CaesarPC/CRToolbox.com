@@ -64,7 +64,7 @@ textarea{min-height:80px;resize:vertical}
     <h3>👑 管理员控制</h3>
     <label>弹幕模式 <select id="dmMode"><option value="on">开启</option><option value="off">关闭(列表模式)</option></select></label>
     <label>字体粗细 <select id="dmBold"><option value="normal">正常</option><option value="bold">加粗</option><option value="heavy">特粗</option></select></label>
-    <label>弹幕位置 <select id="dmPos"><option value="top">顶部</option><option value="mid">中部</option><option value="bottom">底部</option><option value="full">全屏随机</option></select></label>
+    <label>弹幕位置 <select id="dmPos"><option value="top">顶部</option><option value="mid">中部</option><option value="bottom">底部</option><option value="full" selected>全屏随机</option></select></label>
     <label>弹幕速度 <select id="dmSpeed"><option value="fast">快</option><option value="mid" selected>中</option><option value="slow">慢</option></select></label>
   </div>
   <div class="box">
@@ -151,7 +151,9 @@ var DM_SPAWNED = {};       // 已生成的弹幕id(去重，供增量刷新)
 
 function dmTrackCount() {
   var stage = document.getElementById('stage');
-  return Math.max(1, Math.floor((stage.clientHeight || DM_BASE_STAGE_H) / DM_TRACK_H));
+  // 优先取 style.height（同步可信），reflow 延迟时 clientHeight 可能滞后
+  var h = parseFloat(stage.style.height) || stage.clientHeight || DM_BASE_STAGE_H;
+  return Math.max(1, Math.floor(h / DM_TRACK_H));
 }
 /* 根据舞台里实际的弹幕重建轨道占用表（扩展/收缩舞台后调用，避免重叠） */
 function dmRebuildTracks() {
@@ -193,7 +195,7 @@ function dmSpawnPending() {
 /* 弹幕太多轨道不够：先把舞台往下延伸一行区域，再试分配 */
 function dmExtendStage() {
   var stage = document.getElementById('stage');
-  var curH = stage.clientHeight || DM_BASE_STAGE_H;
+  var curH = parseFloat(stage.style.height) || stage.clientHeight || DM_BASE_STAGE_H;
   if (curH >= DM_MAX_STAGE_H) return false;      // 已到上限
   stage.style.height = Math.min(curH + DM_TRACK_H * 4, DM_MAX_STAGE_H) + 'px';
   dmRebuildTracks();
@@ -210,7 +212,7 @@ function dmEvictOldest() {
 /* 弹幕变少时把舞台慢慢收回去（不影响正在滚动的，只回收下方空区） */
 function dmShrinkIfIdle() {
   var stage = document.getElementById('stage');
-  var curH = stage.clientHeight || DM_BASE_STAGE_H;
+  var curH = parseFloat(stage.style.height) || stage.clientHeight || DM_BASE_STAGE_H;
   if (curH <= DM_BASE_STAGE_H) return;
   var n = dmTrackCount();
   var used = 0;
@@ -409,7 +411,7 @@ setInterval(function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005b';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005c';
     s.onload = function () { setupAdmin(); loadWall(); };
     s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
     (document.head || document.body).appendChild(s);

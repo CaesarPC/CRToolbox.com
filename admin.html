@@ -135,7 +135,7 @@
   </div>
 </div>
 
-<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005f"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005g"></script>
 <script>
 var CLOUD_REPO = 'CaesarPC/website-finder';
 var CLOUD_WALL = 'api_data/wall.json';
@@ -154,6 +154,15 @@ function fetchT(url, ms) {
   var c = new AbortController();
   var t = setTimeout(function () { c.abort(); }, ms || 12000);
   return fetch(url, { cache: 'no-store', signal: c.signal }).then(function (r) { clearTimeout(t); return r; });
+}
+
+/* 更改密码（所有写操作需要） */
+var _cachedCP = '';
+function getChangePassword() {
+  if (_cachedCP) return _cachedCP;
+  var cp = prompt('请输入更改密码（后台写操作需要验证）：');
+  if (cp) _cachedCP = cp;
+  return cp || '';
 }
 
 /* 标签切换 */
@@ -253,7 +262,7 @@ function togglePin(id, pinned) {
   if (!it) return;
   it.pinned = pinned;
   if (!window.CrGH) return;
-  window.CrGH.wallPin({ id: id, pinned: pinned, token: adminToken }, function (j) {
+  window.CrGH.wallPin({ id: id, pinned: pinned, token: adminToken, changePassword: getChangePassword() }, function (j) {
     if (j.ok) { renderWall(); alert(pinned ? '已置顶 📌' : '已取消置顶'); }
     else alert(j.msg || '操作失败');
   });
@@ -262,7 +271,7 @@ function delOne(id) {
   if (!confirm('确定删除这条留言？')) return;
   wallList = wallList.filter(function (x) { return x.id !== id; });
   if (!window.CrGH) return;
-  window.CrGH.wallSync({ list: wallList, token: adminToken }, function (j) {
+  window.CrGH.wallSync({ list: wallList, token: adminToken, changePassword: getChangePassword() }, function (j) {
     if (j.ok) { renderWall(); alert('已删除'); }
     else alert(j.msg || '同步失败');
   });
@@ -271,7 +280,7 @@ function clearAllWall() {
   if (!confirm('确定清空全部留言？此操作不可恢复！')) return;
   wallList = [];
   if (!window.CrGH) return;
-  window.CrGH.wallSync({ list: [], token: adminToken }, function (j) {
+  window.CrGH.wallSync({ list: [], token: adminToken, changePassword: getChangePassword() }, function (j) {
     if (j.ok) { renderWall(); alert('已清空'); }
     else alert(j.msg || '同步失败');
   });
@@ -311,7 +320,7 @@ function resetPass(username) {
   if (!np) return;
   if (np.length < 4) { alert('密码至少4位'); return; }
   if (!window.CrGH) return;
-  window.CrGH.adminUserReset({ username: username, password: np, token: adminToken }, function (j) {
+  window.CrGH.adminUserReset({ username: username, password: np, token: adminToken, changePassword: getChangePassword() }, function (j) {
     alert(j.ok ? '密码已重置为: ' + np : (j.msg || '操作失败'));
     if (j.ok) loadUsers();
   });
@@ -319,7 +328,7 @@ function resetPass(username) {
 function delUser(username) {
   if (!confirm('确定删除用户 ' + username + '？该用户的所有登录状态将失效！')) return;
   if (!window.CrGH) return;
-  window.CrGH.adminUserDelete({ username: username, token: adminToken }, function (j) {
+  window.CrGH.adminUserDelete({ username: username, token: adminToken, changePassword: getChangePassword() }, function (j) {
     alert(j.ok ? '用户已删除' : (j.msg || '操作失败'));
     if (j.ok) loadUsers();
   });
@@ -328,7 +337,7 @@ function setRole(username, role) {
   var tip = role === 'mod' ? '升级为半管理员（金色框、无皇冠、不能置顶）' : '降级为普通用户';
   if (!confirm('确定将 ' + username + ' ' + tip + '？')) return;
   if (!window.CrGH) return;
-  window.CrGH.adminUserSetRole({ username: username, role: role, token: adminToken }, function (j) {
+  window.CrGH.adminUserSetRole({ username: username, role: role, token: adminToken, changePassword: getChangePassword() }, function (j) {
     alert(j.ok ? j.msg : (j.msg || '操作失败'));
     if (j.ok) loadUsers();
   });

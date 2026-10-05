@@ -323,7 +323,10 @@ function startSpin(){if(!spinOpts.length){alert('先生成转盘');return;}var t
   function anim(){var p=Math.min(1,(Date.now()-start)/dur);var ease=1-Math.pow(1-p,3);var rot=startRot+ease*target;
     drawSpin(rot);
     if(p<1){requestAnimationFrame(anim);}
-    else{var n=spinOpts.length,arc=2*Math.PI/n;var idx=Math.floor(((2*Math.PI-(rot%(2*Math.PI)))%(2*Math.PI))/arc)%n;
+    else{var n=spinOpts.length,arc=2*Math.PI/n;
+      /* 指针固定在顶部(3π/2方向)：先算指针所指的转盘位置，再归一到[0,2π) */
+      var pos=((3*Math.PI/2-(rot%(2*Math.PI)))%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+      var idx=Math.floor(pos/arc+1e-9)%n;  /* +1e-9 防浮点边界误差 */
       document.getElementById('spin-result').textContent='🎯 结果：'+spinOpts[idx];}}
   anim();}
 

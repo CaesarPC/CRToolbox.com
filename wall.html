@@ -33,7 +33,7 @@ textarea{min-height:80px;resize:vertical}
 .pin-item .badge{display:inline-block;background:#ffd700;color:#1e1e2e;font-size:11px;font-weight:bold;border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:middle}
 .pin-item .pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
 /* 弹幕舞台 */
-.stage{position:relative;height:420px;overflow:hidden;background:#1a1a24;border-radius:12px;border:1px solid #44475a;margin-bottom:14px}
+.stage{position:relative;min-height:420px;height:420px;overflow:hidden;background:#1a1a24;border-radius:12px;border:1px solid #44475a;margin-bottom:14px}
 .dm{position:absolute;left:0;top:0;white-space:nowrap;max-width:80%;overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:6px 14px;border-radius:20px;background:rgba(40,42,54,.85);border:1px solid #44475a;color:#e6e6e6;will-change:transform}
 .dm .nm{color:#8be9fd;font-weight:bold;margin-right:6px}
 .dm.admin{background:rgba(255,215,0,.12);border-color:#ffd700;color:#ffe97a;font-weight:bold}
@@ -140,20 +140,33 @@ function setupAdmin() {
   }
 }
 
-/* 生成弹幕：rAF 一帧帧驱动，从右侧屏幕外滑到左侧完全消失 */
-/* ===== 轨道制弹幕 ===== */
+/* 生成弹幕：rAF 一帧帧驱动，从右侧屏幕外滑到左侧，到达后循环重新从右侧进入（不再消失） */
+/* ===== 轨道制弹幕（支持循环滚动 + 动态向下扩展） ===== */
 var DM_TRACK_H = 34;       // 每条轨道高度(px)，弹幕高度约33px
+var DM_BASE_STAGE_H = 420; // 基础舞台高度
+var DM_MAX_STAGE_H = 1560; // 舞台最高可扩展到约46条轨道
 var DM_TRACKS = [];        // 轨道占用状态: true=占用
 var DM_PENDING = [];       // 排队中的弹幕
 var DM_SPAWNED = {};       // 已生成的弹幕id(去重，供增量刷新)
 
 function dmTrackCount() {
   var stage = document.getElementById('stage');
-  return Math.max(1, Math.floor((stage.clientHeight || 420) / DM_TRACK_H));
+  return Math.max(1, Math.floor((stage.clientHeight || DM_BASE_STAGE_H) / DM_TRACK_H));
+}
+/* 根据舞台里实际的弹幕重建轨道占用表（扩展/收缩舞台后调用，避免重叠） */
+function dmRebuildTracks() {
+  var n = dmTrackCount();
+  DM_TRACKS = new Array(n).fill(false);
+  var els = document.querySelectorAll('.dm');
+  for (var i = 0; i < els.length; i++) {
+    var t = parseInt(els[i].style.top, 10);
+    var idx = Math.floor(t / DM_TRACK_H);
+    if (idx >= 0 && idx < n) DM_TRACKS[idx] = true;
+  }
 }
 function dmFreeTrack(from, to) {
   var n = dmTrackCount();
-  if (DM_TRACKS.length !== n) DM_TRACKS = new Array(n).fill(false);
+  if (DM_TRACKS.length !== n) dmRebuildTracks();
   for (var i = from; i <= to && i < n; i++) if (!DM_TRACKS[i]) return i;
   return -1;
 }
@@ -177,8 +190,40 @@ function dmSpawnPending() {
     }
   }
 }
+/* 弹幕太多轨道不够：先把舞台往下延伸一行区域，再试分配 */
+function dmExtendStage() {
+  var stage = document.getElementById('stage');
+  var curH = stage.clientHeight || DM_BASE_STAGE_H;
+  if (curH >= DM_MAX_STAGE_H) return false;      // 已到上限
+  stage.style.height = Math.min(curH + DM_TRACK_H * 4, DM_MAX_STAGE_H) + 'px';
+  dmRebuildTracks();
+  return true;
+}
+/* 舞台到上限且仍无空轨道：淘汰最旧的一条弹幕，给新弹幕让位 */
+function dmEvictOldest() {
+  var els = document.querySelectorAll('.dm');
+  if (!els.length) return;
+  var el = els[0];              // 最早生成的弹幕
+  if (el.parentNode) el.parentNode.removeChild(el);
+  dmRebuildTracks();
+}
+/* 弹幕变少时把舞台慢慢收回去（不影响正在滚动的，只回收下方空区） */
+function dmShrinkIfIdle() {
+  var stage = document.getElementById('stage');
+  var curH = stage.clientHeight || DM_BASE_STAGE_H;
+  if (curH <= DM_BASE_STAGE_H) return;
+  var n = dmTrackCount();
+  var used = 0;
+  DM_TRACKS.forEach(function (v) { if (v) used++; });
+  var need = Math.max(used, DM_PENDING.length + 1);
+  var target = Math.max(DM_BASE_STAGE_H, Math.min(curH, need * DM_TRACK_H + 20));
+  if (target < curH) {
+    stage.style.height = target + 'px';
+    dmRebuildTracks();
+  }
+}
 
-/* 生成弹幕：轨道分配 + rAF 平滑滚动，右进左出 */
+/* 生成弹幕：轨道分配 + rAF 平滑滚动，右进左出，到达左侧后循环重播 */
 function spawnDm(item) {
   var stage = document.getElementById('stage');
   if (!stage || !item) return;
@@ -189,9 +234,21 @@ function spawnDm(item) {
   var rng = dmPickRange(pos);
   var idx = dmFreeTrack(rng[0], rng[1]);
   if (idx < 0) {
-    item._pos = pos;
-    DM_PENDING.push(item);          // 无空轨道 → 排队
-    return;
+    // 无空轨道 → 先往下扩展舞台，再试一次；仍不行就淘汰最旧的
+    if (dmExtendStage()) {
+      rng = dmPickRange(pos);
+      idx = dmFreeTrack(rng[0], rng[1]);
+    }
+    if (idx < 0) {
+      dmEvictOldest();
+      rng = dmPickRange(pos);
+      idx = dmFreeTrack(rng[0], rng[1]);
+    }
+    if (idx < 0) {
+      item._pos = pos;
+      DM_PENDING.push(item);          // 真没位置 → 排队等待
+      return;
+    }
   }
   DM_TRACKS[idx] = true;
   if (item.id !== undefined) DM_SPAWNED[item.id] = true;
@@ -214,11 +271,13 @@ function spawnDm(item) {
   var t0 = performance.now();
   el.style.transform = 'translateX(' + startX + 'px)';
   function frame(now) {
+    if (!el.parentNode) return;      // 已被淘汰移除，停止
     var dx = (now - t0) * pxPerMs;
     if (dx >= dist) {
-      if (el.parentNode) el.parentNode.removeChild(el);
-      DM_TRACKS[idx] = false;      // 释放轨道
-      dmSpawnPending();            // 唤醒排队的
+      // 循环：到达左侧后瞬间回到右侧重新播放，弹幕一直滚动不消失
+      t0 = now;
+      el.style.transform = 'translateX(' + startX + 'px)';
+      requestAnimationFrame(frame);
       return;
     }
     el.style.transform = 'translateX(' + (startX - dx) + 'px)';
@@ -311,14 +370,15 @@ function doPost() {
     time: new Date().toLocaleString('zh-CN', { hour12: false }),
     admin: getUsername() === 'Server'
   };
-  /* 写入本地后端（在线时同步到云端） */
+  /* 写入云端（直连 GitHub，站长关机也能用） */
   post('/api/wall', { name: name, content: content, token: getToken() }, function (j) {
     if (j.ok) {
       document.getElementById('w-msg').textContent = '✅ 留言成功！';
       document.getElementById('w-content').value = '';
       loadWall();
     } else {
-      document.getElementById('w-msg').textContent = (j.msg || '发布失败') + '（服务暂不可用，稍后重试）';
+      // 直接显示权威层返回的提示（如刷屏/重复防御），无提示时才补通用文案
+      document.getElementById('w-msg').textContent = j.msg || '发布失败，请稍后重试';
     }
   });
 }
@@ -336,6 +396,8 @@ function spawnNew(list) {
 /* 自动轮询：每8秒增量刷新弹幕（不打断正在滚动的） */
 setInterval(function () {
   if (document.getElementById('dmMode').value === 'off') { loadWall(); return; }
+  // 弹幕少了就回收舞台空区
+  dmShrinkIfIdle();
   // 仅拉列表并增量生成新弹幕（优先云端后端，兜底GitHub只读）
   get('/api/wall', function (j) {
     if (!j.ok || !j.list) { cloudGetWall(function (c2) { if (c2.ok && c2.list) spawnNew(c2.list); }); return; }
@@ -347,7 +409,7 @@ setInterval(function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005b';
     s.onload = function () { setupAdmin(); loadWall(); };
     s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
     (document.head || document.body).appendChild(s);

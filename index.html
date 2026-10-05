@@ -10,25 +10,31 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 .hd{background:#282a36;padding:20px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .hd h1{margin:0;font-size:24px;color:#50fa7b;letter-spacing:1px}
 .hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
-.wrap{max-width:1000px;margin:26px auto;padding:0 16px}
+.wrap{max-width:900px;margin:26px auto;padding:0 16px}
 .intro{background:#282a36;border-radius:10px;padding:16px 20px;margin-bottom:20px;border-left:4px solid #50fa7b}
 .intro h2{margin:0 0 6px;font-size:16px;color:#50fa7b}
 .intro p{margin:0;font-size:13px;color:#bdc3c7;line-height:1.6}
-.sec{margin:28px 0 14px;display:flex;align-items:center;gap:10px}
-.sec .line{flex:1;height:1px;background:#44475a}
-.sec h2{margin:0;font-size:18px;color:#f1fa8c;white-space:nowrap}
-.sec .cnt{font-size:12px;color:#6272a4;background:#44475a;padding:2px 8px;border-radius:10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.card{background:#282a36;border-radius:12px;padding:18px;border:1px solid #44475a;transition:.15s;cursor:pointer;display:block;text-decoration:none;color:inherit}
-.card:hover{transform:translateY(-3px);border-color:#50fa7b;box-shadow:0 6px 20px rgba(80,250,123,.12)}
-.card .ic{width:44px;height:44px;border-radius:10px;background:#1e1e2e;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px}
-.card h3{margin:0 0 5px;font-size:16px;color:#50fa7b}
-.card p{margin:0;font-size:12px;color:#bdc3c7;line-height:1.5}
-.card .go{display:inline-block;margin-top:10px;font-size:12px;color:#8be9fd;font-weight:600}
-.card .go::after{content:' →'}
-.card.admin{border-color:#ffd700}
-.card.admin h3{color:#ffd700}
+/* 大模块卡片 */
+.bigcard{background:#282a36;border-radius:14px;border:1px solid #44475a;margin-bottom:18px;overflow:hidden;transition:.15s}
+.bigcard:hover{border-color:#50fa7b;box-shadow:0 6px 24px rgba(80,250,123,.1)}
+.bigcard-hd{padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #44475a;background:#1e1e2e}
+.bigcard-hd .ic{font-size:28px}
+.bigcard-hd .info h2{margin:0;font-size:18px;color:#50fa7b}
+.bigcard-hd .info p{margin:2px 0 0;font-size:12px;color:#6272a4}
+.bigcard-hd .cnt{margin-left:auto;font-size:11px;color:#6272a4;background:#44475a;padding:3px 10px;border-radius:10px}
+/* 大卡片里的小功能入口 */
+.bigcard-body{padding:16px 20px;display:flex;flex-wrap:wrap;gap:10px}
+.mini{display:flex;align-items:center;gap:8px;background:#1e1e2e;border:1px solid #44475a;border-radius:10px;padding:10px 14px;cursor:pointer;transition:.12s;text-decoration:none;color:inherit;min-width:140px}
+.mini:hover{border-color:#50fa7b;background:#282a36;transform:translateY(-2px)}
+.mini .mic{font-size:18px}
+.mini .mname{font-size:13px;font-weight:600;color:#e6e6e6}
+.mini .mdesc{font-size:10.5px;color:#6272a4;margin-top:1px}
+.mini .mtext{display:flex;flex-direction:column}
+/* 管理中心特殊样式 */
+.bigcard.admin{border-color:#ffd700}
+.bigcard.admin .bigcard-hd .info h2{color:#ffd700}
 .foot{color:#6272a4;font-size:12px;margin-top:30px;text-align:center;padding-bottom:20px}
+/* 免责弹窗 */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;z-index:99}
 .mbox{background:#282a36;border:2px solid #ff5555;border-radius:12px;padding:26px 30px;max-width:520px;width:94%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.5);max-height:92vh;overflow-y:auto}
 .mbox h3{color:#ff5555;margin:0 0 14px;font-size:18px}
@@ -54,44 +60,80 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
     <p>一个免费的在线工具集合站，包含实用工具、休闲小游戏、社区交流三大板块。所有工具纯本地处理或云端存储，无需注册即可使用大部分功能。</p>
   </div>
 
-  <div class="sec"><h2>🔧 实用工具</h2><span class="cnt">5个工具</span><div class="line"></div></div>
-  <div class="grid">
-    <a class="card" href="finder.html"><div class="ic">🔍</div><h3>网站查找器</h3><p>多顶级域域名占用状态扫描，探测域名是否被注册。</p><span class="go">进入工具</span></a>
-    <a class="card" href="combiner.html"><div class="ic">🧬</div><h3>域名组合器</h3><p>按关键词组合域名，搭配不同后缀，探测哪些可注册。</p><span class="go">进入工具</span></a>
-    <a class="card" href="codec.html"><div class="ic">🔐</div><h3>编码解码</h3><p>Base64、URL、HTML实体、Unicode编码解码，纯本地。</p><span class="go">进入工具</span></a>
-    <a class="card" href="file-convert.html"><div class="ic">📦</div><h3>文件转换</h3><p>图片格式转换、CSV↔JSON、文件哈希校验，全部本地。</p><span class="go">进入工具</span></a>
-    <a class="card" href="tools.html"><div class="ic">🧰</div><h3>更多工具</h3><p>二维码、密码生成、单位换算、时间戳、JSON格式化、图片压缩等。</p><span class="go">进入工具</span></a>
+  <!-- 实用工具 大模块 -->
+  <div class="bigcard">
+    <div class="bigcard-hd">
+      <span class="ic">🔧</span>
+      <div class="info"><h2>实用工具</h2><p>域名探测、编码转换、文件处理等效率工具</p></div>
+      <span class="cnt">5个工具</span>
+    </div>
+    <div class="bigcard-body">
+      <a class="mini" href="finder.html"><span class="mic">🔍</span><span class="mtext"><span class="mname">网站查找器</span><span class="mdesc">域名占用扫描</span></span></a>
+      <a class="mini" href="combiner.html"><span class="mic">🧬</span><span class="mtext"><span class="mname">域名组合器</span><span class="mdesc">关键词组合域名</span></span></a>
+      <a class="mini" href="codec.html"><span class="mic">🔐</span><span class="mtext"><span class="mname">编码解码</span><span class="mdesc">Base64/URL/Unicode</span></span></a>
+      <a class="mini" href="file-convert.html"><span class="mic">📦</span><span class="mtext"><span class="mname">文件转换</span><span class="mdesc">图片/CSV/哈希</span></span></a>
+      <a class="mini" href="tools.html"><span class="mic">🧰</span><span class="mtext"><span class="mname">更多工具</span><span class="mdesc">二维码/密码/换算等</span></span></a>
+    </div>
   </div>
 
-  <div class="sec"><h2>🎮 休闲娱乐</h2><span class="cnt">5个工具</span><div class="line"></div></div>
-  <div class="grid">
-    <a class="card" href="games.html"><div class="ic">🎮</div><h3>小游戏合集</h3><p>贪吃蛇、2048、扫雷、俄罗斯方块、五子棋、生命游戏、粒子沙盒、双摆模拟等。支持触屏虚拟按键。</p><span class="go">开始游戏</span></a>
-    <a class="card" href="tools.html#calculator"><div class="ic">🔢</div><h3>计算器</h3><p>科学计算器，支持基础运算和函数计算。</p><span class="go">开始计算</span></a>
-    <a class="card" href="tools.html#dice"><div class="ic">🎲</div><h3>骰子</h3><p>虚拟骰子，支持多面骰和同时掷多个。</p><span class="go">掷骰子</span></a>
-    <a class="card" href="tools.html#wheel"><div class="ic">🎡</div><h3>大转盘</h3><p>自定义选项的幸运大转盘，帮你做决定。</p><span class="go">转一下</span></a>
-    <a class="card" href="tools.html#quote"><div class="ic">💬</div><h3>今日一言</h3><p>每日一句励志名言或有趣句子，刷新换一句。</p><span class="go">看一句</span></a>
+  <!-- 休闲娱乐 大模块 -->
+  <div class="bigcard">
+    <div class="bigcard-hd">
+      <span class="ic">🎮</span>
+      <div class="info"><h2>休闲娱乐</h2><p>小游戏、计算器、骰子、转盘等放松工具</p></div>
+      <span class="cnt">5个工具</span>
+    </div>
+    <div class="bigcard-body">
+      <a class="mini" href="games.html"><span class="mic">🎮</span><span class="mtext"><span class="mname">小游戏合集</span><span class="mdesc">贪吃蛇/2048/扫雷等</span></span></a>
+      <a class="mini" href="tools.html#calculator"><span class="mic">🔢</span><span class="mtext"><span class="mname">计算器</span><span class="mdesc">科学计算</span></span></a>
+      <a class="mini" href="tools.html#dice"><span class="mic">🎲</span><span class="mtext"><span class="mname">骰子</span><span class="mdesc">多面骰/多骰</span></span></a>
+      <a class="mini" href="tools.html#wheel"><span class="mic">🎡</span><span class="mtext"><span class="mname">大转盘</span><span class="mdesc">自定义选项</span></span></a>
+      <a class="mini" href="tools.html#quote"><span class="mic">💬</span><span class="mtext"><span class="mname">今日一言</span><span class="mdesc">每日一句</span></span></a>
+    </div>
   </div>
 
-  <div class="sec"><h2>💬 社区交流</h2><span class="cnt">3个分区</span><div class="line"></div></div>
-  <div class="grid">
-    <a class="card" href="wall.html"><div class="ic">💬</div><h3>公开留言墙</h3><p>给站长或访客留言，弹幕滚动展示，所有内容公开可见。</p><span class="go">去留言</span></a>
-    <a class="card" href="share.html"><div class="ic">📦</div><h3>开源专区</h3><p>发布你的作品（存档、脚本、工具、创意），支持文件上传下载，与社区分享交流。</p><span class="go">去分享</span></a>
-    <a class="card" href="paste.html"><div class="ic">📋</div><h3>文本分享</h3><p>粘贴文字、代码、链接生成专属分享链接，发给别人即可查看。</p><span class="go">去分享</span></a>
+  <!-- 社区交流 大模块 -->
+  <div class="bigcard">
+    <div class="bigcard-hd">
+      <span class="ic">💬</span>
+      <div class="info"><h2>社区交流</h2><p>留言墙、开源分享、文本粘贴等互动功能</p></div>
+      <span class="cnt">3个分区</span>
+    </div>
+    <div class="bigcard-body">
+      <a class="mini" href="wall.html"><span class="mic">💬</span><span class="mtext"><span class="mname">公开留言墙</span><span class="mdesc">弹幕滚动留言</span></span></a>
+      <a class="mini" href="share.html"><span class="mic">📦</span><span class="mtext"><span class="mname">开源专区</span><span class="mdesc">作品发布/文件下载</span></span></a>
+      <a class="mini" href="paste.html"><span class="mic">📋</span><span class="mtext"><span class="mname">文本分享</span><span class="mdesc">代码/链接分享</span></span></a>
+    </div>
   </div>
 
-  <div class="sec"><h2>📥 软件下载</h2><span class="cnt">1个分区</span><div class="line"></div></div>
-  <div class="grid">
-    <a class="card" href="software.html"><div class="ic">📥</div><h3>本地软件</h3><p>钢4工具箱、钢4存档守护、鼠标宏、网络测速等本地工具，提供可执行程序下载。</p><span class="go">进入下载</span></a>
+  <!-- 软件下载 大模块 -->
+  <div class="bigcard">
+    <div class="bigcard-hd">
+      <span class="ic">📥</span>
+      <div class="info"><h2>软件下载</h2><p>本地工具软件下载</p></div>
+      <span class="cnt">1个分区</span>
+    </div>
+    <div class="bigcard-body">
+      <a class="mini" href="software.html"><span class="mic">📥</span><span class="mtext"><span class="mname">本地软件</span><span class="mdesc">钢4工具箱/鼠标宏等</span></span></a>
+    </div>
   </div>
 
-  <div class="sec" id="adminSec" style="display:none"><h2>👑 管理中心</h2><span class="cnt">Server专属</span><div class="line"></div></div>
-  <div class="grid" id="adminGrid" style="display:none">
-    <a class="card admin" href="admin.html"><div class="ic">👑</div><h3>后台管理</h3><p>留言管理、用户管理、意见反馈、访问监控、半管理员权限设置。</p><span class="go">进入后台</span></a>
+  <!-- 管理中心 大模块（Server专属） -->
+  <div class="bigcard admin" id="adminCard" style="display:none">
+    <div class="bigcard-hd">
+      <span class="ic">👑</span>
+      <div class="info"><h2 style="color:#ffd700">管理中心</h2><p>Server 管理员专属后台</p></div>
+      <span class="cnt">Server专属</span>
+    </div>
+    <div class="bigcard-body">
+      <a class="mini" href="admin.html"><span class="mic">👑</span><span class="mtext"><span class="mname">后台管理</span><span class="mdesc">留言/用户/访问监控</span></span></a>
+    </div>
   </div>
 
   <div class="foot">Cr工具站 · 免费在线工具 · 免责声明：所有工具仅供参考，不对使用后果负责</div>
 </div>
 
+<!-- 免责弹窗 -->
 <div class="modal" id="modal">
   <div class="mbox">
     <h3>⚠️ 使用条款与免责声明</h3>
@@ -120,19 +162,16 @@ function agree(){
 function disagree(){
   closeModal();
   document.getElementById('msg').textContent='已拒绝条款，工具不可用';
-  document.querySelectorAll('.card').forEach(a=>{a.style.pointerEvents='none';a.style.opacity=.4});
+  document.querySelectorAll('.mini').forEach(a=>{a.style.pointerEvents='none';a.style.opacity=.4});
 }
 function refreshUserBar(){
   var u = localStorage.getItem('cr_user');
   var bar = document.getElementById('userBar');
-  var adminSec = document.getElementById('adminSec');
-  var adminGrid = document.getElementById('adminGrid');
-  adminSec.style.display = 'none';
-  adminGrid.style.display = 'none';
+  var adminCard = document.getElementById('adminCard');
+  adminCard.style.display = 'none';
   if(u === 'Server'){
     bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
-    adminSec.style.display = 'flex';
-    adminGrid.style.display = 'grid';
+    adminCard.style.display = 'block';
   } else if(u){
     bar.innerHTML = '🥈 <b style="color:#50fa7b">' + u + '</b>';
   } else {

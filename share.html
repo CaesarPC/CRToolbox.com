@@ -225,6 +225,27 @@ function openPublish() {
 }
 function closePub() { document.getElementById('pubOv').classList.remove('on'); }
 
+/* ---- 防攻击防护层 ---- */
+var SHARE_ANTI_FLOOD_KEY = 'cr_antiflood_share';
+var SHARE_CAPTCHA_KEY = 'cr_captcha_share';
+function shareCheckRate() {
+  var last = parseInt(localStorage.getItem(SHARE_ANTI_FLOOD_KEY) || '0', 10);
+  var now = Date.now();
+  if (now - last < 15000) return { ok: false, msg: '操作太频繁，请 ' + Math.ceil((15000 - (now - last)) / 1000) + ' 秒后再试' };
+  return { ok: true };
+}
+function shareMarkRate() { localStorage.setItem(SHARE_ANTI_FLOOD_KEY, String(Date.now())); }
+function shareGenCaptcha() {
+  var a = Math.floor(Math.random() * 9) + 1, b = Math.floor(Math.random() * 9) + 1;
+  localStorage.setItem(SHARE_CAPTCHA_KEY, String(a + b));
+  return a + ' + ' + b + ' = ?';
+}
+function shareVerifyCaptcha(input) {
+  var ans = localStorage.getItem(SHARE_CAPTCHA_KEY);
+  localStorage.removeItem(SHARE_CAPTCHA_KEY);
+  return ans && String(input).trim() === ans;
+}
+
 function doPublish() {
   var title = document.getElementById('p-title').value.trim();
   var desc = document.getElementById('p-desc').value.trim();
@@ -236,6 +257,17 @@ function doPublish() {
   var file = fileInput.files && fileInput.files[0];
   if (!title) { document.getElementById('pubMsg').textContent = '标题不能为空'; return; }
   if (file && file.size > 1024 * 1024) { document.getElementById('pubMsg').textContent = '文件不能超过 1MB'; return; }
+
+  /* 防攻击检查 */
+  var rl = shareCheckRate();
+  if (!rl.ok) { document.getElementById('pubMsg').textContent = rl.msg; return; }
+  var captchaInput = prompt('请输入验证码（防机器人）：' + shareGenCaptcha());
+  if (captchaInput === null) return;
+  if (!shareVerifyCaptcha(captchaInput)) {
+    document.getElementById('pubMsg').textContent = '验证码错误，请重试';
+    return;
+  }
+  shareMarkRate();
 
   function createProject(extra) {
     var data = { token: getToken(), title: title, desc: desc, content: content, link: link, tags: tags, category: cat };

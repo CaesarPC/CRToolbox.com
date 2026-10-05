@@ -152,6 +152,21 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
   </div>
 </div>
 
+<!-- 登录/注册弹窗 -->
+<div class="modal" id="loginModal">
+  <div class="mbox" style="border-color:#50fa7b;max-width:380px">
+    <h3 id="loginTitle" style="color:#50fa7b">🔑 登录</h3>
+    <input id="lg-user" placeholder="用户名" autocomplete="off" style="width:100%;background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:6px;padding:10px;font-size:14px;margin:8px 0">
+    <input id="lg-pass" type="password" placeholder="密码" autocomplete="off" style="width:100%;background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:6px;padding:10px;font-size:14px;margin:8px 0">
+    <div id="lg-msg" style="font-size:12px;color:#ff5555;min-height:16px;margin:4px 0"></div>
+    <div class="mbtns">
+      <button class="btn" id="lgGo">登录</button>
+      <button class="btn" style="background:#44475a;color:#e6e6e6" id="lgToReg">注册新账号</button>
+      <button class="btn btn-red" onclick="closeLogin()">关闭</button>
+    </div>
+  </div>
+</div>
+
 <script>
 function showModal(){document.getElementById('modal').style.display='flex'}
 function closeModal(){document.getElementById('modal').style.display='none'}
@@ -170,14 +185,48 @@ function refreshUserBar(){
   var adminCard = document.getElementById('adminCard');
   adminCard.style.display = 'none';
   if(u === 'Server'){
-    bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
+    bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="javascript:;" onclick="doLogout()" style="color:#8be9fd">退出</a>';
     adminCard.style.display = 'block';
   } else if(u){
-    bar.innerHTML = '🥈 <b style="color:#50fa7b">' + u + '</b>';
+    bar.innerHTML = '🥈 <b style="color:#50fa7b">' + u + '</b> · <a href="javascript:;" onclick="doLogout()" style="color:#8be9fd">退出</a>';
   } else {
-    bar.innerHTML = '<a href="wall.html" style="color:#8be9fd">登录/注册</a>';
+    bar.innerHTML = '<a href="javascript:;" onclick="openLogin()" style="color:#8be9fd">登录/注册</a>';
   }
 }
+function openLogin(){document.getElementById('loginModal').style.display='flex';setLoginMode(true);}
+function closeLogin(){document.getElementById('loginModal').style.display='none';}
+function setLoginMode(isLogin){
+  document.getElementById('loginTitle').textContent = isLogin ? '🔑 登录' : '📝 注册新账号';
+  document.getElementById('lg-msg').textContent = '';
+  document.getElementById('lg-pass').value = '';
+  document.getElementById('lgGo').textContent = isLogin ? '登录' : '注册';
+  document.getElementById('lgToReg').textContent = isLogin ? '注册新账号' : '← 返回登录';
+}
+function doLogout(){
+  localStorage.removeItem('cr_token');
+  localStorage.removeItem('cr_user');
+  refreshUserBar();
+}
+document.getElementById('lgToReg').onclick = function(){
+  var isLogin = document.getElementById('loginTitle').textContent.indexOf('登录') >= 0;
+  setLoginMode(!isLogin);
+};
+document.getElementById('lgGo').onclick = function(){
+  var u = document.getElementById('lg-user').value.trim();
+  var p = document.getElementById('lg-pass').value;
+  var isLogin = document.getElementById('loginTitle').textContent.indexOf('登录') >= 0;
+  if(!u || !p){document.getElementById('lg-msg').textContent='请输入用户名和密码';return;}
+  window.CrGH && CrGH.route('POST', '/api/' + (isLogin ? 'login' : 'register'), {username:u,password:p}, function(j){
+    if(j.ok){
+      localStorage.setItem('cr_token', j.token);
+      localStorage.setItem('cr_user', j.username);
+      closeLogin();
+      refreshUserBar();
+    } else {
+      document.getElementById('lg-msg').textContent = j.msg || '操作失败';
+    }
+  });
+};
 window.addEventListener('load',function(){
   if(localStorage.getItem('Cr工具站_已同意条款')!=='1'){showModal();}
   if(window.CrGH && window.CrGH.visitLog){

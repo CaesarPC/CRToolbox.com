@@ -7,20 +7,21 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #1a1a24; color: #e6e6e6; font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; padding: 20px; min-height: 100vh; }
-  .wrap { max-width: 900px; margin: 0 auto; }
+  .wrap { max-width: 960px; margin: 0 auto; }
   h1 { font-size: 22px; color: #50fa7b; margin-bottom: 6px; }
   .sub { color: #6272a4; font-size: 13px; margin-bottom: 20px; }
   .card { background: #1e1e2e; border: 1px solid #44475a; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
   .card h2 { font-size: 15px; color: #8be9fd; margin-bottom: 12px; }
   .stat-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .stat { flex: 1; min-width: 130px; background: #282a36; border: 1px solid #44475a; border-radius: 10px; padding: 14px; text-align: center; }
-  .stat b { display: block; font-size: 26px; color: #50fa7b; }
+  .stat { flex: 1; min-width: 110px; background: #282a36; border: 1px solid #44475a; border-radius: 10px; padding: 14px; text-align: center; }
+  .stat b { display: block; font-size: 24px; color: #50fa7b; }
   .stat span { font-size: 12px; color: #6272a4; }
   .btn { background: #44475a; color: #e6e6e6; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; margin-right: 8px; }
   .btn:hover { background: #6272a4; }
   .btn.red { background: #ff5555; }
   .btn.green { background: #50fa7b; color: #1e1e2e; font-weight: bold; }
   .btn.small { padding: 4px 10px; font-size: 12px; }
+  .btn.blue { background: #8be9fd; color: #1e1e2e; }
   .item { background: #282a36; border: 1px solid #44475a; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
   .item .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .item .nm { font-weight: bold; color: #50fa7b; font-size: 14px; }
@@ -28,8 +29,9 @@
   .item .ct { margin-top: 8px; font-size: 14px; line-height: 1.6; word-break: break-word; white-space: pre-wrap; }
   .badge { display: inline-block; background: #ffd700; color: #1e1e2e; font-size: 11px; font-weight: bold; border-radius: 4px; padding: 1px 7px; }
   .badge.gray { background: #6272a4; color: #e6e6e6; }
+  .badge.blue { background: #8be9fd; color: #1e1e2e; }
   .ops { margin-top: 8px; }
-  .empty { color: #6272a4; text-align: center; padding: 40px; font-size: 14px; }
+  .empty { color: #6272a4; text-align: center; padding: 30px; font-size: 14px; }
   .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .back { color: #8be9fd; text-decoration: none; font-size: 13px; cursor: pointer; }
   .back:hover { text-decoration: underline; }
@@ -37,6 +39,18 @@
   #authBox input { width: 260px; max-width: 90%; padding: 10px 12px; border-radius: 8px; border: 1px solid #44475a; background: #282a36; color: #e6e6e6; font-size: 14px; margin: 10px 0; }
   .msg { color: #ff5555; font-size: 13px; margin-top: 8px; min-height: 18px; }
   .ok-msg { color: #50fa7b; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tab { padding: 8px 16px; border-radius: 8px; background: #282a36; border: 1px solid #44475a; cursor: pointer; font-size: 13px; color: #6272a4; }
+  .tab.active { background: #50fa7b; color: #1e1e2e; font-weight: bold; border-color: #50fa7b; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .user-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #282a36; border: 1px solid #44475a; border-radius: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .user-row .uname { font-weight: bold; color: #50fa7b; min-width: 80px; }
+  .user-row .ureg { font-size: 11px; color: #6272a4; flex: 1; }
+  .visit-row { display: flex; gap: 10px; padding: 8px 12px; background: #282a36; border: 1px solid #44475a; border-radius: 8px; margin-bottom: 6px; font-size: 12px; flex-wrap: wrap; }
+  .visit-row .vt { color: #6272a4; min-width: 130px; }
+  .visit-row .vp { color: #8be9fd; flex: 1; word-break: break-all; }
+  .visit-row .vua { color: #6272a4; font-size: 11px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -45,7 +59,7 @@
     <h1>🛠️ CR 工具箱 · 后台管理</h1>
     <a class="back" href="index.html">← 返回主页</a>
   </div>
-  <div class="sub">数据存储在云端（GitHub 仓库），与本地电脑自动同步。需要 Server 管理员身份进入。</div>
+  <div class="sub">数据存储在云端（GitHub 仓库），需要 Server 管理员身份进入。</div>
 
   <!-- 鉴权 -->
   <div class="card" id="authBox">
@@ -54,101 +68,171 @@
     <input type="password" id="adminPass" placeholder="Server 密码" autocomplete="off">
     <div><button class="btn green" id="btnLogin">进入后台</button></div>
     <div class="msg" id="authMsg"></div>
-    <div class="sub" style="margin-top:8px">提示：密码与本地后端 Server 账号一致。</div>
   </div>
 
   <!-- 管理面板 -->
   <div id="panel" style="display:none">
+    <!-- 数据概览 -->
     <div class="card">
       <h2>📊 数据概览</h2>
       <div class="stat-row">
         <div class="stat"><b id="stWall">0</b><span>留言总数</span></div>
-        <div class="stat"><b id="stPin">0</b><span>置顶公告</span></div>
-        <div class="stat"><b id="stAdmin">0</b><span>管理员留言</span></div>
-        <div class="stat"><b id="stCloud">--</b><span>云端状态</span></div>
+        <div class="stat"><b id="stUser">0</b><span>注册用户</span></div>
+        <div class="stat"><b id="stFb">0</b><span>意见反馈</span></div>
+        <div class="stat"><b id="stVisit">0</b><span>访问记录</span></div>
       </div>
     </div>
 
-    <div class="card">
-      <h2>💬 留言管理</h2>
-      <div style="margin-bottom:10px">
-        <button class="btn" id="btnRefresh">🔄 刷新</button>
-        <button class="btn red" id="btnClear">🗑️ 清空全部留言</button>
-        <span class="sub" style="margin-left:8px">（云端 + 本地同步删除）</span>
+    <!-- 标签页 -->
+    <div class="tabs">
+      <div class="tab active" data-tab="wall">💬 留言管理</div>
+      <div class="tab" data-tab="users">👥 用户管理</div>
+      <div class="tab" data-tab="feedback">📝 意见反馈</div>
+      <div class="tab" data-tab="visits">👁️ 访问监控</div>
+    </div>
+
+    <!-- 留言管理 -->
+    <div class="tab-panel active" id="panel-wall">
+      <div class="card">
+        <div style="margin-bottom:10px">
+          <button class="btn" onclick="loadWall()">🔄 刷新</button>
+          <button class="btn red" onclick="clearAllWall()">🗑️ 清空全部留言</button>
+        </div>
+        <div id="wallList"></div>
       </div>
-      <div id="wallList"></div>
+    </div>
+
+    <!-- 用户管理 -->
+    <div class="tab-panel" id="panel-users">
+      <div class="card">
+        <div style="margin-bottom:10px">
+          <button class="btn" onclick="loadUsers()">🔄 刷新用户列表</button>
+        </div>
+        <div id="userList"></div>
+      </div>
+    </div>
+
+    <!-- 意见反馈 -->
+    <div class="tab-panel" id="panel-feedback">
+      <div class="card">
+        <div style="margin-bottom:10px">
+          <button class="btn" onclick="loadFeedback()">🔄 刷新反馈</button>
+        </div>
+        <div id="fbList"></div>
+      </div>
+    </div>
+
+    <!-- 访问监控 -->
+    <div class="tab-panel" id="panel-visits">
+      <div class="card">
+        <div style="margin-bottom:10px">
+          <button class="btn" onclick="loadVisits()">🔄 刷新访问记录</button>
+          <span class="sub" style="margin-left:8px">最多保留最近 500 条</span>
+        </div>
+        <div id="visitList"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005c"></script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v7"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005d"></script>
 <script>
 var CLOUD_REPO = 'CaesarPC/website-finder';
 var CLOUD_WALL = 'api_data/wall.json';
-var isAuthed = false;
 var wallList = [];
+var adminToken = '';
 
-function b64encode(str) {
-  if (typeof btoa === 'function') return btoa(unescape(encodeURIComponent(str)));
-  var bytes = new TextEncoder().encode(str);
-  var bin = '';
-  bytes.forEach(function (b) { bin += String.fromCharCode(b); });
-  return btoa(bin);
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function sha256hex(str) {
   return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
     return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
   });
 }
-
-/* 带超时的fetch */
 function fetchT(url, ms) {
   var c = new AbortController();
   var t = setTimeout(function () { c.abort(); }, ms || 12000);
   return fetch(url, { cache: 'no-store', signal: c.signal }).then(function (r) { clearTimeout(t); return r; });
 }
 
-/* 云端文件多源读取：jsDelivr CDN(国内快) -> raw 兜底 */
+/* 标签切换 */
+document.querySelectorAll('.tab').forEach(function (tab) {
+  tab.onclick = function () {
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'users') loadUsers();
+    if (tab.dataset.tab === 'feedback') loadFeedback();
+    if (tab.dataset.tab === 'visits') loadVisits();
+  };
+});
+
+/* 鉴权：同时验证密码并获取管理 token */
+document.getElementById('btnLogin').onclick = function () {
+  var pass = document.getElementById('adminPass').value;
+  var msgEl = document.getElementById('authMsg');
+  if (!pass) { msgEl.textContent = '请输入密码'; return; }
+  msgEl.textContent = '验证中...';
+  if (!window.CrGH) { msgEl.textContent = '数据层加载失败，请刷新'; return; }
+  window.CrGH.login({ username: 'Server', password: pass }, function (j) {
+    if (j.ok) {
+      adminToken = j.token;
+      localStorage.setItem('cr_user', 'Server');
+      localStorage.setItem('cr_token', j.token);
+      document.getElementById('authBox').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      loadAll();
+    } else {
+      msgEl.textContent = j.msg || '密码错误';
+    }
+  });
+};
+
+function loadAll() { loadWall(); loadStats(); }
+
+function loadStats() {
+  if (!window.CrGH) return;
+  window.CrGH.adminUsersList({ token: adminToken }, function (j) {
+    if (j.ok) document.getElementById('stUser').textContent = j.list.length;
+  });
+  window.CrGH.adminFeedbackList({ token: adminToken }, function (j) {
+    if (j.ok) document.getElementById('stFb').textContent = j.list.length;
+  });
+  window.CrGH.adminVisitsList({ token: adminToken }, function (j) {
+    if (j.ok) document.getElementById('stVisit').textContent = j.list.length;
+  });
+}
+
+/* ========== 留言管理 ========== */
 var CLOUD_SOURCES = [
   'https://CaesarPC.github.io/website-finder/' + CLOUD_WALL,
   'https://cdn.jsdelivr.net/gh/' + CLOUD_REPO + '@main/' + CLOUD_WALL,
   'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/' + CLOUD_WALL
 ];
-
-/* 读取云端 */
 function cloudGet(cb) {
   var tryN = 0;
   function next() {
     if (tryN >= CLOUD_SOURCES.length) { cb(null); return; }
     var u = CLOUD_SOURCES[tryN++];
-    fetchT(u).then(function (r) {
-      if (!r.ok) throw 0;
-      return r.json();
-    }).then(function (j) {
-      // 兼容两种格式：数组 或 {list:[...]}
-      cb(Array.isArray(j) ? j : (j && Array.isArray(j.list) ? j.list : []));
-    }).catch(function () { next(); });
+    fetchT(u).then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) { cb(Array.isArray(j) ? j : (j && Array.isArray(j.list) ? j.list : [])); })
+      .catch(function () { next(); });
   }
   next();
 }
-/* 写入云端：直连 GitHub（站长关机也能用） */
-function cloudSave(list, cb) {
-  if (!window.CrGH) { cb(false, '数据层未加载'); return; }
-  window.CrGH.wallSync({ list: list, token: localStorage.getItem('cr_token') }, function (j) {
-    cb(j.ok, j.msg || '');
+function loadWall() {
+  cloudGet(function (list) {
+    if (!list) return;
+    wallList = list;
+    renderWall();
   });
 }
-
-function renderStats() {
-  document.getElementById('stWall').textContent = wallList.length;
-  document.getElementById('stPin').textContent = wallList.filter(function (x) { return x.pinned; }).length;
-  document.getElementById('stAdmin').textContent = wallList.filter(function (x) { return x.admin; }).length;
-  document.getElementById('stCloud').textContent = '已加载';
-}
-function renderList() {
+function renderWall() {
   var el = document.getElementById('wallList');
-  if (!wallList.length) { el.innerHTML = '<div class="empty">暂无留言</div>'; renderStats(); return; }
+  document.getElementById('stWall').textContent = wallList.length;
+  if (!wallList.length) { el.innerHTML = '<div class="empty">暂无留言</div>'; return; }
   var h = '';
   wallList.slice().reverse().forEach(function (x) {
     h += '<div class="item">' +
@@ -158,76 +242,121 @@ function renderList() {
       '<span class="tm">' + esc(x.time) + '</span></div>' +
       '<div class="ct">' + esc(x.content) + '</div>' +
       '<div class="ops">' +
-      '<button class="btn small" onclick="togglePin(' + x.id + ', ' + !x.pinned + ')">' + (x.pinned ? '取消置顶' : '置顶') + '</button>' +
+      '<button class="btn small" onclick="togglePin(' + x.id + ', ' + !x.pinned + ')">' + (x.pinned ? '取消置顶' : '置顶') + '</button> ' +
       '<button class="btn red small" onclick="delOne(' + x.id + ')">删除</button>' +
       '</div></div>';
   });
   el.innerHTML = h;
-  renderStats();
 }
-function esc(s) {
-  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function loadData() {
-  cloudGet(function (list) {
-    if (!list) { document.getElementById('stCloud').textContent = '云端离线'; return; }
-    wallList = list;
-    renderList();
-  });
-}
-
 function togglePin(id, pinned) {
   var it = wallList.filter(function (x) { return x.id === id; })[0];
   if (!it) return;
   it.pinned = pinned;
-  cloudSave(wallList, function (ok, msg) {
-    if (ok) { renderList(); alert(pinned ? '已置顶 📌' : '已取消置顶'); }
-    else alert(msg || '同步失败（电脑未开机？）');
+  if (!window.CrGH) return;
+  window.CrGH.wallPin({ id: id, pinned: pinned, token: adminToken }, function (j) {
+    if (j.ok) { renderWall(); alert(pinned ? '已置顶 📌' : '已取消置顶'); }
+    else alert(j.msg || '操作失败');
   });
 }
 function delOne(id) {
   if (!confirm('确定删除这条留言？')) return;
   wallList = wallList.filter(function (x) { return x.id !== id; });
-  cloudSave(wallList, function (ok, msg) {
-    if (ok) { renderList(); alert('已删除'); }
-    else alert(msg || '同步失败（电脑未开机？）');
+  if (!window.CrGH) return;
+  window.CrGH.wallSync({ list: wallList, token: adminToken }, function (j) {
+    if (j.ok) { renderWall(); alert('已删除'); }
+    else alert(j.msg || '同步失败');
+  });
+}
+function clearAllWall() {
+  if (!confirm('确定清空全部留言？此操作不可恢复！')) return;
+  wallList = [];
+  if (!window.CrGH) return;
+  window.CrGH.wallSync({ list: [], token: adminToken }, function (j) {
+    if (j.ok) { renderWall(); alert('已清空'); }
+    else alert(j.msg || '同步失败');
   });
 }
 
-/* 鉴权：SHA256 哈希比对云端 auth.json（不依赖本地后端，电脑关机也能进后台） */
-document.getElementById('btnLogin').onclick = function () {
-  var pass = document.getElementById('adminPass').value;
-  var msgEl = document.getElementById('authMsg');
-  if (!pass) { msgEl.textContent = '请输入密码'; return; }
-  msgEl.textContent = '验证中...';
-  var authSources = [
-    'https://CaesarPC.github.io/website-finder/api_data/auth.json',
-    'https://cdn.jsdelivr.net/gh/' + CLOUD_REPO + '@main/api_data/auth.json',
-    'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/api_data/auth.json'
-  ];
-  var idx = 0;
-  function tryAuth() {
-    if (idx >= authSources.length) { msgEl.textContent = '无法连接云端认证（网络慢？请重试）'; return; }
-    var u = authSources[idx++];
-    fetchT(u).then(function (r) {
-      if (!r.ok) throw 0;
-      return r.json();
-    }).then(function (auth) {
-      return sha256hex(pass).then(function (h) {
-        if (h === auth.server_hash) {
-          localStorage.setItem('cr_user', 'Server');
-          document.getElementById('authBox').style.display = 'none';
-          document.getElementById('panel').style.display = 'block';
-          loadData();
-        } else {
-          msgEl.textContent = '密码错误，请重试';
-        }
-      });
-    }).catch(function () { tryAuth(); });
-  }
-  tryAuth();
-};
+/* ========== 用户管理 ========== */
+function loadUsers() {
+  if (!window.CrGH) return;
+  window.CrGH.adminUsersList({ token: adminToken }, function (j) {
+    var el = document.getElementById('userList');
+    if (!j.ok) { el.innerHTML = '<div class="empty">' + esc(j.msg) + '</div>'; return; }
+    document.getElementById('stUser').textContent = j.list.length;
+    if (!j.list.length) { el.innerHTML = '<div class="empty">暂无用户</div>'; return; }
+    var h = '';
+    j.list.forEach(function (u) {
+      h += '<div class="user-row">' +
+        '<span class="uname">' + esc(u.username) + '</span>' +
+        (u.admin ? ' <span class="badge">👑 管理员</span>' : '') +
+        '<span class="ureg">注册时间: ' + esc(u.regTime) + '</span>' +
+        (u.admin ? '' :
+          '<button class="btn blue small" onclick="resetPass(\'' + esc(u.username) + '\')">重置密码</button> ' +
+          '<button class="btn red small" onclick="delUser(\'' + esc(u.username) + '\')">删除用户</button>') +
+        '</div>';
+    });
+    el.innerHTML = h;
+  });
+}
+function resetPass(username) {
+  var np = prompt('为用户 ' + username + ' 设置新密码（至少4位）：');
+  if (!np) return;
+  if (np.length < 4) { alert('密码至少4位'); return; }
+  if (!window.CrGH) return;
+  window.CrGH.adminUserReset({ username: username, password: np, token: adminToken }, function (j) {
+    alert(j.ok ? '密码已重置为: ' + np : (j.msg || '操作失败'));
+    if (j.ok) loadUsers();
+  });
+}
+function delUser(username) {
+  if (!confirm('确定删除用户 ' + username + '？该用户的所有登录状态将失效！')) return;
+  if (!window.CrGH) return;
+  window.CrGH.adminUserDelete({ username: username, token: adminToken }, function (j) {
+    alert(j.ok ? '用户已删除' : (j.msg || '操作失败'));
+    if (j.ok) loadUsers();
+  });
+}
+
+/* ========== 意见反馈 ========== */
+function loadFeedback() {
+  if (!window.CrGH) return;
+  window.CrGH.adminFeedbackList({ token: adminToken }, function (j) {
+    var el = document.getElementById('fbList');
+    if (!j.ok) { el.innerHTML = '<div class="empty">' + esc(j.msg) + '</div>'; return; }
+    document.getElementById('stFb').textContent = j.list.length;
+    if (!j.list.length) { el.innerHTML = '<div class="empty">暂无反馈</div>'; return; }
+    var h = '';
+    j.list.slice().reverse().forEach(function (x) {
+      h += '<div class="item">' +
+        '<div class="head"><span class="nm">' + esc(x.name || x.who || '匿名') + '</span>' +
+        '<span class="tm">' + esc(x.time || '') + '</span></div>' +
+        '<div class="ct">' + esc(x.content || x.text || '') + '</div></div>';
+    });
+    el.innerHTML = h;
+  });
+}
+
+/* ========== 访问监控 ========== */
+function loadVisits() {
+  if (!window.CrGH) return;
+  window.CrGH.adminVisitsList({ token: adminToken }, function (j) {
+    var el = document.getElementById('visitList');
+    if (!j.ok) { el.innerHTML = '<div class="empty">' + esc(j.msg) + '</div>'; return; }
+    document.getElementById('stVisit').textContent = j.list.length;
+    if (!j.list.length) { el.innerHTML = '<div class="empty">暂无访问记录</div>'; return; }
+    var h = '';
+    j.list.slice().reverse().slice(0, 100).forEach(function (x) {
+      h += '<div class="visit-row">' +
+        '<span class="vt">' + esc(x.time) + '</span>' +
+        '<span class="vp">' + esc(x.page || '/') + '</span>' +
+        '<span class="vua" title="' + esc(x.ua) + '">' + esc(x.ua).slice(0, 60) + '</span>' +
+        '</div>';
+    });
+    if (j.list.length > 100) h += '<div class="empty">仅显示最近 100 条，共 ' + j.list.length + ' 条</div>';
+    el.innerHTML = h;
+  });
+}
 </script>
 </body>
 </html>

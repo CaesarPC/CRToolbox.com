@@ -427,9 +427,61 @@ function togglePin(id, pinned) {
   });
 }
 
+/* ---- 防攻击防护层 ---- */
+var ANTI_FLOOD_KEY = 'cr_antiflood_wall';
+var CAPTCHA_KEY = 'cr_captcha_wall';
+
+/* 频率限制：同一浏览器10秒内只能发1条 */
+function checkRateLimit() {
+  var last = parseInt(localStorage.getItem(ANTI_FLOOD_KEY) || '0', 10);
+  var now = Date.now();
+  if (now - last < 10000) {
+    var wait = Math.ceil((10000 - (now - last)) / 1000);
+    return { ok: false, msg: '操作太频繁，请 ' + wait + ' 秒后再试' };
+  }
+  return { ok: true };
+}
+function markRateLimit() { localStorage.setItem(ANTI_FLOOD_KEY, String(Date.now())); }
+
+/* 简单算术验证码：防止脚本批量攻击 */
+function genCaptcha() {
+  var a = Math.floor(Math.random() * 9) + 1;
+  var b = Math.floor(Math.random() * 9) + 1;
+  localStorage.setItem(CAPTCHA_KEY, String(a + b));
+  return a + ' + ' + b + ' = ?';
+}
+function verifyCaptcha(input) {
+  var ans = localStorage.getItem(CAPTCHA_KEY);
+  localStorage.removeItem(CAPTCHA_KEY);
+  return ans && String(input).trim() === ans;
+}
+
+/* 内容过滤：超长/重复/垃圾内容 */
+function filterContent(content) {
+  if (content.length > 500) return { ok: false, msg: '内容不能超过500字' };
+  if (/^[重复复制粘贴]+$/.test(content)) return { ok: false, msg: '内容不能全是重复字符' };
+  return { ok: true };
+}
+
 function doPost() {
   var content = document.getElementById('w-content').value.trim();
   if (!content) { document.getElementById('w-msg').textContent = '留言内容不能为空'; return; }
+
+  /* 防攻击检查 */
+  var rl = checkRateLimit();
+  if (!rl.ok) { document.getElementById('w-msg').textContent = rl.msg; return; }
+  var fc = filterContent(content);
+  if (!fc.ok) { document.getElementById('w-msg').textContent = fc.msg; return; }
+
+  /* 验证码 */
+  var captchaInput = prompt('请输入验证码（防机器人）：' + genCaptcha());
+  if (captchaInput === null) return;
+  if (!verifyCaptcha(captchaInput)) {
+    document.getElementById('w-msg').textContent = '验证码错误，请重试';
+    return;
+  }
+
+  markRateLimit();
   document.getElementById('w-msg').textContent = '发布中...';
   var name = document.getElementById('w-name').value.trim();
   post('/api/wall', { name: name, content: content, token: getToken() }, function (j) {
@@ -438,7 +490,6 @@ function doPost() {
       document.getElementById('w-content').value = '';
       loadWall();
     } else {
-      // 直接显示权威层返回的提示（如刷屏/重复防御），无提示时才补通用文案
       document.getElementById('w-msg').textContent = j.msg || '发布失败，请稍后重试';
     }
   });

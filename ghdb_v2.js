@@ -689,17 +689,28 @@
     }
   }
 
+  /* 写函数包装：直接调用 CrGH.wallPost() 等也必须先验证更改密码并解锁写token */
+  function withWriteLock(fn) {
+    return function (data, cb) {
+      if (WRITE_TOKEN) return fn(data, cb);
+      verifyAndUnlock(data && data.changePassword, function (pass, msg) {
+        if (!pass) return cb(fail(msg));
+        fn(data, cb);
+      });
+    };
+  }
+
   window.CrGH = {
     token: TOKEN,
     route: route,
-    wallGet: wallGet, wallPost: wallPost, wallPin: wallPin, wallSync: wallSync,
+    wallGet: wallGet, wallPost: withWriteLock(wallPost), wallPin: withWriteLock(wallPin), wallSync: withWriteLock(wallSync),
     login: doLogin, register: doRegister,
-    noteGet: noteGet, notePost: notePost,
-    feedbackPost: feedbackPost,
+    noteGet: noteGet, notePost: withWriteLock(notePost),
+    feedbackPost: withWriteLock(feedbackPost),
     report: report,
-    projectsList: projectsList, projectCreate: projectCreate,
-    projectComment: projectComment, projectDel: projectDel,
-    adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete, adminUserSetRole: adminUserSetRole,
+    projectsList: projectsList, projectCreate: withWriteLock(projectCreate),
+    projectComment: withWriteLock(projectComment), projectDel: withWriteLock(projectDel),
+    adminUsersList: adminUsersList, adminUserReset: withWriteLock(adminUserReset), adminUserDelete: withWriteLock(adminUserDelete), adminUserSetRole: withWriteLock(adminUserSetRole),
     adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
     visitLog: visitLog,
     verifyAndUnlock: verifyAndUnlock

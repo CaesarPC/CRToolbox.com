@@ -101,12 +101,33 @@ function sha256hex(str) {
   });
 }
 
+/* 带超时的fetch */
+function fetchT(url, ms) {
+  var c = new AbortController();
+  var t = setTimeout(function () { c.abort(); }, ms || 12000);
+  return fetch(url, { cache: 'no-store', signal: c.signal }).then(function (r) { clearTimeout(t); return r; });
+}
+
+/* 云端文件多源读取：jsDelivr CDN(国内快) -> raw 兜底 */
+var CLOUD_SOURCES = [
+  'https://cdn.jsdelivr.net/gh/' + CLOUD_REPO + '@main/' + CLOUD_WALL,
+  'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/' + CLOUD_WALL
+];
+
 /* 读取云端 */
 function cloudGet(cb) {
-  fetch('https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/' + CLOUD_WALL, { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-    .then(function (j) { cb(j && Array.isArray(j.list) ? j.list : []); })
-    .catch(function () { cb(null); });
+  var tryN = 0;
+  function next() {
+    if (tryN >= CLOUD_SOURCES.length) { cb(null); return; }
+    var u = CLOUD_SOURCES[tryN++];
+    fetchT(u).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.json();
+    }).then(function (j) {
+      cb(j && Array.isArray(j.list) ? j.list : []);
+    }).catch(function () { next(); });
+  }
+  next();
 }
 /* 写入云端：通过本地后端代理同步 */
 function cloudSave(list, cb) {
@@ -162,7 +183,7 @@ function togglePin(id, pinned) {
   var it = wallList.filter(function (x) { return x.id === id; })[0];
   if (!it) return;
   it.pinned = pinned;
-  cloudSave(wallList, function (ok) {
+  cloudSave(wallList, function (ok, msg) {
     if (ok) { renderList(); alert(pinned ? '已置顶 📌' : '已取消置顶'); }
     else alert(msg || '同步失败（电脑未开机？）');
   });
@@ -170,7 +191,7 @@ function togglePin(id, pinned) {
 function delOne(id) {
   if (!confirm('确定删除这条留言？')) return;
   wallList = wallList.filter(function (x) { return x.id !== id; });
-  cloudSave(wallList, function (ok) {
+  cloudSave(wallList, function (ok, msg) {
     if (ok) { renderList(); alert('已删除'); }
     else alert(msg || '同步失败（电脑未开机？）');
   });
@@ -179,10 +200,21 @@ function delOne(id) {
 /* 鉴权：SHA256 哈希比对云端 auth.json（不依赖本地后端，电脑关机也能进后台） */
 document.getElementById('btnLogin').onclick = function () {
   var pass = document.getElementById('adminPass').value;
-  if (!pass) { document.getElementById('authMsg').textContent = '请输入密码'; return; }
-  fetch('https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/api_data/auth.json', { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-    .then(function (auth) {
+  var msgEl = document.getElementById('authMsg');
+  if (!pass) { msgEl.textContent = '请输入密码'; return; }
+  msgEl.textContent = '验证中...';
+  var authSources = [
+    'https://cdn.jsdelivr.net/gh/' + CLOUD_REPO + '@main/api_data/auth.json',
+    'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/api_data/auth.json'
+  ];
+  var idx = 0;
+  function tryAuth() {
+    if (idx >= authSources.length) { msgEl.textContent = '无法连接云端认证（网络慢？请重试）'; return; }
+    var u = authSources[idx++];
+    fetchT(u).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.json();
+    }).then(function (auth) {
       return sha256hex(pass).then(function (h) {
         if (h === auth.server_hash) {
           localStorage.setItem('cr_user', 'Server');
@@ -190,13 +222,12 @@ document.getElementById('btnLogin').onclick = function () {
           document.getElementById('panel').style.display = 'block';
           loadData();
         } else {
-          document.getElementById('authMsg').textContent = '密码错误，请重试';
+          msgEl.textContent = '密码错误，请重试';
         }
       });
-    })
-    .catch(function () {
-      document.getElementById('authMsg').textContent = '无法连接云端认证（请检查网络）';
-    });
+    }).catch(function () { tryAuth(); });
+  }
+  tryAuth();
 };
 </script>
 </body>

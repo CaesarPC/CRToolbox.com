@@ -147,29 +147,32 @@ function disagree(){
   document.querySelectorAll('.card a,.card').forEach(a=>{a.style.pointerEvents='none';a.style.opacity=.4});
 }
 function comingSoon(){alert('该工具尚未上线，敬请期待！');}
-window.addEventListener('load',function(){
-  if(localStorage.getItem('Cr工具箱_已同意条款')!=='1'){showModal();}
-  /* 访问上报 */
-  if(window.CrGH && window.CrGH.visitLog){
-    try{ window.CrGH.visitLog({page:location.pathname.split('/').pop()||'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
-  }
-  /* 用户状态显示 */
+function refreshUserBar(){
   var u = localStorage.getItem('cr_user');
   var bar = document.getElementById('userBar');
-  if(u){
-    if(u === 'Server'){
-      bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
-      document.getElementById('adminCard').style.display = 'block';
-    } else {
-      bar.innerHTML = '👤 <b style="color:#50fa7b">' + u + '</b>';
-    }
+  var adminCard = document.getElementById('adminCard');
+  adminCard.style.display = 'none';
+  if(u === 'Server'){
+    bar.innerHTML = '👑 <b style="color:#ffd700">Server 管理员</b> · <a href="admin.html" style="color:#8be9fd">后台管理</a>';
+    adminCard.style.display = 'block';
+  } else if(u){
+    bar.innerHTML = '🥈 <b style="color:#50fa7b">' + u + '</b>';
   } else {
     bar.innerHTML = '<a href="wall.html" style="color:#8be9fd">登录/注册</a>';
   }
+}
+window.addEventListener('load',function(){
+  if(localStorage.getItem('Cr工具箱_已同意条款')!=='1'){showModal();}
+  if(window.CrGH && window.CrGH.visitLog){
+    try{ window.CrGH.visitLog({page:location.pathname.split('/').pop()||'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
+  }
+  refreshUserBar();
 });
+window.addEventListener('pageshow',function(){ refreshUserBar(); });
+setInterval(refreshUserBar, 2000);
 </script>
 
-<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005e"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005f"></script>
 <script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v7"></script>
 </body>
 </html>

@@ -24,7 +24,7 @@
    * 还原：base64解码 → 反转 → 每个字符-7。
    * ⚠ 该 token 会随网页公开，务必使用受限 token（仅 website-finder 仓库、Contents 读写）。
    */
-  var _ENC = 'bH1tYV86VGw/c8KAwoE3cVI4c0xZdHdrfEw4fG05VlRIPD9zelZmd29u';
+  var _ENC = 'VnlhfT1xU21TS1FUPUlYVlNRVjd+WUtqU0pNVjl+WHJeSFhOSVxsV051czhwWExvXGBKU09OXFJSWH5mPm07eld1V05bwoFYbTdIVzk5VFhKODhme2h3Zml8b3twbg==';
   function _token() {
     try {
       var s = atob(_ENC);           // base64 解码
@@ -418,19 +418,35 @@
     });
   }
 
-  /* 统一出口：前端 post/get 路由到这里 */
-  function route(path, data, cb) {
+  /* 统一出口：前端 post/get 路由到这里
+   * route('GET', '/api/wall?x=1', null, cb)
+   * route('POST', '/api/wall', {name,content,token}, cb)
+   */
+  function route(method, path, data, cb) {
     var p = String(path || '').replace(/^\/api\//, '').split('?')[0];
+    if (method === 'GET') {
+      var q = {};
+      var qs = String(path || '').split('?')[1];
+      if (qs) qs.split('&').forEach(function (kv) {
+        if (!kv) return;
+        var kk = kv.split('=');
+        q[decodeURIComponent(kk[0])] = decodeURIComponent((kk[1] || '').replace(/\+/g, ' '));
+      });
+      if (p === 'wall') return wallGet(cb);
+      if (p === 'note') return noteGet({ token: q.token }, cb);
+      if (p === 'projects') return projectsList({ q: q.q, cat: q.cat, mine: q.mine }, cb);
+      if (p === 'report') return report(cb);
+      return cb(fail('接口不存在: ' + p));
+    }
     switch (p) {
-      case 'wall': if (data === 'GET') return wallGet(cb); return wallPost(data, cb);
+      case 'wall': return wallPost(data, cb);
       case 'wall/pin': return wallPin(data, cb);
       case 'wall/sync': return wallSync(data, cb);
       case 'login': return doLogin(data, cb);
       case 'register': return doRegister(data, cb);
-      case 'note': if (data === 'GET') return noteGet({ token: cb.__token }, cb); return notePost(data, cb);
+      case 'note': return notePost(data, cb);
       case 'feedback': return feedbackPost(data, cb);
-      case 'report': return report(cb);
-      case 'projects': if (data === 'GET') return projectsList(cb.__q || {}, cb); return projectCreate(data, cb);
+      case 'projects': return projectCreate(data, cb);
       case 'projects/comment': return projectComment(data, cb);
       case 'projects/del': return projectDel(data, cb);
       default: return cb(fail('接口不存在: ' + p));

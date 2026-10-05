@@ -11,14 +11,14 @@
 (function () {
   if (window.CrGH) return;
   var s = document.createElement('script');
-  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005e';
+  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005f';
   s.async = false;
   (document.head || document.body).appendChild(s);
 })();
 
 (function () {
   var TOKEN_KEY = 'cr_token';
-  var USER_KEY = 'cr_username';
+  var USER_KEY = 'cr_user';
 
   /* ---------- 基础 ---------- */
   function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }

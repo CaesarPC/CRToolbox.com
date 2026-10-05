@@ -103,6 +103,38 @@ function post(path, data, cb) {
   }).then(function (r) { return r.json(); }).then(cb)
     .catch(function () { cb({ ok: false, msg: '后端未连接（站长电脑可能关机）' }); });
 }
+/* ===== 云端存储（GitHub 仓库当数据库） ===== */
+
+/* 读取云端留言列表 */
+function cloudGetWall(cb) {
+  var u = 'https://raw.githubusercontent.com/' + CLOUD_REPO + '/main/' + CLOUD_WALL;
+  fetch(u, { cache: 'no-store' }).then(function (r) {
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.json();
+  }).then(function (j) {
+    cb(j && Array.isArray(j.list) ? j : { ok: true, list: [] });
+  }).catch(function () { cb({ ok: false }); });
+}
+
+/* 写入云端：通过本地后端代理（后端自动同步到云端），token不暴露在前端 */
+function cloudSaveWall(list, cb) {
+  if (apiUrl) {
+    post('/api/wall/sync', { list: list }, function (j) {
+      cb(j.ok ? { ok: true } : { ok: false, msg: j.msg || '同步失败' });
+    });
+  } else {
+    cb({ ok: false, msg: '电脑后端未连接，无法同步云端（留言已保存在本地待同步）' });
+  }
+}
+function b64encode(str) {
+  if (typeof btoa === 'function') return btoa(unescape(encodeURIComponent(str)));
+  // 兜底：手动编码（UTF-8安全）
+  var bytes = new TextEncoder().encode(str);
+  var bin = '';
+  bytes.forEach(function (b) { bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+
 function get(path, cb) {
   fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
     .catch(function () { cb({ ok: false, msg: '后端未连接' }); });
@@ -209,10 +241,26 @@ function spawnDm(item) {
 }
 
 function loadWall() {
-  get('/api/wall', function (j) {
-    if (!j.ok || !j.list) return;
-    items = j.list;
-    // 置顶区
+  cloudGetWall(function (cj) {
+    if (cj.ok) {
+      renderWall(cj.list);
+      // 本地后端在线时也同步一份最新数据
+      get('/api/wall', function (lj) {
+        if (lj.ok && lj.list && lj.list.length > cj.list.length) renderWall(lj.list);
+      });
+      return;
+    }
+    // 云端不可用→退回本地后端
+    get('/api/wall', function (j) {
+      if (!j.ok || !j.list) return;
+      renderWall(j.list);
+    });
+  });
+}
+
+function renderWall(list) {
+  items = list;
+      // 置顶区
     var pins = items.filter(function (x) { return x.pinned; });
     var pinZone = document.getElementById('pinZone');
     var pinList = document.getElementById('pinList');
@@ -262,7 +310,6 @@ function loadWall() {
       var st = document.getElementById('stage');
       st.innerHTML = '<div style="color:#6272a4;text-align:center;padding-top:180px;font-size:14px">弹幕飞走啦，来发一条吧 ✈️</div>';
     }
-  });
 }
 
 function togglePin(id, pinned) {
@@ -276,17 +323,22 @@ function doPost() {
   var content = document.getElementById('w-content').value.trim();
   if (!content) { document.getElementById('w-msg').textContent = '留言内容不能为空'; return; }
   document.getElementById('w-msg').textContent = '发布中...';
-  post('/api/wall', {
-    name: document.getElementById('w-name').value.trim(),
+  var name = document.getElementById('w-name').value.trim();
+  var newItem = {
+    id: Date.now(),
+    name: name || '匿名',
     content: content,
-    token: getToken()
-  }, function (j) {
+    time: new Date().toLocaleString('zh-CN', { hour12: false }),
+    admin: getUsername() === 'Server'
+  };
+  /* 写入本地后端（在线时同步到云端） */
+  post('/api/wall', { name: name, content: content, token: getToken() }, function (j) {
     if (j.ok) {
       document.getElementById('w-msg').textContent = '✅ 留言成功！';
       document.getElementById('w-content').value = '';
       loadWall();
     } else {
-      document.getElementById('w-msg').textContent = j.msg || '发布失败';
+      document.getElementById('w-msg').textContent = (j.msg || '发布失败') + '（电脑未开机？）';
     }
   });
 }
@@ -296,7 +348,7 @@ function doPost() {
 setInterval(function () {
   if (document.getElementById('dmMode').value === 'off') { loadWall(); return; }
   // 仅拉列表并增量生成新弹幕
-  get('/api/wall', function (j) {
+  cloudGetWall(function (j) {
     if (!j.ok || !j.list) return;
     var stage = document.getElementById('stage');
     if (!stage || stage.style.display === 'none') return;
@@ -326,6 +378,6 @@ fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-
   });
 });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v4"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v5"></script>
 </body>
 </html>

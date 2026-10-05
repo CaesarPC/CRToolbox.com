@@ -152,18 +152,16 @@
       ghRead('api_data/wall.json', function (err, list) {
         if (err) return cb(fail(err.error));
         list = list || [];
-        /* ---- 刷屏防御（Server 管理员豁免） ---- */
+        /* ---- 刷屏防御（所有账号统一生效，包括 Server，防止账号被乱用） ---- */
         var who = username || '匿名';
         var now = Date.now();
         var recent = list.filter(function (x) {
           var t = Number(x.ts) || (x.id ? Number(x.id) : 0);
           return (x.who || x.name) === who && (now - t) < 600000;   // 10分钟内的发言
         });
-        if (username !== 'Server') {
-          if (recent.length >= 5) return cb(fail('发言太频繁了，请 10 分钟后再试试'));
-          var same = recent.filter(function (x) { return (x.content || '') === content; }).length;
-          if (same >= 2) return cb(fail('这句你已经发过两次了，换一句吧'));
-        }
+        if (recent.length >= 5) return cb(fail('发言太频繁了，请 10 分钟后再试试'));
+        var same = recent.filter(function (x) { return (x.content || '') === content; }).length;
+        if (same >= 2) return cb(fail('这句你已经发过两次了，换一句吧'));
         var item = {
           id: Date.now(),
           ts: now,
@@ -432,6 +430,107 @@
     });
   }
 
+  /* ========== 管理员专属 API ========== */
+  function adminUsersList(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      ghRead('api_data/users.json', function (err, users) {
+        if (err) return cb(fail(err.error));
+        users = users || {};
+        var out = Object.keys(users).map(function (k) {
+          return { username: k, regTime: users[k].created || '', admin: k === 'Server' };
+        });
+        cb(ok({ list: out }));
+      });
+    });
+  }
+  function adminUserReset(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      var target = String(data.username || '').trim();
+      var newPass = String(data.password || '').trim();
+      if (!target || !newPass) return cb(fail('用户名和新密码不能为空'));
+      if (target === 'Server') return cb(fail('不能重置 Server 密码'));
+      ghRead('api_data/users.json', function (err, users) {
+        if (err) return cb(fail(err.error));
+        users = users || {};
+        if (!users[target]) return cb(fail('用户不存在'));
+        var salt = randToken().slice(0, 8);
+        sha256(newPass + '::' + salt).then(function (hash) {
+          users[target].salt = salt; users[target].hash = hash;
+          ghWrite('api_data/users.json', users, function (e2) {
+            if (e2) return cb(fail(e2.error));
+            cb(ok({ msg: '密码已重置' }));
+          });
+        });
+      });
+    });
+  }
+  function adminUserDelete(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      var target = String(data.username || '').trim();
+      if (!target) return cb(fail('用户名不能为空'));
+      if (target === 'Server') return cb(fail('不能删除 Server'));
+      ghRead('api_data/users.json', function (err, users) {
+        if (err) return cb(fail(err.error));
+        users = users || {};
+        if (!users[target]) return cb(fail('用户不存在'));
+        delete users[target];
+        ghWrite('api_data/users.json', users, function (e2) {
+          if (e2) return cb(fail(e2.error));
+          // 同时清理该用户的 session
+          ghRead('api_data/sessions.json', function (e3, sessions) {
+            if (!e3 && sessions) {
+              Object.keys(sessions).forEach(function (tk) { if (sessions[tk] === target) delete sessions[tk]; });
+              ghWrite('api_data/sessions.json', sessions, function () {});
+            }
+          });
+          cb(ok({ msg: '用户已删除' }));
+        });
+      });
+    });
+  }
+  function adminFeedbackList(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      ghRead('api_data/feedback.json', function (err, list) {
+        if (err) return cb(fail(err.error));
+        cb(ok({ list: list || [] }));
+      });
+    });
+  }
+  function adminVisitsList(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      ghRead('api_data/visits.json', function (err, list) {
+        if (err) return cb(fail(err.error));
+        cb(ok({ list: list || [] }));
+      });
+    });
+  }
+  /* 访问记录（公开，页面加载时调用） */
+  function visitLog(data, cb) {
+    ghRead('api_data/visits.json', function (err, list) {
+      if (err) list = [];
+      list = list || [];
+      var item = {
+        id: Date.now(),
+        ts: Date.now(),
+        time: nowStr(),
+        page: String(data.page || '').slice(0, 100),
+        ua: String(data.ua || '').slice(0, 200),
+        ref: String(data.ref || '').slice(0, 200)
+      };
+      list.push(item);
+      if (list.length > 500) list = list.slice(-500);
+      ghWrite('api_data/visits.json', list, function (e2) {
+        if (e2) return cb(fail(e2.error));
+        cb(ok({ msg: '已记录' }));
+      });
+    });
+  }
+
   /* 统一出口：前端 post/get 路由到这里
    * route('GET', '/api/wall?x=1', null, cb)
    * route('POST', '/api/wall', {name,content,token}, cb)
@@ -450,6 +549,9 @@
       if (p === 'note') return noteGet({ token: q.token }, cb);
       if (p === 'projects') return projectsList({ q: q.q, cat: q.cat, mine: q.mine }, cb);
       if (p === 'report') return report(cb);
+      if (p === 'admin/users') return adminUsersList({ token: q.token }, cb);
+      if (p === 'admin/feedback') return adminFeedbackList({ token: q.token }, cb);
+      if (p === 'admin/visits') return adminVisitsList({ token: q.token }, cb);
       return cb(fail('接口不存在: ' + p));
     }
     switch (p) {
@@ -463,6 +565,9 @@
       case 'projects': return projectCreate(data, cb);
       case 'projects/comment': return projectComment(data, cb);
       case 'projects/del': return projectDel(data, cb);
+      case 'admin/user/reset': return adminUserReset(data, cb);
+      case 'admin/user/delete': return adminUserDelete(data, cb);
+      case 'visit/log': return visitLog(data, cb);
       default: return cb(fail('接口不存在: ' + p));
     }
   }
@@ -476,6 +581,9 @@
     feedbackPost: feedbackPost,
     report: report,
     projectsList: projectsList, projectCreate: projectCreate,
-    projectComment: projectComment, projectDel: projectDel
+    projectComment: projectComment, projectDel: projectDel,
+    adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete,
+    adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
+    visitLog: visitLog
   };
 })();

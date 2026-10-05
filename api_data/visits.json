@@ -230,5 +230,13 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (iPad; CPU OS 17_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.78(0x18004e33) NetType/WIFI Language/zh_HK",
   "ref": "https://caesarpc.github.io/website-finder/finder.html"
+ },
+ {
+  "id": 1791214429677,
+  "ts": 1791214429677,
+  "time": "2026-10-05 23:33",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.14 Safari/605.1.15",
+  "ref": "https://caesarpc.github.io/website-finder/share.html"
  }
 ]

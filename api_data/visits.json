@@ -222,5 +222,13 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (Linux; Android 12; HarmonyOS; ADA-AL00; HMSCore 6.16.4.352) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.6834.79 HuaweiBrowser/17.0.8.310 Mobile Safari/537.36",
   "ref": "https://caesarpc.github.io/website-finder/finder.html"
+ },
+ {
+  "id": 1791212332030,
+  "ts": 1791212332030,
+  "time": "2026-10-05 22:58",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (iPad; CPU OS 17_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.78(0x18004e33) NetType/WIFI Language/zh_HK",
+  "ref": "https://caesarpc.github.io/website-finder/finder.html"
  }
 ]

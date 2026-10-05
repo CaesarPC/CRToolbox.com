@@ -155,6 +155,31 @@
       .catch(function () { cb({ error: '网络错误' }); });
   }
 
+  /* 上传任意文件（base64内容）到仓库 uploads/ 目录，返回下载URL */
+  function uploadFile(filename, contentBase64, cb) {
+    var safeName = String(filename || 'file').replace(/[^a-zA-Z0-9._-]/g, '_');
+    var path = 'uploads/' + Date.now() + '_' + safeName;
+    var tok = WRITE_TOKEN || TOKEN;
+    fetch(API + path, { cache: 'no-store', headers: { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + tok } })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        var sha = (j && j.sha) || null;
+        return fetch(API + path, {
+          method: 'PUT',
+          headers: { 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'upload: ' + safeName, content: contentBase64, branch: BRANCH, sha: sha || undefined })
+        }).then(function (r) { return r.json(); });
+      })
+      .then(function (j) {
+        if (j.content || j.commit) {
+          cb(null, { url: 'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH + '/' + path, path: path, name: safeName });
+        } else {
+          cb({ error: (j.message || '上传失败') });
+        }
+      })
+      .catch(function () { cb({ error: '网络错误' }); });
+  }
+
   /* ---------- 工具 ---------- */
   function sha256(str) {
     return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
@@ -445,8 +470,10 @@
       var content = String(data.content || '').trim().slice(0, 5000);
       var link = String(data.link || '').trim().slice(0, 300);
       var tags = String(data.tags || '').trim().slice(0, 100);
+      var fileUrl = String(data.fileUrl || '').trim().slice(0, 500);
+      var fileName = String(data.fileName || '').trim().slice(0, 100);
       if (!title) return cb(fail('标题不能为空'));
-      if (!desc && !content && !link) return cb(fail('描述、内容、链接至少填一个'));
+      if (!desc && !content && !link && !fileUrl) return cb(fail('描述、内容、链接、文件至少填一个'));
       ghRead('api_data/projects.json', function (err, list) {
         if (err) return cb(fail(err.error));
         list = list || [];
@@ -456,6 +483,8 @@
           desc: desc,
           content: content,
           link: link,
+          fileUrl: fileUrl,
+          fileName: fileName,
           tags: tags,
           category: String(data.category || '其他').slice(0, 20),
           author: username,
@@ -699,6 +728,7 @@
     adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete, adminUserSetRole: adminUserSetRole,
     adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
     visitLog: visitLog,
-    verifyAndUnlock: verifyAndUnlock
+    verifyAndUnlock: verifyAndUnlock,
+    uploadFile: uploadFile
   };
 })();

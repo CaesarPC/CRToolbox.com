@@ -1,5 +1,16 @@
 [
  {
+  "id": 1791214499420,
+  "ts": 1791214499419,
+  "who": "Server",
+  "name": "Server",
+  "content": "欢迎留言！",
+  "time": "2026-10-05 23:34",
+  "admin": true,
+  "mod": false,
+  "pinned": false
+ },
+ {
   "id": 1791194458512,
   "ts": 1791194458512,
   "who": "Server",

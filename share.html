@@ -125,7 +125,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 </div>
 
 <script>
-var apiUrl = localStorage.getItem('cr_api_url') || '';
+var apiUrl = '';   // 兼容旧变量，不再使用
 var TOKEN_KEY = 'cr_token';
 var USER_KEY = 'cr_user';
 var curUser = localStorage.getItem(USER_KEY) || '';
@@ -133,15 +133,10 @@ var projects = [];
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 function post(path, data, cb) {
-  fetch(apiUrl + path, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).then(function (r) { return r.json(); }).then(cb)
-    .catch(function () { cb({ ok: false, msg: '服务暂不可用（云端后端未部署或离线）' }); });
+  window.CrGH && CrGH.route('POST', path, data, cb);
 }
 function get(path, cb) {
-  fetch(apiUrl + path, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(cb)
-    .catch(function () { cb({ ok: false, msg: '服务暂不可用' }); });
+  window.CrGH && CrGH.route('GET', path, null, cb);
 }
 function esc(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -274,19 +269,23 @@ document.getElementById('loginLink').onclick = function () {
   openLogin();
 };
 
-/* 启动：读云端后端地址 + 拉取列表 */
-fetch('https://CaesarPC.github.io/website-finder/api_config.json', { cache: 'no-store' })
-  .then(function (r) { return r.json(); })
-  .then(function (cfg) {
-    if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
-    updUserUI();
-    loadList();
-  })
-  .catch(function () { updUserUI(); loadList(); });
+/* 启动：直接走 GitHub 数据层 */
+(function () {
+  if (!window.CrGH) {
+    var s = document.createElement('script');
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb.js?v=20261005v1';
+    s.onload = function () { updUserUI(); loadList(); };
+    s.onerror = function () { updUserUI(); };
+    (document.head || document.body).appendChild(s);
+    return;
+  }
+  updUserUI();
+  loadList();
+})();
 
 document.getElementById('pubGo').onclick = doPublish;
 document.getElementById('q').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v3"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v6"></script>
 </body>
 </html>

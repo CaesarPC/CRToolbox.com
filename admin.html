@@ -135,7 +135,7 @@
   </div>
 </div>
 
-<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005e"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005f"></script>
 <script>
 var CLOUD_REPO = 'CaesarPC/website-finder';
 var CLOUD_WALL = 'api_data/wall.json';
@@ -287,11 +287,18 @@ function loadUsers() {
     if (!j.list.length) { el.innerHTML = '<div class="empty">暂无用户</div>'; return; }
     var h = '';
     j.list.forEach(function (u) {
+      var roleBadge = u.admin ? ' <span class="badge">👑 纯管理员</span>' :
+        (u.role === 'mod' ? ' <span class="badge blue">🥈 半管理员</span>' : ' <span class="badge gray">普通用户</span>');
+      var roleBtn = u.admin ? '' :
+        (u.role === 'mod'
+          ? '<button class="btn small" onclick="setRole(\'' + esc(u.username) + '\',\'user\')">降级普通</button> '
+          : '<button class="btn small" onclick="setRole(\'' + esc(u.username) + '\',\'mod\')">升级半管理员</button> ');
       h += '<div class="user-row">' +
         '<span class="uname">' + esc(u.username) + '</span>' +
-        (u.admin ? ' <span class="badge">👑 管理员</span>' : '') +
+        roleBadge +
         '<span class="ureg">注册时间: ' + esc(u.regTime) + '</span>' +
         (u.admin ? '' :
+          roleBtn +
           '<button class="btn blue small" onclick="resetPass(\'' + esc(u.username) + '\')">重置密码</button> ' +
           '<button class="btn red small" onclick="delUser(\'' + esc(u.username) + '\')">删除用户</button>') +
         '</div>';
@@ -314,6 +321,15 @@ function delUser(username) {
   if (!window.CrGH) return;
   window.CrGH.adminUserDelete({ username: username, token: adminToken }, function (j) {
     alert(j.ok ? '用户已删除' : (j.msg || '操作失败'));
+    if (j.ok) loadUsers();
+  });
+}
+function setRole(username, role) {
+  var tip = role === 'mod' ? '升级为半管理员（金色框、无皇冠、不能置顶）' : '降级为普通用户';
+  if (!confirm('确定将 ' + username + ' ' + tip + '？')) return;
+  if (!window.CrGH) return;
+  window.CrGH.adminUserSetRole({ username: username, role: role, token: adminToken }, function (j) {
+    alert(j.ok ? j.msg : (j.msg || '操作失败'));
     if (j.ok) loadUsers();
   });
 }

@@ -1,1 +1,18 @@
-[{"id": 1791181435758, "name": "\u73a9\u5bb6\u5c0f\u660e", "content": "\u4e91\u7aef\u7559\u8a00\u6d4b\u8bd5", "time": "2026-10-05 14:23", "admin": false, "pinned": false}]
+[
+ {
+  "id": 1791184315550,
+  "name": "t",
+  "content": "hdr测试",
+  "time": "2026-10-05 15:11",
+  "admin": false,
+  "pinned": false
+ },
+ {
+  "id": 1791181435758,
+  "name": "玩家小明",
+  "content": "云端留言测试",
+  "time": "2026-10-05 14:23",
+  "admin": false,
+  "pinned": false
+ }
+]

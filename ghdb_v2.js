@@ -146,14 +146,28 @@
   }
   function wallPost(data, cb) {
     var name = String(data.name || '匿名').slice(0, 20);
-    var content = String(data.content || '').slice(0, 500);
+    var content = String(data.content || '').trim().slice(0, 500);
     if (!content) return cb(fail('留言内容不能为空'));
     usernameByToken(data.token, function (username) {
       ghRead('api_data/wall.json', function (err, list) {
         if (err) return cb(fail(err.error));
         list = list || [];
+        /* ---- 刷屏防御（Server 管理员豁免） ---- */
+        var who = username || '匿名';
+        var now = Date.now();
+        var recent = list.filter(function (x) {
+          var t = Number(x.ts) || (x.id ? Number(x.id) : 0);
+          return (x.who || x.name) === who && (now - t) < 600000;   // 10分钟内的发言
+        });
+        if (username !== 'Server') {
+          if (recent.length >= 5) return cb(fail('发言太频繁了，请 10 分钟后再试试'));
+          var same = recent.filter(function (x) { return (x.content || '') === content; }).length;
+          if (same >= 2) return cb(fail('这句你已经发过两次了，换一句吧'));
+        }
         var item = {
           id: Date.now(),
+          ts: now,
+          who: who,
           name: name,
           content: content,
           time: nowStr(),

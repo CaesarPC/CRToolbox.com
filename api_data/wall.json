@@ -1,1 +1,13 @@
-[]
+[
+ {
+  "id": 1791194458512,
+  "ts": 1791194458512,
+  "who": "Server",
+  "name": "匿名",
+  "content": "hello",
+  "time": "2026-10-05 18:00",
+  "admin": true,
+  "mod": false,
+  "pinned": false
+ }
+]

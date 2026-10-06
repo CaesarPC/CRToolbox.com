@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://caesarpc.github.io/website-finder/sitemap.xml

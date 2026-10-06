@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件上传与大文件分片 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>文件上传与大文件分片</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>文件上传与大文件分片：从单图上传到GB级文件的技术方案</p>
+<p>上传一个头像很简单，一个form表单就搞定。但上传几个GB的视频、断点续传、秒传，就需要一套完整的上传方案。</p>
+<p>基础上传：input[type=file]选文件，FormData包装，POST到后端。小文件够用。</p>
+<p>大文件分片上传是核心方案。文件太大一次性上传，网络波动就前功尽弃。把大文件切成小块（比如每块5MB），逐块上传。某块失败只重传那一块，不用从头来。全部传完后后端合并分片。</p>
+<p>分片上传流程：前端计算文件MD5（唯一标识）；按大小切片；逐片上传，每片带文件标识+片序号；后端记录已收到哪些片；全部传完通知后端合并。</p>
+<p>断点续传：刷新页面后，问后端"这个文件已经传了哪些片"，没传完的片继续传，已传的跳过。这就是断点续传。</p>
+<p>秒传：上传前先把文件MD5发给后端，后端检查是否已有这个MD5的文件。有的话直接秒传完成，不用真传文件。网盘的"秒传"就是这个原理。</p>
+<p>并发上传：多个分片同时传，加快速度。但要控制并发数（比如同时3个），太多会占用带宽反而慢。</p>
+<p>进度展示：已传片数/总片数算进度百分比，实时显示。</p>
+<p>拖拽上传、粘贴上传、目录上传是体验增强。后端配合：分片接收接口、合并接口、已传分片查询接口。</p>
+<p>成熟库：react-uploader、vue-upload-component，或者自己基于XMLHttpRequest/Fetch写。大文件上传是前端工程化的典型场景。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

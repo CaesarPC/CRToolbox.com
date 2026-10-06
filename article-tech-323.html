@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS_overflow溢出处理 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CSS_overflow溢出处理</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CSS overflow与溢出处理</p>
+<p>overflow控制内容溢出时的表现。visible（默认，溢出可见）、hidden（裁剪溢出部分）、scroll（始终显示滚动条）、auto（需要时显示滚动条）。</p>
+<p>overflow: auto是常见做法：内容超出时自动显示滚动条，不超出不显示。比scroll灵活（不会一直显示滚动条）。</p>
+<p>overflow也能触发BFC（块级格式化上下文），用于清除浮动、防止margin重叠。overflow: hidden是常用的清除浮动手段。</p>
+<p>理解overflow，才能处理内容溢出和滚动。这是布局的基础属性。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

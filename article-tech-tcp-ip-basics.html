@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCP_IP网络基础 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>TCP_IP网络基础</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>TCP/IP网络基础：理解互联网通信的底层协议</h2>
+<p>浏览网页、发请求、调API，底层都是网络协议在支撑。虽然日常开发不直接操作TCP，但理解网络分层和关键概念，能帮你定位"请求超时"、"连接被拒绝"这类网络问题。</p>
+<p>TCP/IP是分层模型。应用层（HTTP、WebSocket）负责业务数据格式；传输层（TCP、UDP）负责端到端传输；网络层（IP）负责路由寻址；链路层负责物理传输。数据从应用层往下逐层打包，到对端后逐层解包。</p>
+<p>TCP三次握手建立连接：客户端发SYN、服务器回SYN+ACK、客户端再发ACK，连接建立。为什么三次？因为要确认双方的发送和接收能力都正常，两次不够。四次挥手断开连接，因为全双工要分别关闭两个方向。</p>
+<p>TCP的可靠传输机制：序列号+确认应答（没收到确认就重传）、滑动窗口（流量控制）、拥塞控制（网络堵了就放慢发送）。这些机制保证数据不丢、不乱序。</p>
+<p>UDP是无连接协议，不保证可靠但快。视频通话、游戏实时数据用UDP，允许丢包但不能慢。</p>
+<p>HTTP基于TCP。一次HTTPS请求涉及：DNS解析（域名转IP）、TCP三次握手、TLS握手（前面讲过）、发请求收响应、关闭连接。理解这个链路，就知道为什么优化网络要做：DNS缓存、连接复用（keep-alive避免重复握手）、HTTP/2多路复用。</p>
+<p>常见网络问题排查：连接超时（对方没响应，可能是防火墙、服务没启动）、连接被拒绝（对方端口没开）、DNS解析失败（域名配置错）、跨域（浏览器同源策略，不是网络层问题）。用ping测连通性、telnet测端口、traceroute看路径，是基本排查手段。</p>
+<p>WebSocket基于TCP长连接，HTTP/3基于UDP（QUIC协议），新一代协议在解决TCP的队头阻塞问题。理解TCP基础，再看新协议演进就容易理解。</p>
+<p>网络是分布式系统的基石。服务之间调用、用户访问网站，都在网络上跑。理解TCP/IP，出了网络问题不再只会"刷新试试"。</p>
+</div>
+</body>
+</html>

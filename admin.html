@@ -89,6 +89,7 @@
       <div class="tab" data-tab="users">👥 用户管理</div>
       <div class="tab" data-tab="feedback">📝 意见反馈</div>
       <div class="tab" data-tab="visits">👁️ 访问监控</div>
+      <div class="tab" data-tab="version">🏷️ 版本管理</div>
     </div>
 
     <!-- 留言管理 -->
@@ -132,6 +133,22 @@
         <div id="visitList"></div>
       </div>
     </div>
+
+    <!-- 版本管理 -->
+    <div class="tab-panel" id="panel-version">
+      <div class="card">
+        <h2>🏷️ 版本管理</h2>
+        <div class="stat-row" style="margin-bottom:14px">
+          <div class="stat"><b id="curVer">alpha-1.0</b><span>当前版本</span></div>
+        </div>
+        <div style="margin-bottom:10px">
+          <input id="newVer" placeholder="新版本号，如 alpha-1.1" style="padding:8px;margin-right:6px">
+          <input id="verNote" placeholder="本次改了什么（可选）" style="padding:8px;width:260px">
+          <button class="btn green" onclick="doSetVersion()">✅ 更新版本</button>
+        </div>
+        <div id="changelogList"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -166,8 +183,48 @@ document.querySelectorAll('.tab').forEach(function (tab) {
     if (tab.dataset.tab === 'users') loadUsers();
     if (tab.dataset.tab === 'feedback') loadFeedback();
     if (tab.dataset.tab === 'visits') loadVisits();
+    if (tab.dataset.tab === 'version') loadVersion();
   };
 });
+
+/* 版本管理 */
+function loadVersion() {
+  if (!window.CrGH) return;
+  window.CrGH.route('GET', '/api/version', null, function (j) {
+    if (!j.ok) return;
+    document.getElementById('curVer').textContent = j.version || 'alpha-1.0';
+    var list = j.changelog || [];
+    if (!list.length) {
+      document.getElementById('changelogList').innerHTML = '<div class="sub">暂无变更记录</div>';
+      return;
+    }
+    var h = '<h3 style="margin:14px 0 8px;color:#8be9fd">📋 变更日志</h3>';
+    list.forEach(function (c) {
+      h += '<div class="item" style="margin-bottom:8px;padding:10px;background:#282a36;border-radius:8px">' +
+        '<div><b style="color:#50fa7b">' + esc(c.version) + '</b> <span class="sub">' + esc(c.date ? c.date.slice(0,10) : '') + '</span></div>' +
+        (c.note ? '<div style="margin-top:4px;font-size:13px">' + esc(c.note) + '</div>' : '') +
+        '</div>';
+    });
+    document.getElementById('changelogList').innerHTML = h;
+  });
+}
+
+function doSetVersion() {
+  var v = document.getElementById('newVer').value.trim();
+  var note = document.getElementById('verNote').value.trim();
+  if (!v) return alert('请输入新版本号');
+  if (!window.CrGH) return;
+  window.CrGH.route('POST', '/api/version', { token: adminToken, version: v, note: note }, function (j) {
+    if (j.ok) {
+      alert('✅ 版本已更新为 ' + v);
+      document.getElementById('newVer').value = '';
+      document.getElementById('verNote').value = '';
+      loadVersion();
+    } else {
+      alert('❌ ' + (j.msg || '更新失败'));
+    }
+  });
+}
 
 /* 鉴权：同时验证密码并获取管理 token */
 document.getElementById('btnLogin').onclick = function () {

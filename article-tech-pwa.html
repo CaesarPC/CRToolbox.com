@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA渐进式Web应用 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>PWA渐进式Web应用</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>PWA渐进式Web应用：让网站拥有APP般的体验</h2>
+<p>网页和原生APP长期以来有一道鸿沟：网页方便打开（点链接就用），但体验不如APP（不能离线、不能发推送、不能加到桌面全屏运行）。原生APP体验好，但要下载安装、占用存储空间。PWA（Progressive Web App，渐进式Web应用）试图弥合这道鸿沟：用Web技术开发，却拥有接近原生APP的体验。</p>
+<p>PWA的三大核心技术是Service Worker、Web App Manifest和离线缓存。</p>
+<p>Service Worker是一段在后台运行的JavaScript脚本，独立于网页。它可以拦截网页的网络请求，决定是从网络拿还是从本地缓存拿。这是离线能力的基础：用户访问过的页面，即使没网，Service Worker也能从缓存返回页面，网站照样能打开。Service Worker还能接收服务器推送的消息（Web Push），即使浏览器没打开，用户也能收到通知。</p>
+<p>Web App Manifest是一个JSON文件，告诉浏览器这个应用的名称、图标、主题色、启动方式。用户"添加到主屏幕"后，桌面会出现一个图标，点开后全屏运行，没有浏览器地址栏，看起来和原生APP一模一样。</p>
+<p>离线缓存策略通过Service Worker实现。核心思路是App Shell预缓存：应用的基本框架（HTML、CSS、核心JS、图标）安装时就缓存好。用户打开时，App Shell瞬间从本地加载，然后再请求动态内容。即使网络不好，至少应用框架是秒开的，不会白屏。</p>
+<p>PWA的"渐进式"体现在：不是所有浏览器都支持PWA的全部特性。支持的浏览器享受完整PWA体验（离线、推送、桌面图标）；不支持的浏览器，网站照样正常用，只是没有这些增强功能。优雅降级，不会因为PWA功能缺失导致网站不能用。</p>
+<p>实际案例：Twitter的PWA版本、星巴克的PWA点餐应用、很多新闻网站的PWA。在新兴市场（用户手机存储小、流量贵），PWA特别受欢迎——不用下载几十MB的APP，浏览器访问就有APP体验。</p>
+<p>PWA也有局限。iOS Safari对PWA的支持一直比较慢，推送通知、后台运行等功能直到最近才完善。在Android上PWA体验已经很好。国内浏览器生态碎片化，很多WebView对PWA支持不完整。所以PWA更适合面向海外市场、或者Chrome/Edge用户群的产品。</p>
+<p>虽然原生APP和小程序仍然是主流，但PWA代表了Web技术向APP体验靠拢的方向。离线可用、可安装、可推送，这些能力让网页应用不再只是"打开就用、关闭就走"的一次性工具，而能成为用户日常依赖的应用。</p>
+</div>
+</body>
+</html>

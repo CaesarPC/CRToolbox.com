@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浏览器渲染原理 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>浏览器渲染原理</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 浏览器渲染原理：从输入URL到页面呈现的全过程</p>
+<p>当你在浏览器地址栏输入一个网址按下回车，到页面完整渲染出来，背后发生了一连串精密的工作：DNS解析、TCP连接、HTTP请求、服务器处理、HTML解析、CSS计算、布局绘制、图层合成。整个过程通常在几百毫秒内完成，但每一步都可能成为性能瓶颈。理解浏览器渲染原理，不是为了背面试题，而是为了知道你的代码为什么慢、该怎么优化。</p>
+<p>## 一、DOM树与CSSOM树</p>
+<p>浏览器拿到HTML之后，从上到下解析HTML标签，构建DOM树——一个节点树，每个HTML标签对应一个节点。遇到CSS文件或者style标签，解析CSS规则，构建CSSOM树——描述每个选择器对应哪些样式属性。</p>
+<p>DOM树和CSSOM树是两棵独立的树。DOM描述页面结构，CSSOM描述样式规则。它们合在一起，就生成了渲染树（Render Tree）——每个可见DOM节点加上它计算后的样式。注意是"可见"——head标签、display:none的元素不在渲染树里，因为它们不需要绘制。</p>
+<p>关键性能点：CSSOM的构建是阻塞渲染的。浏览器必须等CSS全部下载并解析完，才能构建渲染树开始绘制。这就是为什么CSS要放在head里尽早加载——如果CSS放在body底部，浏览器前面解析了一堆HTML，到CSS加载完之前都白屏等着。而JS更狠——解析到script标签时，DOM构建会暂停，因为JS可能会修改DOM和CSSOM。这就是为什么普通的script标签要放底部或者加defer/async。</p>
+<p>## 二、布局与绘制</p>
+<p>渲染树构建好之后，浏览器进入布局阶段（Layout）：计算每个节点在屏幕上的确切位置和大小。这一步也叫Reflow。浏览器从根节点开始遍历，算出每个元素的坐标、尺寸。</p>
+<p>布局之后是绘制（Paint）：把每个节点的像素画出来——颜色、文字、图片、边框、阴影。绘制不是一步画完全部，浏览器会把页面分成多个图层，每个图层单独绘制。</p>
+<p>最后是合成（Composite）：把多个绘制好的图层按照正确的顺序叠在一起，显示到屏幕上。这一步由GPU加速处理，非常快。</p>
+<p>关键性能点：修改不同的CSS属性，触发的渲染步骤不同。修改width、height、left、top这些几何属性，会触发Layout（重排），然后Paint，然后Composite——最贵。修改color、background-color，不需要Layout，只需要Paint和Composite——中等。修改transform和opacity，只需要Composite——最便宜，因为元素的位置和大小没变，只需要把合成图层变换一下位置或者透明度。</p>
+<p>这就是为什么高性能动画推荐用transform做位移动画而不是改left/top——改left/top每帧都触发重排，性能极差；用transform只触发合成，GPU处理，丝般顺滑。</p>
+<p>## 三、节流与渲染帧</p>
+<p>浏览器每秒大概刷新60次屏幕，也就是每16.7毫秒要完成一帧的渲染。如果你的JS执行时间超过了16毫秒，就会掉帧——页面卡顿。</p>
+<p>requestAnimationFrame是和浏览器渲染节奏对齐的API。你把动画更新的逻辑放在requestAnimationFrame回调里，浏览器会在每次重绘前调用它，保证动画流畅。不要用setTimeout做动画——setTimeout的时间线和浏览器渲染不同步，容易丢帧。</p>
+<p>## 四、重排与重绘优化</p>
+<p>减少重排是前端性能优化的核心原则之一。以下操作会触发重排：修改元素尺寸位置、修改字体、添加删除样式、窗口大小变化、读取offsetWidth等布局属性。</p>
+<p>一个经典优化技巧：批量修改DOM。不要一次次修改元素样式然后读布局属性——每次修改都触发一次重排。正确做法是：先把元素display:none（脱离渲染树），然后批量修改它的所有样式，再显示回来。这样只触发两次重排（隐藏和显示），而不是每次修改都触发。</p>
+<p>读取布局属性也要小心。如果你连续修改样式然后读offsetWidth，浏览器为了给你正确的值，会强制同步刷新布局——本来可以批量优化的重排被你拆成了一个个独立的。最好把所有读操作放在前面，写完再统一读。</p>
+<p>## 五、总结</p>
+<p>浏览器渲染是一个流水线：解析HTML/CSS→构建渲染树→布局→绘制→合成。每一步都有性能开销，理解每一步什么操作最贵，就能写出性能更好的代码。记住三个层级：改几何属性最贵（重排+重绘+合成），改颜色居中（重绘+合成），改transform/opacity最便宜（只合成）。高性能动画永远走合成层，避免每帧重排。这就是浏览器渲染原理给前端开发者最实用的指导。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

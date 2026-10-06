@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>暗色模式实现 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>暗色模式实现</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>暗色模式实现：让网站支持白天黑夜两种主题</p>
+<p>暗色模式（Dark Mode）现在是标配功能。用户晚上看网页不想被白底晃眼。实现暗色模式不是做两套样式，而是用CSS变量做主题切换。</p>
+<p>核心思路：所有颜色定义为CSS变量。:root里定义亮色主题的变量值，[data-theme="dark"]里定义暗色变量值。组件里用var(--color-bg)而不是写死颜色。切换主题就是切换data-theme属性，所有变量值自动切换。</p>
+<p>CSS变量的好处：改一处全局生效。不用给每个元素写两套样式。</p>
+<p>颜色设计要注意：暗色模式不是简单反色。背景不是纯黑（#000太刺眼），而是深灰；文字不是纯白，而是浅灰；对比度要满足可读性标准。直接取反色效果通常很差。</p>
+<p>用户偏好检测：prefers-color-scheme媒体查询可以知道用户系统是否设置了暗色模式，默认跟随系统。同时提供手动切换按钮，用户可以强制选亮色或暗色。</p>
+<p>持久化：用户选择存localStorage，下次访问记住。切换时要避免闪烁（页面加载前就根据存储的偏好设置好主题）。</p>
+<p>暗色模式是细节体验，但做好了显示产品用心。CSS变量是现代主题切换的标准做法。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

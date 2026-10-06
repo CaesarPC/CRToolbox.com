@@ -201,7 +201,6 @@
   function fail(msg) { return { ok: false, msg: msg }; }
 
   /* ---------- 更改密码验证（所有写操作必须通过） ---------- */
-  var SECURITY_CACHE = null;
   function verifyChangePassword(pwd, cb) {
     if (!pwd) return cb(false, '请输入更改密码');
     function check(sec) {
@@ -640,24 +639,54 @@
       });
     });
   }
-  /* 访问记录（公开，页面加载时调用） */
+  /* 访问记录（公开，页面加载时调用）
+   * 优化：同一会话30分钟内同一UA+同一page只记一次，防刷页面导致数据膨胀；
+   *       写入失败时暂存 localStorage，下次页面加载时补传。 */
   function visitLog(data, cb) {
+    cb = cb || function () {};
+    var page = String(data.page || '').slice(0, 100);
+    var ua = String(data.ua || '').slice(0, 300);
+    var ref = String(data.ref || '').slice(0, 200);
+    /* 会话去重：30分钟内同一UA+同一page只记一次 */
+    try {
+      var key = 'cr_visit_' + page + '_' + (ua.length > 40 ? ua.substring(0, 40) : ua);
+      var last = parseInt(localStorage.getItem(key) || '0', 10);
+      if (last && (Date.now() - last) < 1800000) {
+        return cb(ok({ msg: '会话内已记录，跳过' }));
+      }
+      localStorage.setItem(key, String(Date.now()));
+    } catch (e) {}
+    /* 先补传之前失败的缓存 */
+    var pending = [];
+    try {
+      pending = JSON.parse(localStorage.getItem('cr_visit_pending') || '[]');
+      localStorage.removeItem('cr_visit_pending');
+    } catch (e) { pending = []; }
+    var item = {
+      id: Date.now(),
+      ts: Date.now(),
+      time: nowStr(),
+      page: page,
+      ua: ua,
+      ref: ref
+    };
+    pending.push(item);
     ghRead('api_data/visits.json', function (err, list) {
       if (err) list = [];
       list = list || [];
-      var item = {
-        id: Date.now(),
-        ts: Date.now(),
-        time: nowStr(),
-        page: String(data.page || '').slice(0, 100),
-        ua: String(data.ua || '').slice(0, 200),
-        ref: String(data.ref || '').slice(0, 200)
-      };
-      list.push(item);
+      pending.forEach(function (it) { list.push(it); });
       if (list.length > 500) list = list.slice(-500);
       ghWrite('api_data/visits.json', list, function (e2) {
-        if (e2) return cb(fail(e2.error));
-        cb(ok({ msg: '已记录' }));
+        if (e2) {
+          /* 写入失败，存回 localStorage 待下次补传 */
+          try {
+            var old = JSON.parse(localStorage.getItem('cr_visit_pending') || '[]');
+            old = old.concat(pending);
+            localStorage.setItem('cr_visit_pending', JSON.stringify(old.slice(-50)));
+          } catch (e) {}
+          return cb(fail(e2.error));
+        }
+        cb(ok({ msg: '已记录', count: pending.length }));
       });
     });
   }

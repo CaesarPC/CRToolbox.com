@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日志收集体系ELK - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>日志收集体系ELK</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>日志收集体系ELK：从分散日志到集中检索的工程实践</h2>
+<p>一台服务器的日志看 tail 就行，但几十台上百台服务器，日志分散在各个机器上，出问题要登录每台机器翻日志，效率极低。日志集中收集体系就是把所有服务的日志汇聚到一个地方，统一存储、统一检索、统一分析。</p>
+<p>ELK是经典方案的缩写：Elasticsearch（存储和检索日志）、Logstash（日志收集和处理）、Kibana（日志可视化查询界面）。后来Beats（轻量级日志采集器）替代了重的Logstash做采集，演进为EFLK栈。</p>
+<p>工作流程：每台服务器上的Filebeat采集日志文件，发送到Logstash做解析和过滤（提取时间、级别、traceId，过滤无用信息），然后存入Elasticsearch。开发者在Kibana界面搜索日志：按traceId查一次请求的完整链路、按错误级别筛错误日志、按时间范围查。</p>
+<p>结构化日志是前提。日志不能是自由文本"用户登录成功了"，要是结构化的JSON：{"time":"2026-10-06","level":"INFO","traceId":"abc123","userId":"456","message":"用户登录成功"}。这样才能按字段筛选和聚合。日志里带上traceId，是串联一次请求经过所有服务日志的关键。</p>
+<p>日志分级：ERROR（需要立刻处理的错误）、WARN（警告，暂时不影响但要关注）、INFO（关键业务事件）、DEBUG（调试信息，生产关闭）。合理分级，ERROR日志才是告警关注的对象。</p>
+<p>日志保留策略要规划。日志量很大（一个中大型服务每天几十GB），不能无限存。热数据（最近7天）存在高性能集群快速查询；冷数据（超过7天）归档到低成本存储或删除。设置生命周期自动管理。</p>
+<p>日志告警是进阶能力。ERROR日志数量突增（比平时多几倍）自动告警；特定关键词（"OutOfMemory"、"连接拒绝"）出现立刻通知。日志不只是事后排查工具，也要做实时监控。</p>
+<p>云厂商也有日志服务（阿里云SLS、AWS CloudWatch Logs），不用自己搭ELK，直接把日志发到云服务，开箱即用。中小团队推荐这种托管方案。</p>
+<p>日志系统是可观测性三大支柱之一（日志、指标、链路追踪）。没有集中日志，出问题就是盲人摸象；有了日志体系，排错效率提升一个量级。</p>
+</div>
+</body>
+</html>

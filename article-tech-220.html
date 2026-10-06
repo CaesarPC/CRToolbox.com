@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT认证与Session对比 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>JWT认证与Session对比</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># JWT认证与Session对比：两种登录态管理方案</p>
+<p>用户登录后，服务器怎么知道下一次请求是谁发的？这就是认证（Authentication）要解决的问题。Session和JWT是两种主流方案，各有优劣。理解它们的原理和区别，才能在项目中做出正确选择。</p>
+<p>## 一、Session：服务器端存登录态</p>
+<p>传统方案是Session。用户登录成功后，服务器创建一个Session对象，存用户信息（userId、角色等），生成一个随机Session ID，通过Cookie发给浏览器。浏览器后续请求自动带上这个Cookie，服务器根据Session ID找到对应的Session，就知道是谁了。</p>
+<p>Session的问题：服务器要存储所有登录用户的Session。单体应用时没问题，存在内存里就行。但微服务多实例部署时，用户A的请求打到了1号服务器，Session在1号的内存里；下一个请求打到了2号服务器，2号没有这个Session——就要求用户重新登录。解决办法是Session集中存储（存Redis），所有实例共享。</p>
+<p>## 二、JWT：无状态的令牌</p>
+<p>JWT（JSON Web Token）的思路完全不同。登录成功后，服务器不存任何Session，而是生成一个签过名的Token发给客户端。这个Token里包含了用户信息（userId、过期时间等），用服务器的私钥签名。客户端后续请求带上这个Token，服务器用公钥验证签名——签名有效就说明Token是服务器发的，没有被篡改。</p>
+<p>JWT的核心优势是无状态：服务器不需要存Session。任何一台服务器都能验证Token，天然适合分布式和多实例部署。客户端把Token存在localStorage或者Cookie里，每次请求带上就行。</p>
+<p>## 三、JWT的结构</p>
+<p>JWT由三部分组成，用点号分隔：header.payload.signature。</p>
+<p>header指定签名算法。payload存放用户数据和过期时间（注意：Payload只是Base64编码，不是加密的！任何人都能解码看到内容。不要在JWT里放敏感信息）。signature是用私钥对前两部分的签名——防篡改。如果有人改了Payload，签名就对不上了，服务器拒绝。</p>
+<p>## 四、JWT的缺点</p>
+<p>第一，不能主动作废。Session存在服务器，用户登出直接删Session就行。JWT签发给客户端后，在过期之前一直有效——除非服务器额外维护一个黑名单。用户改密码了、账号被封了，已经签发的JWT还有效，这是安全隐患。</p>
+<p>第二，体积较大。JWT比Session ID大不少，每次请求都要带，增加了带宽开销。</p>
+<p>第三，Payload不加密。虽然签名防篡改，但内容任何人都能解码。不要在JWT里放密码、身份证号等敏感数据。</p>
+<p>## 五、怎么选</p>
+<p>单体应用、服务器端渲染、对安全要求高——用Session。简单可靠，登出即失效。
+前后端分离、移动端App、多服务分布式——用JWT。无状态、易扩展。</p>
+<p>实际项目中很多人用混合方案：JWT做短期访问令牌（15分钟过期），Refresh Token做长期刷新。Access Token泄露风险小，Refresh Token存在安全地方用来换新的Access Token。</p>
+<p>## 六、总结</p>
+<p>Session和JWT不是谁取代谁，而是适合不同场景。Session简单可靠但有状态，JWT无状态易扩展但不好注销。理解两者的原理和权衡，根据项目架构做选择。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

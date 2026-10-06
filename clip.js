@@ -11,9 +11,16 @@
 (function () {
   if (window.CrGH) return;
   var s = document.createElement('script');
-  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006a';
+  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c';
   s.async = false;
   (document.head || document.body).appendChild(s);
+})();
+
+/* 手机触摸优化：禁止双击缩放、防止游戏误触 */
+(function(){
+  var st = document.createElement('style');
+  st.textContent = 'html{touch-action:manipulation;}input,textarea{user-select:text;-webkit-user-select:text;}';
+  (document.head || document.documentElement).appendChild(st);
 })();
 
 (function () {

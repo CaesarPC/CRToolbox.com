@@ -1,43 +1,39 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON格式化是什么？为什么程序员都需要它 - Cr工具箱</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; line-height: 1.8; }
-    .container { max-width: 720px; margin: 0 auto; padding: 20px; }
-    h1 { font-size: 26px; margin: 20px 0; line-height: 1.4; }
-    .meta { font-size: 13px; color: #999; margin-bottom: 24px; }
-    .content { background: #fff; border-radius: 12px; padding: 28px; }
-    .content p { margin-bottom: 16px; }
-    .content h2 { font-size: 20px; margin: 24px 0 12px; color: #2563eb; }
-    .content code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
-    .back { display: inline-block; margin-bottom: 16px; color: #666; text-decoration: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON格式化是什么？为什么程序员都需要它 - Cr工具箱</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
+.back:hover{color:#50fa7b}
+.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
+h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
+.meta{font-size:12px;color:#6272a4;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #44475a}
+p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
 </head>
 <body>
-  <div class="container">
-    <a href="articles.html" class="back">← 返回文章列表</a>
-    <h1>JSON格式化是什么？为什么程序员都需要它</h1>
-    <div class="meta">2026-10-06 · 教程</div>
-    <div class="content">
-      <p>你有没有见过这样一堆挤在一起的数据：<code>{"name":"小明","age":18,"city":"深圳"}</code>？</p>
-      <p>这就是 JSON。它是网页和服务器之间交换数据最常用的格式。</p>
-
-      <h2>为什么需要格式化？</h2>
-      <p>API 返回的 JSON 数据经常挤成一团，没有换行没有缩进，人眼根本看不懂哪里是哪里。格式化工具就是把这一团数据变成有缩进、有换行的整齐格式，让你一眼就能看清结构。</p>
-
-      <h2>格式化有什么用？</h2>
-      <p>1. 快速看清数据结构，找字段不用翻来翻去</p>
-      <p>2. 检查 JSON 有没有语法错误（少个括号、多个逗号）</p>
-      <p>3. 调试接口的时候，快速定位哪个字段出了问题</p>
-
-      <h2>怎么用？</h2>
-      <p>本站的实用工具里就有 JSON 格式化功能，粘贴进去一键美化，纯本地处理不上传服务器。</p>
-      <p><a href="tools.html" style="color:#2563eb;">→ 打开 JSON 格式化工具</a></p>
-    </div>
-  </div>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<div class="card">
+<h1>JSON格式化是什么？为什么程序员都需要它</h1>
+<div class="meta">2026-10-06 · 教程</div>
+<p>你有没有见过这样一堆挤在一起的数据：<code>{"name":"小明","age":18,"city":"深圳"}</code>？</p>
+<p>这就是 JSON。它是网页和服务器之间交换数据最常用的格式。</p>
+<p>API 返回的 JSON 数据经常挤成一团，没有换行没有缩进，人眼根本看不懂哪里是哪里。格式化工具就是把这一团数据变成有缩进、有换行的整齐格式，让你一眼就能看清结构。</p>
+<p>1. 快速看清数据结构，找字段不用翻来翻去</p>
+<p>2. 检查 JSON 有没有语法错误（少个括号、多个逗号）</p>
+<p>3. 调试接口的时候，快速定位哪个字段出了问题</p>
+<p>本站的实用工具里就有 JSON 格式化功能，粘贴进去一键美化，纯本地处理不上传服务器。</p>
+<p><a href="tools.html" style="color:#2563eb;">→ 打开 JSON 格式化工具</a></p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</div>
 </body>
 </html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国际化i18n实战 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>国际化i18n实战</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>国际化i18n实战：让网站支持多语言</p>
+<p>产品要出海，网站要支持英文、日文、韩文。国际化（i18n）不是写两套页面，而是把界面文案抽离成语言文件，根据用户语言动态切换。</p>
+<p>核心思路：所有界面文字不硬编码在组件里，放在语言资源文件中。中文文件zh-CN.json、英文文件en-US.json，每个文案一个key。组件里用t('welcome')这种方式取文案，当前语言是什么就从对应文件取。</p>
+<p>实现库：React用react-i18next，Vue用vue-i18n。配置语言资源、检测用户语言（浏览器语言、用户设置、URL参数）、切换语言，库都封装好了。</p>
+<p>日期、数字、货币格式化是国际化的难点。不同地区日期格式不同（MM/DD/YYYY vs DD/MM/YYYY）、小数分隔符不同、货币符号位置不同。用Intl API（浏览器原生）处理，不要自己拼格式。</p>
+<p>文本复数、性别、语序变化也要考虑。英文"1 item"和"2 items"复数变化；有些语言不同语序。i18n库支持复数规则和插值。</p>
+<p>RTL（从右到左）语言如阿拉伯语，整个页面布局要镜像：CSS用逻辑属性（margin-inline-start代替margin-left），自动适配方向。</p>
+<p>工程实践：文案key用层级命名（nav.home、button.submit），不要用简单的a、b、c；翻译文件和代码一起维护，翻译人员通过专门工具管理；默认语言兜底（缺翻译时显示默认语言）。</p>
+<p>国际化是产品出海的基础工作。提前在架构上做好i18n，后续加语言只是加翻译文件，不用改组件。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

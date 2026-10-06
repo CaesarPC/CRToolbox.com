@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTPS与TLS加密原理 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>HTTPS与TLS加密原理</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># HTTPS与TLS：加密传输是怎么工作的</p>
+<p>你每天访问的网站都挂着一把小锁，表示HTTPS加密。但HTTPS到底是怎么加密的？为什么HTTPS不会被中间人窃听？为什么现在所有网站都必须上HTTPS？理解TLS加密的基本原理，不仅是网络安全的必修课，也能帮你理解现代Web的信任体系。</p>
+<p>## 一、为什么需要加密</p>
+<p>HTTP是明文传输的。你在咖啡馆连公共Wi-Fi，你输入的密码、浏览的网页、发送的数据，都以明文形式在网络上传输。同一网络上的其他人可以用抓包工具直接看到你的所有数据——甚至篡改你看到的网页内容，插入广告或者钓鱼链接。</p>
+<p>HTTPS在HTTP和TCP之间加了一层TLS加密。数据在浏览器和服务器之间是加密传输的，中间的人只能看到一堆乱码，不知道你传了什么，也篡改不了内容。</p>
+<p>## 二、对称加密与非对称加密</p>
+<p>加密有两种基本方式。</p>
+<p>对称加密：加密和解密用同一个密钥。就像一把钥匙开一把锁——你和对方都有同一把钥匙，加密后发过去，对方用钥匙解密。问题是：怎么把安全地把密钥告诉对方？如果密钥在传输过程中被截获，后面所有加密都白搭。</p>
+<p>非对称加密：有一对密钥——公钥和私钥。公钥加密的数据，只有私钥能解密。公钥可以公开给任何人，私钥自己保管。你要给我发消息，用我的公钥加密，我用我的私钥解密。但非对称加密非常慢，不适合加密大量数据。</p>
+<p>TLS的聪明之处是：用非对称加密安全地交换一个对称密钥，然后用对称密钥加密后续的数据传输。两全其美。</p>
+<p>## 三、TLS握手过程</p>
+<p>浏览器和服务器建立HTTPS连接时，要做一次TLS握手。过程大概是这样：</p>
+<p>浏览器说：我支持这些加密算法，这是我的随机数。服务器说：好，选这个算法，这是我的随机数和数字证书（证书里包含服务器的公钥）。浏览器验证证书——这个证书是受信任的CA机构签发的吗？域名对不对？有没有被吊销？验证通过后，浏览器生成一个预主密钥，用服务器的公钥加密发给服务器。服务器用私钥解密，拿到预主密钥。双方根据之前的两个随机数和预主密钥，各自生成一个会话密钥。之后所有通信用这个会话密钥对称加密。</p>
+<p>整个握手过程可能需要2-3个RTT，但之后的数据传输就是高速的对称加密了。</p>
+<p>## 四、数字证书与信任链</p>
+<p>你可能会问：浏览器怎么知道服务器的公钥是真的？万有人伪造了一个网站，给了一个假公钥怎么办？</p>
+<p>答案是数字证书。证书是由受信任的CA（证书颁发机构）签发的，里面包含域名、公钥、有效期、CA的签名。浏览器内置了所有主流CA的根证书。当服务器把证书发给浏览器时，浏览器用CA的公钥验证证书上的签名——如果签名有效，说明这个证书确实是CA给这个域名签的，公钥可信。</p>
+<p>这个信任链是层层嵌套的：你的网站证书由中级CA签发，中级CA由根CA签发，根CA预装在浏览器里。只要根CA是可信的，整条链就可信。</p>
+<p>Let's Encrypt让免费证书变得普及，现在HTTPS几乎没有成本门槛了。</p>
+<p>## 五、混合内容与HSTS</p>
+<p>网站上一个常见问题是混合内容：HTML是HTTPS加载的，但里面引用的图片或JS是HTTP的浏览器会拦截这些HTTP资源，因为不安全。解决方案是所有资源都用HTTPS或者相对路径引用。</p>
+<p>HSTS是一个响应头，告诉浏览器：这个网站以后只允许用HTTPS访问，不要尝试HTTP。这样即使有人输入http://example.com，浏览器也会自动跳转到HTTPS，防止降级攻击。</p>
+<p>## 六、总结</p>
+<p>HTTPS不是什么高深的黑科技，它是一套组合拳：非对称加密安全交换密钥，对称加密高效传输数据，数字证书验证身份。理解了这个原理，你就知道为什么HTTPS安全、为什么证书重要、为什么不能随便点"继续访问不安全网站"。在今天，HTTPS已经不是可选项，而是Web的基本要求。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对象存储与云存储架构原理 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>对象存储与云存储架构原理</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>对象存储与云存储架构原理：从文件服务器到S3的演进</p>
+<p>早期的网站存储文件，就是存在服务器本地磁盘上，通过Nginx直接对外提供下载。这种方式在单机时代没问题，但随着文件数量增长（图片、视频、用户上传的附件），单机存储的瓶颈很快暴露：扩容麻烦、备份困难、带宽有限、多机文件不一致。对象存储（Object Storage）就是为解决海量文件存储而生的架构。</p>
+<p>对象存储的核心概念是：所有文件作为"对象"存储在扁平的存储空间（Bucket）里，不是文件系统的目录树结构。每个对象有一个唯一的Key（相当于路径），通过Key读写对象。S3（Amazon Simple Storage Service）是对象存储的鼻祖和标准API，现在阿里云OSS、腾讯云COS、Cloudflare R2都兼容S3 API。</p>
+<p>对象存储和传统文件存储的区别：文件系统是层级目录结构，支持随机修改文件内容；对象存储是扁平的，整个对象作为一个单元上传下载，不支持修改文件中间的某一段（要么整个重传）。这种简单模型换来的是极强的扩展性：存储容量几乎无限，自动扩容，不需要管理磁盘。</p>
+<p>实际使用中，网站的图片、视频、用户上传的文件，都存在对象存储里，而不是应用服务器本地。应用服务器只处理业务逻辑，文件交给对象存储。前端上传文件时，通常是后端生成一个带权限的上传凭证（Pre-signed URL），前端直接把文件传到对象存储，不经过应用服务器。这样应用服务器不占用带宽处理文件传输，性能和成本都更优。</p>
+<p>CDN和对象存储天然配合。文件存在对象存储源站，CDN缓存到全球边缘节点，用户从就近节点下载。图片处理（缩放、裁剪、转格式）也在CDN边缘完成，不用后端服务器处理。</p>
+<p>数据冗余是对象存储的底层设计。每个对象自动多副本存储（通常3份），分布在不同机房，单块磁盘损坏不影响数据可用性。这就是为什么对象存储号称"11个9"的持久性——数据几乎不会丢。版本控制功能可以保留文件的历史版本，误删后可以恢复。</p>
+<p>生命周期管理是成本优化的利器。不常访问的文件（如一年前的日志、历史图片），自动从标准存储降级到低频访问存储、归档存储，价格便宜很多。符合条件的数据自动迁移，不用手动操作。</p>
+<p>自建对象存储 vs 用云服务：MinIO是开源的对象存储，可以部署在自己的服务器上，兼容S3 API。适合有数据合规要求、不想把数据放公有云的场景。但自建要自己运维：磁盘管理、扩容、备份、监控，成本不低。大多数中小团队直接用云厂商的托管对象存储，省心。</p>
+<p>对象存储已经是现代Web应用的基础设施。几乎所有网站的静态资源、用户上传文件都存在对象存储上。理解它的原理和使用方式，是全栈开发的基本能力。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

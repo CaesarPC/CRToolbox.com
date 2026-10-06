@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript_Proxy与Reflect - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>JavaScript_Proxy与Reflect</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>JavaScript Proxy与Reflect：元编程能力</p>
+<p>Proxy可以包装一个对象，拦截并自定义其基本操作（属性查找、赋值、枚举、函数调用）。Reflect提供与Proxy拦截器对应的默认操作。这是JS的元编程能力——在语言层面操作语言本身。</p>
+<p>Proxy用途：数据绑定（Vue3的响应式系统用Proxy）、校验（赋值时验证数据）、缓存（惰性计算）、日志（记录属性访问）。</p>
+<p>Reflect配合Proxy使用：在拦截器里调用Reflect的默认行为，而不是手动实现。比如return Reflect.get(target, prop)。</p>
+<p>Vue3的响应式就是用Proxy替代了Vue2的Object.defineProperty。理解Proxy，才能理解现代框架的响应式原理。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

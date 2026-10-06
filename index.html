@@ -54,7 +54,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 </head>
 <body>
 <div class="hd">
-  <div><h1>🛠️ Cr工具站</h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
+  <div><h1>🛠️ Cr工具站 <span id="verTag" style="font-size:12px;color:#6272a4;font-weight:normal;background:#44475a;padding:2px 8px;border-radius:8px;vertical-align:middle">valpha-1.0</span></h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
   <div id="userBar" style="font-size:13px;color:#bdc3c7"></div>
 </div>
 <div class="wrap">
@@ -236,6 +236,15 @@ window.addEventListener('load',function(){
     try{ window.CrGH.visitLog({page:location.pathname.split('/').pop()||'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
   }
   refreshUserBar();
+  /* 显示版本号 */
+  if(window.CrGH && window.CrGH.route){
+    window.CrGH.route('GET','/api/version',null,function(j){
+      if(j&&j.ok){
+        var el=document.getElementById('verTag');
+        if(el) el.textContent='v'+j.version;
+      }
+    });
+  }
 });
 window.addEventListener('pageshow',function(){ refreshUserBar(); });
 setInterval(refreshUserBar, 2000);

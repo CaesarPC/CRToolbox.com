@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>消息队列与分布式异步架构实践 - Cr工具站</title>
+<title>消息队列与分布式异步架构实践 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>消息队列与分布式异步架构实践</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
-<h2>消息队列与分布式异步架构：从解耦削峰到最终一致性的设计实践</h2>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>在单体应用里，所有模块同步调用，代码写起来简单直接。但当系统拆分为微服务，或者面对高并发流量时，同步调用的弊端就暴露无遗：一个服务挂了，调用它的所有服务都跟着挂；一个接口慢了，整个调用链路都被拖慢；流量高峰时数据库被直接打垮。消息队列（Message Queue）是解决这些问题的核心武器。理解消息队列的工作原理和适用场景，才能设计出真正健壮的分布式系统。</p>
 <p>消息队列的核心价值可以概括为三个词：解耦、异步、削峰。</p>
 <p>解耦是最基础的价值。假设你下单之后，需要调用库存服务扣库存、调用物流服务创建物流单、调用短信服务发通知、调用积分服务加积分。如果同步调用，订单服务要知道所有下游服务的接口，任何一个下游新增功能或者接口变更，订单服务都要改代码。通过消息队列，订单服务只需要发布一个"订单创建"事件，下游各个服务自己订阅这个事件做各自的处理。新增一个通知渠道，只需要新增一个订阅者，订单服务完全不需要改动。这种发布-订阅模式，让系统模块之间从直接依赖变为间接依赖，极大提升了可维护性。</p>
@@ -34,6 +38,7 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>第四个问题是消息积压。消费速度跟不上生产速度，队列里的消息越积越多。可能的原因是消费逻辑有慢查询、消费者实例不够、或者出现了死消息（反复消费失败的消息卡住了队列）。应对方案包括：临时增加消费者数量、排查慢消费、设置死信队列处理失败消息。</p>
 <p>分布式事务是微服务架构中最复杂的问题之一。下单要扣库存、扣余额、创建订单，这三个操作要么都成功，要么都失败。跨服务的事务怎么保证一致性？两阶段提交（2PC）性能差、阻塞严重，实际很少用。基于消息队列的最终一致性方案是主流选择：本地事务和发消息放在一个事务里（RocketMQ的事务消息机制），消费者消费失败就重试，直到最终一致。虽然不是强实时一致，但在大多数业务场景下（几秒内最终一致是可接受的），这种方案足够可靠。</p>
 <p>消息队列不是万能药，不是所有场景都该用它。引入消息队列会增加系统复杂度：多了一个中间件要运维、多了一层网络延迟、多了排查问题的难度。简单的小系统，同步调用就够了。只有当解耦、异步、削峰的收益大于复杂度成本时，消息队列才是正确的选择。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

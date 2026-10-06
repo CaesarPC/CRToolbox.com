@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>压力测试与容量规划 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>压力测试与容量规划</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>压力测试与容量规划：知道系统能扛多少流量</h2>
+<p>预估双十一流量十万QPS，服务器够不够用？拍脑袋答不出来。压力测试就是模拟真实高并发，看系统在多大流量下会出问题。</p>
+<p>压测的类型：负载测试（逐步加压，看系统在什么吞吐量下响应时间可接受）；压力测试（超出正常流量，看系统什么时候崩溃、怎么降级）；持久测试（长时间跑中等流量，看有没有内存泄漏、性能衰减）。</p>
+<p>压测工具：JMeter（Java生态，功能全）、wrk（轻量命令行）、k6（现代JS脚本）、Locust（Python写脚本）。分布式压测（多台机器同时发压）模拟真实流量。</p>
+<p>压测环境要接近生产。测试环境配置和生产差很多，测出来的数据没有参考价值。最好用预发环境或流量回放（把生产真实流量复制一份到测试环境）。</p>
+<p>压测要看哪些指标：吞吐量（QPS/TPS）、响应时间（平均、P95、P99）、错误率、资源利用率（CPU、内存、数据库连接）。找到拐点：响应时间开始陡增、错误率开始上升的那个点，就是系统的实际承载能力。</p>
+<p>容量规划：基于压测结果和业务预测，推算需要多少台服务器。预计流量10万QPS，单机能扛1万，那就需要10台，再加冗余（N+1或N+2）应对突发和故障。</p>
+<p>压测发现的问题要优化：慢SQL加索引、热点数据加缓存、接口异步化、加机器。优化完再压测，直到达到目标。</p>
+<p>不要等大促前才压测。定期压测，掌握系统容量基线。知道自己的系统能扛多少，比盲目加机器或盲目担心更重要。</p>
+</div>
+</body>
+</html>

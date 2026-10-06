@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>表单处理最佳实践 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>表单处理最佳实践</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>表单处理最佳实践：让用户顺畅地填完表单</h2>
+<p>表单是网站最常见的交互：登录、注册、下单、留言。但很多表单设计得让人崩溃：报错不告诉原因、提交了才发现填错、移动端键盘不对。好的表单设计能大幅提升转化率。</p>
+<p>实时校验是基础。用户输入时就校验，不要等提交才报错。邮箱格式对不对、密码够不够长，边填边提示。错误提示要具体："邮箱格式不对"而不是"输入有误"。</p>
+<p>错误定位：哪个字段错了，高亮哪个字段，错误信息放在字段旁边。不要笼统地弹个"提交失败"。</p>
+<p>移动端适配：手机号输入调起数字键盘、邮箱输入调起带@的键盘、自动大写首字母。用input的type属性让浏览器自动处理。</p>
+<p>提交按钮：提交中显示loading，防止重复提交。成功后给明确反馈（跳转成功页或提示）。</p>
+<p>必填项标记：红星标必填，可选的不标。不要所有项都必填。</p>
+<p>密码可见切换：密码框加个小眼睛按钮，让用户能切换明文显示。</p>
+<p>自动填充：合理使用autocomplete属性，浏览器能自动填充地址、手机号。</p>
+<p>禁用自动提交：回车不要触发表单提交（除非是登录框），避免误触。</p>
+<p>表单是转化率的关键环节。一个难用的表单会赶走大量用户。细节做好，用户体验自然好。</p>
+</div>
+</body>
+</html>

@@ -11,7 +11,7 @@
 (function () {
   if (window.CrGH) return;
   var s = document.createElement('script');
-  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261005f';
+  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006a';
   s.async = false;
   (document.head || document.body).appendChild(s);
 })();
@@ -36,7 +36,14 @@
   function doReport() {
     var page = (location.pathname || '/').split('/').pop() || 'index.html';
     try {
+      /* 总访问计数 */
       window.CrGH && CrGH.report(function () {});
+      /* 详细访问记录（含UA/时间/来源，会话内去重） */
+      window.CrGH && CrGH.visitLog({
+        page: page,
+        ua: navigator.userAgent,
+        ref: document.referrer
+      }, function () {});
     } catch (e) {}
   }
 

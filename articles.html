@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章教程 - Cr工具箱</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { font-size: 28px; margin: 20px 0; }
+    .article-list { background: #fff; border-radius: 12px; padding: 20px; margin-top: 20px; }
+    .article-item { padding: 16px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+    .article-item:last-child { border-bottom: none; }
+    .article-item:hover { background: #f9f9f9; }
+    .article-item h3 { font-size: 18px; margin-bottom: 6px; color: #2563eb; }
+    .article-item p { font-size: 14px; color: #666; }
+    .article-item .date { font-size: 12px; color: #999; margin-top: 6px; }
+    a { color: #2563eb; text-decoration: none; }
+    .back { display: inline-block; margin-bottom: 16px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back">← 返回工具箱首页</a>
+    <h1>文章教程</h1>
+    <p style="color:#666;margin-bottom:20px;">实用工具教程和使用指南</p>
+
+    <div class="article-list">
+      <div class="article-item" onclick="location.href='article-base64.html'">
+        <h3>什么是Base64编码？一分钟看懂</h3>
+        <p>Base64是什么？为什么网页里到处都是它？这篇文章用最简单的话讲清楚。</p>
+        <div class="date">2026-10-06</div>
+      </div>
+      <div class="article-item" onclick="location.href='article-json.html'">
+        <h3>JSON格式化是什么？为什么程序员都需要它</h3>
+        <p>API返回的JSON数据挤成一团看不懂？格式化工具帮你一键美化，快速定位错误。</p>
+        <div class="date">2026-10-06</div>
+      </div>
+      <div class="article-item" onclick="location.href='article-domain.html'">
+        <h3>怎么查一个域名有没有被注册？免费方法</h3>
+        <p>想注册一个好域名，但不知道能不能注册？教你用免费工具一键查询所有后缀。</p>
+        <div class="date">2026-10-06</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

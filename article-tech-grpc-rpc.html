@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gRPC与高性能RPC框架 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>gRPC与高性能RPC框架</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>gRPC与高性能RPC框架：服务间调用的新选择</h2>
+<p>微服务之间怎么调用？最早是HTTP+JSON（REST），简单但性能一般。gRPC是Google开源的RPC框架，用HTTP/2做传输、Protocol Buffers做序列化，性能比REST高很多。</p>
+<p>RPC（远程过程调用）的思想：调用远程服务像调用本地函数一样。你写userClient.GetUser(123)，底层自动处理网络通信、序列化、错误处理。开发者不用关心HTTP细节。</p>
+<p>gRPC的工作方式：先写.proto接口定义文件，声明服务方法、请求和响应的数据结构。用protoc工具生成各语言的客户端和服务端代码。服务端实现接口，客户端用生成的Stub调用。</p>
+<p>gRPC的优势：性能高（Protobuf二进制序列化比JSON小、快；HTTP/2多路复用）；强类型（.proto就是接口契约，自动生成代码）；多语言支持（一套定义，Java/Go/Python/C++都能用）；流式调用（支持客户端流、服务端流、双向流，适合实时数据）。</p>
+<p>缺点：浏览器不能直接调gRPC（需要gRPC-Web代理）；调试不如REST直观（curl不方便）；学习成本（要学Protobuf语法）。</p>
+<p>适用场景：微服务之间内部调用，追求性能和类型安全，用gRPC很合适。对外提供API给浏览器/第三方用，还是REST或GraphQL更友好。</p>
+<p>其他RPC框架：Dubbo（阿里开源，Java生态流行）、Thrift（Facebook开源）。思想类似，都是IDL定义+代码生成。</p>
+<p>服务间调用的选型：内部高性能调用选gRPC/Dubbo；对外API选REST/GraphQL。根据场景选择，不是所有地方都上RPC。</p>
+</div>
+</body>
+</html>

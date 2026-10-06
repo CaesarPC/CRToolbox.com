@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript闭包与作用域 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>JavaScript闭包与作用域</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>JavaScript闭包与作用域：理解函数背后的隐藏状态</p>
+<p>闭包（Closure）是JavaScript的核心概念。函数可以"记住"它定义时的环境，即使在那个环境之外执行。这就是闭包：内部函数访问外部函数的变量，外部函数执行完后变量依然存活。</p>
+<p>闭包的形成：内部函数引用了外部函数的变量，外部函数执行返回后，内部函数依然能访问那些变量。因为JS的垃圾回收不会回收还被引用的变量，所以这些变量"活"了下来。</p>
+<p>常见用途：数据私有化。用闭包模拟私有变量，外部无法直接修改，只能通过暴露的方法操作。比如计数器：function counter() { let count = 0; return { increment: () => ++count, get: () => count }; }。外部拿到counter后，只能通过increment和get操作count，不能直接改。</p>
+<p>循环中的闭包坑：for循环里用var声明变量，每个回调共享同一个变量，导致最终都是最后一个值。用let解决（块级作用域），或者用IIFE立即执行函数创建独立作用域。</p>
+<p>闭包让JS拥有了函数式编程的能力：函数可以作为返回值、作为参数传递、记住环境。这是JS灵活强大的根源，也是面试高频考点。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

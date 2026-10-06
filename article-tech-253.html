@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FetchAPI - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>FetchAPI</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 前端Fetch API：现代网络请求</p>
+<p>XMLHttpRequest是老派的AJAX方式，写起来回调嵌套。现代前端用Fetch API——Promise风格，简洁优雅。</p>
+<p>## 一、基本用法</p>
+<p>fetch('/api/users')
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(err => console.error(err));</p>
+<p>async/await写法更舒服：
+async function getUsers() {
+  const res = await fetch('/api/users');
+  const data = await res.json();
+  return data;
+}</p>
+<p>## 二、POST请求</p>
+<p>fetch('/api/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: '张三' })
+});</p>
+<p>## 三、常见坑</p>
+<p>fetch不会因为4xx/5xx就reject——只有网络错误才reject。HTTP错误状态码要手动检查：
+if (!res.ok) throw new Error('HTTP ' + res.status);</p>
+<p>超时：fetch默认没有超时。要超时用AbortController：
+const controller = new AbortController();
+setTimeout(() => controller.abort(), 5000);
+fetch(url, { signal: controller.signal });</p>
+<p>## 四、总结</p>
+<p>Fetch是现代前端请求数据的标准方式。比XHR简洁，支持Promise和async/await。记住两个坑：HTTP错误要手动检查ok，超时要用AbortController。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

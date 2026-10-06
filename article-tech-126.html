@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分库分表实战 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>分库分表实战</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>分库分表实战：当单表数据量突破千万后的架构升级</p>
+<p>数据库单表数据量到了千万级，查询性能开始下降；到了亿级，即使索引建得再好，也明显变慢。分库分表是解决这个问题的终极方案：把数据分散到多个数据库、多张表里，每个分片只存一部分数据。</p>
+<p>垂直拆分是第一步：按业务把不同的表放到不同数据库。用户相关的表放用户库、订单相关的放订单库、商品相关的放商品库。这和微服务的拆分对应，每个服务有自己的数据库。垂直拆分后单库压力减小，但单表数据量还是可能很大。</p>
+<p>水平拆分是真正的分表：同一张表的数据按某个规则分散到多张表。比如订单表按用户ID取模，分散到64张表里。查询时根据用户ID路由到对应的表。</p>
+<p>分片键的选择至关重要。选什么字段做分片？要满足：大部分查询都带这个字段（能路由到具体分片，不用全分片扫描）；数据分布均匀（不会有的分片数据特别多）。用户ID是常见选择，因为大部分查询是查某个用户的数据。但如果经常要按时间范围查询全部订单，用户ID分片就不合适，要全分片扫描。没有完美的分片键，要根据主要查询模式权衡。</p>
+<p>分片策略：取模（user_id % N）简单均匀，但扩容麻烦（从32张扩到64张，数据要重新分布）；范围分片（按时间范围分表）扩容方便但可能热点（最新数据都在最新分片）；一致性哈希兼顾均匀和扩容。</p>
+<p>分库分表带来的复杂问题：分布式ID（不能用自增ID了，多表自增会冲突，要用雪花算法等全局ID）；跨分片查询（要查所有分片再合并，性能差，要避免）；跨分片事务（一个事务涉及多个分片，强一致性很难保证，通常用最终一致性）；分布式聚合（count、sum要在所有分片算完再汇总）。</p>
+<p>中间件帮开发者屏蔽复杂性：ShardingSphere（Java生态）、Vitess、MyCat。配置好分片规则，中间件负责路由、聚合，业务代码像操作单表一样。但中间件不能解决所有问题，跨分片的复杂SQL还是要业务层面规避。</p>
+<p>分库分表是架构升级的大动作，不到万不得已不要做。先试试优化索引、归档历史数据、读写分离，这些手段能解决大部分问题。当单表数据量真的到了瓶颈，再上分库分表。一旦分了，后续的数据迁移、扩容都是大工程。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

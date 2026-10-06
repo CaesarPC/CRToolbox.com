@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>浏览器渲染原理与前端性能优化实战 - Cr工具站</title>
+<title>浏览器渲染原理与前端性能优化实战 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>浏览器渲染原理与前端性能优化实战</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
-<h2>浏览器渲染原理与前端性能优化实战：从输入URL到页面呈现的完整链路</h2>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>前端性能优化不是凭感觉调参数，而是要真正理解浏览器从接收HTML到绘制像素的完整过程。当用户在地址栏输入URL并按下回车，浏览器背后发生了一连串精密而复杂的操作：DNS解析建立网络连接、下载HTML资源、解析构建DOM树、计算CSS样式、布局绘制图层、合成显示到屏幕。这个过程中的每一个环节，都可能成为性能瓶颈。理解浏览器的渲染管线，才能有的放矢地做性能优化。</p>
 <p>浏览器渲染的第一步，是将下载到的HTML字节流解析为DOM树。HTML解析器遇到外部CSS文件会同步阻塞渲染，遇到外部JavaScript文件也会阻塞DOM解析。这就是为什么性能优化的第一条黄金法则是：CSS放在head里尽早加载，JavaScript放在body底部或加defer/async异步加载。渲染阻塞资源越少，首屏渲染就越快。</p>
 <p>DOM树和CSSOM树构建完成后，浏览器会合成一棵渲染树。渲染树只包含需要显示的节点，display:none的元素不会出现在渲染树中。接下来是布局阶段，计算每个节点在屏幕上的确切位置和大小。然后是绘制阶段，填充颜色、文字、图片等像素内容。最后是合成阶段，将多个图层合并显示到屏幕上。理解这四个阶段的顺序非常重要：修改width/height会触发布局→绘制→合成，成本最高；修改只影响绘制的属性（如background-color）会跳过布局；而只触发合成的属性（如transform、opacity）性能最好。这就是为什么动画优化推荐使用transform代替top/left，直接走合成层，不触发重排重绘。</p>
@@ -32,6 +36,7 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>缓存策略是减少重复加载的关键。强缓存通过Cache-Control和Expires头，让浏览器直接从本地缓存读取资源，不发请求；协商缓存通过ETag和Last-Modified，服务器判断资源是否变化，没变就返回304，不传输内容。合理设置缓存策略：HTML文件设置短缓存或不缓存，确保用户及时拿到新版本；带内容哈希的静态资源（CSS、JS、图片）设置长缓存，一年起步。这样既保证更新及时，又最大化利用缓存。</p>
 <p>网络层面的优化也不能忽视。HTTP/2多路复用允许多个请求并行走一个连接，解决了HTTP/1.1的队头阻塞问题。资源预加载（preload、prefetch）可以提前加载关键资源，提升后续导航速度。CDN将静态资源分发到全球节点，用户就近访问，大幅降低延迟。这些网络层的优化，往往比代码层优化见效更快。</p>
 <p>前端性能优化是一项系统工程，不是一次到位的工作。建立性能监控体系，持续采集真实用户数据（RUM），发现问题再针对性优化，形成闭环。好的性能优化不是堆砌技巧，而是在理解原理的基础上，找到真正的瓶颈，做针对性的改进。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

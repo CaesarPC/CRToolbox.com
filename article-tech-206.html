@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTP2与HTTP3协议演进 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>HTTP2与HTTP3协议演进</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># HTTP/2与HTTP/3：网络协议的下一代演进</p>
+<p>你每天上网都在用HTTP，但你可能不知道它已经偷偷更新了好几个版本。HTTP/1.1统治了互联网二十多年，它简单、可靠，但在现代高并发场景下瓶颈越来越明显。HTTP/2通过多路复用、头部压缩、服务器推送，大幅提升了性能。而HTTP/3更是抛弃了TCP，改用全新的QUIC协议，解决了TCP层的队头阻塞问题。理解这些协议演进背后的逻辑，能帮你更好地理解Web性能优化的方向。</p>
+<p>## 一、HTTP/1.1的瓶颈：队头阻塞</p>
+<p>HTTP/1.1有一个致命问题：同一个TCP连接上，同一时间只能处理一个请求。服务器处理完一个请求返回响应之后，才能处理下一个。虽然浏览器会开多个TCP连接（通常6个）来并行请求资源，但每个连接内部还是串行的。</p>
+<p>一个网页通常有几十上百个资源——HTML、CSS、JS、图片。浏览器要反复建立连接、发送请求、等待响应。虽然Keep-Alive避免了重复建立TCP连接，但请求还是一个排队一个，这就是"队头阻塞"：第一个请求慢了，后面所有请求都等着。</p>
+<p>为了绕过这个限制，开发者想了各种歪招：把多个JS文件合并成一个、把小图片拼成雪碧图、域名分片（把资源分散到多个域名上开更多连接）。这些都是在打补丁，治标不治本。</p>
+<p>## 二、HTTP/2：多路复用的革命</p>
+<p>HTTP/2在2015年标准化，它最大的改进是多路复用。在一个TCP连接上，可以同时并行处理多个请求和响应，互不阻塞。每个请求和响应对都有一个唯一的stream ID，在同一个连接上交错传输。浏览器同时请求十个资源，不需要开十个连接，一个连接全部搞定。</p>
+<p>多路复用解决了队头阻塞问题。一个资源加载慢了不影响其他资源，因为它们在不同的stream上并行传输。网站不需要再做文件合并、雪碧图这些hack了。</p>
+<p>HTTP/2的第二个改进是头部压缩。HTTP/1.1的请求头每次都要重复带Cookie、User-Agent等信息，头部开销可能比实际body还大。HTTP/2用HPACK算法压缩头部，维护一份双方都知道的字典，重复的头部只传差异部分，大幅减少了传输量。</p>
+<p>第三个改进是服务器推送。服务器可以主动把浏览器还没请求的资源推过去——比如浏览器请求了HTML，服务器发现HTML里引用了CSS，主动把CSS也推过去，省得浏览器解析完HTML再发一次CSS请求。这个功能实际用得不多，因为控制不好容易推一堆浏览器用不上的东西。</p>
+<p>## 三、HTTP/2的局限：TCP层的队头阻塞</p>
+<p>HTTP/2解决了应用层的队头阻塞，但它跑在TCP之上，TCP层还有队头阻塞。TCP是可靠传输，保证数据包按顺序到达。如果中间某个包丢了，后面的包就算到了也得等着——等那个丢包重传成功之后才能继续往下走。</p>
+<p>在HTTP/2的多路复用下，多个stream共享一个TCP连接。一旦TCP层丢了包，所有stream都得停在那里等重传。虽然应用层没有队头阻塞了，但传输层有。在网络不稳定的移动场景下，这个问题特别明显。</p>
+<p>## 四、HTTP/3与QUIC：抛弃TCP的勇气</p>
+<p>HTTP/3的解决方案是：不用TCP了。它基于Google开发的QUIC协议，跑在UDP之上。</p>
+<p>QUIC自己实现了可靠传输和拥塞控制，但它做了一个关键改进：stream级别的独立可靠性。每个stream是独立的数据流，一个stream丢了包，只影响那个stream，其他stream不受影响。因为QUIC知道哪个包属于哪个stream，不需要等所有包按顺序到达——这个stream的包到了就给这个stream用，那个stream的包丢了只重传那个stream的包。</p>
+<p>这就从根本上解决了TCP层的队头阻塞。网络抖动丢包的时候，其他资源的加载完全不受影响。</p>
+<p>QUIC还有其他好处：连接建立更快。TCP+TLS握手需要2-3个RTT，QUIC把这些步骤合并了，1个RTT就能建立加密连接。移动网络切换Wi-Fi和蜂窝网络时，连接不会断——QUIC用连接ID标识连接，不依赖IP地址。</p>
+<p>## 五、对开发者意味着什么</p>
+<p>好消息是：HTTP/2和HTTP/3对开发者基本透明。你不需要改任何代码，只要服务器和CDN支持，浏览器会自动用最新的协议。</p>
+<p>但理解协议特性可以帮你做出更好的优化决策。HTTP/2下，域名分片和文件合并已经没有意义了——多路复用本身就解决了并行问题，合并文件反而影响缓存命中率。HTTP/3下，弱网环境的用户体验会自动改善，不需要你做额外工作。</p>
+<p>未来HTTP/3会逐步普及，就像当年HTTPS取代HTTP一样。这是一个对开发者透明、对用户有益的底层升级。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

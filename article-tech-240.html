@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>防抖与节流 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>防抖与节流</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 防抖与节流：高频事件的性能控制</p>
+<p>搜索框每输入一个字符就发一次API请求？滚动事件每帧触发几十次？鼠标移动事件更疯狂——一秒钟触发上百次。如果每次都执行复杂逻辑，页面直接卡死。防抖和节流是控制高频事件执行频率的两种经典方案。</p>
+<p>## 一、防抖（Debounce）</p>
+<p>防抖的思路：事件触发后等待一段时间再执行，如果在这段时间内又触发了，就重新计时。直到用户停下来不操作了，才真正执行。</p>
+<p>搜索框联想就是最典型的防抖场景。用户连续输入"JavaScript"，每次按键都发请求太浪费。防抖后：用户停手300毫秒后才发一次请求，查完整的输入。</p>
+<p>function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}</p>
+<p>## 二、节流（Throttle）</p>
+<p>节流的思路：不管事件触发多频繁，在固定时间间隔内只执行一次。比如每200毫秒最多执行一次。</p>
+<p>滚动事件适合节流。用户滚动页面时，scroll事件疯狂触发，但你不需要每帧都做处理。节流保证每200毫秒执行一次滚动逻辑就够了。</p>
+<p>function throttle(fn, interval) {
+  let last = 0;
+  return function(...args) {
+    const now = Date.now();
+    if (now - last >= interval) {
+      last = now;
+      fn.apply(this, args);
+    }
+  };
+}</p>
+<p>## 三、怎么选</p>
+<p>防抖：用户停止操作后才执行一次。搜索输入、窗口resize、表单验证。
+节流：固定频率执行。滚动监听、鼠标移动、拖拽。</p>
+<p>## 四、总结</p>
+<p>防抖和节流是前端处理高频事件的标配工具。搜索用防抖，滚动用节流。现代框架（Lodash）都有现成的实现，直接用就行。但理解原理，知道什么时候用哪个。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

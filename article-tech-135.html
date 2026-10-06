@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDN原理与优化 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CDN原理与优化</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CDN原理与优化：让全球用户都能快速访问你的网站</p>
+<p>你的服务器放在上海，一个美国用户访问要跨太平洋往返，延迟300毫秒以上。CDN（内容分发网络）解决这个问题：把内容缓存到全球各地的边缘节点，用户从最近的节点获取，延迟降到几十毫秒。</p>
+<p>CDN的核心原理是缓存。静态资源（图片、CSS、JS、视频）首次请求时，从源站拉取并缓存到CDN边缘节点。后续用户请求，CDN直接从就近节点返回，不回源。源站压力大减，用户速度大增。</p>
+<p>CDN节点遍布全球主要城市。用户的DNS请求会被调度到离他最近的节点（智能DNS解析）。这就是为什么用了CDN后域名要换成CNAME记录，指向CDN厂商的调度域名。</p>
+<p>缓存策略是CDN效果的关键配置。哪些资源缓存？静态资源长缓存（CSS/JS/图片缓存一个月）；HTML页面短缓存或不缓存（要及时更新）；API接口通常不缓存（数据实时变化）。缓存过期时间设置要权衡：太长更新不及时，太短频繁回源。</p>
+<p>缓存刷新：网站更新了，但CDN节点还缓存旧内容，用户看到旧版本。需要主动刷新CDN缓存（控制台操作或API触发），强制节点重新从源站拉取。</p>
+<p>动态内容加速：传统CDN只缓存静态内容。现代CDN也能加速动态内容（API接口）：通过优化路由（选最快的回源路径）、TCP连接复用、协议优化（HTTP/2），即使不缓存也能加快动态请求。</p>
+<p>边缘计算和CDN结合：Cloudflare Workers（前面讲过）在CDN节点上运行代码，不只是缓存静态文件，还能做动态处理。CDN从"缓存分发"进化为"边缘计算平台"。</p>
+<p>CDN选择：国内用阿里云CDN、腾讯云CDN、Cloudflare国内版；海外用Cloudflare、AWS CloudFront、Akamai。选择看节点覆盖、价格、是否有边缘计算能力。</p>
+<p>CDN是网站加速的标配。纯静态站+CDN可以做到全球访问都快，几乎不需要源站性能。理解CDN原理，是网站性能优化的基本功。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微前端架构实践 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>微前端架构实践</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>微前端架构实践：把大型应用拆分成独立开发的子应用</p>
+<p>一个公司的业务越来越多，前端应用从一个变成十个。每个团队维护自己的应用，但用户体验是割裂的：跳不同子系统要重新登录、页面风格不统一、跳转体验不一致。把所有功能塞回一个大仓库的巨石应用，又会导致任何小改动都要全团队协调、发布周期长。微前端就是解决这个矛盾的架构：把大型应用拆成多个独立开发、独立部署的小型前端应用，组合成一个完整的产品。</p>
+<p>微前端的核心思想是微服务在前端的映射。每个子应用由独立团队开发，有自己的仓库、自己的技术栈、自己的发布节奏。主应用（壳应用）负责整合这些子应用：根据路由加载对应子应用、统一导航、统一登录态、统一样式规范。</p>
+<p>技术实现有几种方案。路由分发式：主应用根据URL路由，动态加载对应子应用的JS和CSS，挂载到页面容器里。single-spa是这种方案的代表。Module Federation（Webpack5的特性）让不同构建的应用互相共享模块，是新的微前端方式。还有iframe方案（最简单但体验差）、Web Components方案。</p>
+<p>独立部署是微前端的关键价值。子应用A改了代码，自己部署上线，不需要等子应用B、C。主应用只需要知道子应用的地址，子应用部署到哪里都能加载。这样团队完全自治，发布互不影响。</p>
+<p>技术栈无关是另一个优势：子应用A用React、子应用B用Vue、子应用C用Angular，都能在主应用里共存。不需要全公司统一技术栈，每个团队选最适合自己的。</p>
+<p>但微前端带来的挑战也不少。样式隔离：子应用A的样式影响了子应用B，互相污染。解决方案：CSS命名规范（BEM）、CSS Modules、Shadow DOM、运行时样式隔离。JS隔离：全局变量污染、事件监听器冲突。沙箱机制（运行时劫持window）可以隔离子应用的JS环境。</p>
+<p>通信问题：子应用之间怎么传数据？共享登录态、用户信息、全局配置。方案：通过主应用做中介（子应用通过主应用提供的API通信）、共享状态管理库、通过URL参数传递。不要让子应用直接互相调用，否则耦合又回去了。</p>
+<p>公共依赖处理：每个子应用都加载一份React，重复浪费。方案是主应用统一加载公共库（React、Vue运行时），子应用不重复打包。但这要求子应用做对应的externals配置。</p>
+<p>微前端不是银弹。中小型应用没必要上微前端，徒增复杂度。它适合：业务线多、团队多、每个业务相对独立的大型平台。创业公司从0到1阶段，单仓多包（Monorepo）可能更合适。判断标准：你的应用是否真的大到需要多团队并行开发、独立发布？如果是，微前端才有价值。</p>
+<p>典型案例：阿里的中台、字节的内部系统、大型企业的门户，都是微前端的实践场景。它解决的是组织规模带来的技术管理问题，不只是技术问题。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

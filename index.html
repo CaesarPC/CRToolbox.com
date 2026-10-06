@@ -9,7 +9,9 @@
 <meta name="robots" content="index,follow">
 <style>
 *{box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh;overflow-x:hidden}
+#meteorCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hd,.wrap{position:relative;z-index:1}
 .hd{background:#282a36;padding:20px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .hd h1{margin:0;font-size:24px;color:#50fa7b;letter-spacing:1px}
 .hd .st{font-size:13px;color:#bdc3c7;margin-top:4px}
@@ -53,6 +55,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 </style>
 </head>
 <body>
+<canvas id="meteorCanvas"></canvas>
 <div class="hd">
   <div><h1>🛠️ Cr工具站 <span id="verTag" style="font-size:12px;color:#6272a4;font-weight:normal;background:#44475a;padding:2px 8px;border-radius:8px;vertical-align:middle">valpha-1.0</span></h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
   <div id="userBar" style="font-size:13px;color:#bdc3c7"></div>
@@ -71,7 +74,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
       <span class="cnt">5个工具</span>
     </div>
     <div class="bigcard-body">
-      <a class="mini" href="tools.html"><span class="mic">🧰</span><span class="mtext"><span class="mname">全部工具集合</span><span class="mdesc">15个工具点一下就弹</span></span></a>
       <a class="mini" href="finder.html"><span class="mic">🔍</span><span class="mtext"><span class="mname">网站查找器</span><span class="mdesc">域名占用扫描</span></span></a>
       <a class="mini" href="combiner.html"><span class="mic">🧬</span><span class="mtext"><span class="mname">域名组合器</span><span class="mdesc">关键词组合域名</span></span></a>
       <a class="mini" href="codec.html"><span class="mic">🔐</span><span class="mtext"><span class="mname">编码解码</span><span class="mdesc">Base64/URL/Unicode</span></span></a>
@@ -84,16 +86,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
     <div class="bigcard-hd">
       <span class="ic">🎮</span>
       <div class="info"><h2>休闲娱乐</h2><p>小游戏、计算器、骰子、转盘等放松工具</p></div>
-      <span class="cnt">7个工具</span>
+      <span class="cnt">3个工具</span>
     </div>
     <div class="bigcard-body">
       <a class="mini" href="games.html"><span class="mic">🎮</span><span class="mtext"><span class="mname">小游戏合集</span><span class="mdesc">贪吃蛇/2048/扫雷等</span></span></a>
       <a class="mini" href="paint.html"><span class="mic">🎨</span><span class="mtext"><span class="mname">在线画板</span><span class="mdesc">手机画画/保存图片</span></span></a>
       <a class="mini" href="pomodoro.html"><span class="mic">🍅</span><span class="mtext"><span class="mname">番茄钟</span><span class="mdesc">专注25分钟计时</span></span></a>
-      <a class="mini" href="tools.html#calculator"><span class="mic">🔢</span><span class="mtext"><span class="mname">计算器</span><span class="mdesc">科学计算</span></span></a>
-      <a class="mini" href="tools.html#dice"><span class="mic">🎲</span><span class="mtext"><span class="mname">骰子</span><span class="mdesc">多面骰/多骰</span></span></a>
-      <a class="mini" href="tools.html#wheel"><span class="mic">🎡</span><span class="mtext"><span class="mname">大转盘</span><span class="mdesc">自定义选项</span></span></a>
-      <a class="mini" href="tools.html#quote"><span class="mic">💬</span><span class="mtext"><span class="mname">今日一言</span><span class="mdesc">每日一句</span></span></a>
     </div>
   </div>
 
@@ -252,6 +250,23 @@ window.addEventListener('pageshow',function(){ refreshUserBar(); });
 setInterval(refreshUserBar, 2000);
 </script>
 <script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c"></script>
+<script>
+/* 流星背景 */
+(function(){
+  var c=document.getElementById('meteorCanvas'),x=c.getContext('2d'),W,H,ms=[];
+  function rz(){W=c.width=innerWidth;H=c.height=innerHeight;}rz();onresize=rz;
+  function sp(){var s=2+Math.random()*6;ms.push({x:Math.random()*W*0.8,y:-10,vx:s*0.6,vy:s,life:1,decay:.005+Math.random()*.008,size:1+Math.random()*2,trail:s*8});}
+  function lp(){x.fillStyle='rgba(30,30,46,0.15)';x.fillRect(0,0,W,H);
+    if(Math.random()<.03)sp();
+    for(var i=ms.length-1;i>=0;i--){var m=ms[i];m.x+=m.vx;m.y+=m.vy;m.life-=m.decay;
+      if(m.life<=0||m.y>H+50||m.x>W+50){ms.splice(i,1);continue;}
+      var g=x.createLinearGradient(m.x,m.y,m.x-m.vx*m.trail,m.y-m.vy*m.trail);
+      g.addColorStop(0,'rgba(139,233,253,'+m.life+')');g.addColorStop(1,'rgba(139,233,253,0)');
+      x.strokeStyle=g;x.lineWidth=m.size;x.beginPath();x.moveTo(m.x,m.y);x.lineTo(m.x-m.vx*m.trail,m.y-m.vy*m.trail);x.stroke();
+    }
+    requestAnimationFrame(lp);}lp();
+})();
+</script>
 <script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORS与Cookie - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CORS与Cookie</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># CORS与Cookie：跨域带凭证的坑</p>
+<p>前面讲过CORS基础，这里补一个最常见的坑：跨域请求带Cookie。</p>
+<p>## 一、问题</p>
+<p>前端localhost:5173请求后端api.example.com。默认情况下，跨域请求不带Cookie——即使后端设置了Set-Cookie。</p>
+<p>## 二、怎么解决</p>
+<p>前端fetch要加credentials: 'include'。
+后端要加Access-Control-Allow-Credentials: true。
+后端Access-Control-Allow-Origin不能是*，必须指定具体的前端域名。</p>
+<p>三个条件缺一不可。少任何一个，Cookie都带不上。</p>
+<p>## 三、为什么不能用*</p>
+<p>安全考虑：如果Allow-Origin是*，意味着任意网站都能跨域请求你的API。加上Allow-Credentials后，任意网站都能带着用户的Cookie请求——那CSRF防护就废了。所以浏览器强制要求：要带凭证，Origin必须明确指定。</p>
+<p>## 四、总结</p>
+<p>跨域带Cookie是三个条件的组合：前端credentials include + 后端Allow-Credentials true + 后端指定具体Origin。少一个都不行。这个坑几乎每个做前后端分离的开发者都踩过。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

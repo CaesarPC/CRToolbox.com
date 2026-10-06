@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灰度发布与AB测试 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>灰度发布与AB测试</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>灰度发布与A/B测试：安全上线和数据驱动决策</h2>
+<p>新版本直接全量上线，万一有Bug，所有用户都受影响。灰度发布（金丝雀发布）让新版本先给一小部分用户用，没问题再逐步扩大。A/B测试则是同时给两组用户看不同版本，用数据判断哪个版本更好。</p>
+<p>灰度发布的流程：新版本部署，先切1%流量到新版本；观察监控（错误率、性能、业务指标）没问题；逐步扩大到10%、50%、100%。任何阶段发现问题，立刻切回旧版本，影响范围小。</p>
+<p>实现方式：Nginx/网关按比例分流；按用户ID哈希分流（同一用户总是看到同一版本，不会混乱）；按地域分流（先在一个城市试）。K8s的滚动更新、Istio的流量管理都支持灰度。</p>
+<p>灰度发布是工程实践，目的是安全上线。A/B测试是产品实验，目的是用数据做决策。</p>
+<p>A/B测试：把用户随机分成两组，A组看旧版本，B组看新版本（新按钮颜色、新文案、新推荐算法）。一段时间后比较两组的指标（点击率、转化率、留存），统计显著的差异说明新版本更好。</p>
+<p>A/B测试的关键：随机分组（保证两组用户特征一致）、足够样本量（太少数据不显著）、单一变量（一次只测一个改动，不然不知道是什么导致差异）、跑足够长时间（覆盖一周周期）。</p>
+<p>灰度和A/B经常结合：先灰度发布新版本观察稳定性，同时在灰度流量里做A/B测试验证效果。</p>
+<p>特性开关（Feature Flag）是灰度的技术基础。新功能代码部署了，但默认关闭，通过开关控制哪些用户能看到。这样部署和发布解耦：代码随时部署，功能按需开启。出问题关开关就行，不用回滚代码。</p>
+<p>灰度发布和A/B测试是成熟团队的标志。它们让上线不再是"赌一把"，而是可控、可回退、数据驱动的过程。</p>
+</div>
+</body>
+</html>

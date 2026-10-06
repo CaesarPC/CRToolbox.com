@@ -52,14 +52,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 .btn{background:#50fa7b;color:#1e1e2e;border:none;padding:10px 22px;font-size:15px;font-weight:700;border-radius:8px;cursor:pointer}
 .btn:hover{background:#69ff94}
 .btn-red{background:#ff5555;color:#fff}.btn-red:hover{background:#ff6e6e}
+.back-to-cb{display:inline-block;background:#44475a;color:#bdc3c7;text-decoration:none;font-size:13px;padding:8px 14px;border-radius:8px;transition:.12s;border:1px solid #6272a4}
+.back-to-cb:hover{background:#50fa7b;color:#1e1e2e;border-color:#50fa7b}
 </style>
 </head>
 <body>
 <canvas id="meteorCanvas"></canvas>
 <div class="hd">
-  <div><h1>🛠️ Cr工具站 <span id="verTag" style="font-size:12px;color:#6272a4;font-weight:normal;background:#44475a;padding:2px 8px;border-radius:8px;vertical-align:middle">v1.1</span></h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <a href="en.html" style="font-size:13px;color:#8be9fd;text-decoration:none;background:#44475a;padding:4px 12px;border-radius:8px;">English</a>
+  <div><h1>🛠️ Cr工具站 <span id="verTag" style="font-size:12px;color:#6272a4;font-weight:normal;background:#44475a;padding:2px 8px;border-radius:8px;vertical-align:middle">valpha-1.0</span></h1><div class="st" id="msg">免费在线工具站 · 工具 / 休闲 / 社区</div></div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="https://caesarpc.github.io/caesarbase/main.html" class="back-to-cb">← 返回CaesarBase</a>
     <div id="userBar" style="font-size:13px;color:#bdc3c7"></div>
   </div>
 </div>
@@ -110,21 +112,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
       <a class="mini" href="wall.html"><span class="mic">💬</span><span class="mtext"><span class="mname">公开留言墙</span><span class="mdesc">弹幕滚动留言</span></span></a>
       <a class="mini" href="share.html"><span class="mic">📦</span><span class="mtext"><span class="mname">开源专区</span><span class="mdesc">作品发布/文件下载</span></span></a>
       <a class="mini" href="paste.html"><span class="mic">📋</span><span class="mtext"><span class="mname">文本分享</span><span class="mdesc">代码/链接分享</span></span></a>
-    </div>
-  </div>
-
-  <!-- 文章教程 大模块 -->
-  <div class="bigcard">
-    <div class="bigcard-hd">
-      <span class="ic">📖</span>
-      <div class="info"><h2>文章教程</h2><p>工具使用教程、知识科普文章</p></div>
-      <span class="cnt">3篇文章</span>
-    </div>
-    <div class="bigcard-body">
-      <a class="mini" href="articles.html"><span class="mic">📖</span><span class="mtext"><span class="mname">全部文章</span><span class="mdesc">教程/科普/使用指南</span></span></a>
-      <a class="mini" href="article-base64.html"><span class="mic">🔐</span><span class="mtext"><span class="mname">Base64编码</span><span class="mdesc">一分钟看懂</span></span></a>
-      <a class="mini" href="article-json.html"><span class="mic">📋</span><span class="mtext"><span class="mname">JSON格式化</span><span class="mdesc">程序员必备工具</span></span></a>
-      <a class="mini" href="article-domain.html"><span class="mic">🔍</span><span class="mtext"><span class="mname">域名查询</span><span class="mdesc">免费方法教程</span></span></a>
     </div>
   </div>
 
@@ -268,7 +255,7 @@ window.addEventListener('load',function(){
 window.addEventListener('pageshow',function(){ refreshUserBar(); });
 setInterval(refreshUserBar, 2000);
 </script>
-<script src="https://CaesarPC.github.io/ghdb_v2.js?v=20261006c"></script>
+<script src="https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c"></script>
 <script>
 /* 流星背景 */
 (function(){
@@ -286,6 +273,6 @@ setInterval(refreshUserBar, 2000);
     requestAnimationFrame(lp);}lp();
 })();
 </script>
-<script src="https://CaesarPC.github.io/clip.js?v=20261006c"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

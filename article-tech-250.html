@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>限流用户体验 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>限流用户体验</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># API限流与用户体验：拒绝也要优雅</p>
+<p>前面讲了限流的技术实现，这里聊聊限流后的用户体验。系统扛不住了，返回一个500错误页面，用户一脸懵——"什么破网站"。好的限流应该让用户知道发生了什么、该怎么办。</p>
+<p>## 一、返回合适的状态码</p>
+<p>太多请求不要返回500（服务器错误），应该返回429 Too Many Requests。这是标准的"请求过多"状态码。同时带Retry-After头，告诉用户多久后可以重试。</p>
+<p>## 二、友好的提示文案</p>
+<p>不要写"系统繁忙"这种废话。写清楚："您操作太快了，请30秒后再试。"用户知道该等多久。如果是未登录用户被限流，提示登录后提高限额。</p>
+<p>## 三、前端处理</p>
+<p>前端收到429，不要弹一个红色错误框。优雅地提示："操作太频繁，请稍后重试。"按钮可以临时置灰，倒计时结束后恢复。</p>
+<p>## 四、总结</p>
+<p>限流是保护系统，但体验不能崩。返回429而不是500，告诉用户等多久，前端友好提示。技术保护和用户体验不矛盾。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

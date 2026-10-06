@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浏览器跨标签页通信 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>浏览器跨标签页通信</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>浏览器跨标签页通信：多个标签页之间怎么传数据</h2>
+<p>用户开了两个标签页，一个在购物车页，一个在商品页。商品页加了商品，购物车标签页要实时更新数量——这就是跨标签页通信。不同标签页是独立的浏览器进程，怎么通信？</p>
+<p>BroadcastChannel是最简单的方式。同一个域名下的标签页，创建同一个Channel，一个标签页发消息，其他所有标签页都能收到。API简单，兼容性好。</p>
+<p>Storage事件是另一种方式。localStorage变化时，其他标签页会触发storage事件（注意：修改的那个标签页不触发，其他的触发）。利用这个特性可以跨页传消息。缺点是只能传字符串、触发时机和容量有限制。</p>
+<p>SharedWorker是更底层的方案：多个标签页共享一个Web Worker，通过它做消息中转。适合复杂场景，但实现复杂。</p>
+<p>WebSocket配合：所有标签页都连同一个WebSocket服务，服务器广播消息，所有标签页都收到。这其实是跨设备通信了，不只是跨标签页。</p>
+<p>常见场景：多标签页同步登录状态（一个标签页退出，其他也退出）；购物车数量实时更新；多标签页协同操作（一个标签页操作，另一个显示结果）。</p>
+<p>实际项目中，BroadcastChannel足够解决大多数跨标签页需求。理解这个能力，遇到多标签页同步场景就知道怎么做。</p>
+</div>
+</body>
+</html>

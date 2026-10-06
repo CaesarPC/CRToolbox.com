@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幂等性设计 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>幂等性设计</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 幂等性设计：为什么重复请求不能出问题</p>
+<p>用户点了"提交订单"按钮，网络慢，他又点了一次。或者消息队列重试了一次，同一个消息被消费了两遍。如果不做幂等性处理，结果就是：用户付了两次钱、订单创建了两次、积分加了两遍。幂等性是分布式系统中必须考虑的问题——同一个操作执行一次和执行多次，结果应该一样。</p>
+<p>## 一、什么是幂等</p>
+<p>幂等（Idempotent）是一个数学概念：f(f(x)) = f(x)。在编程中，一个幂等操作执行一次和执行多次的效果相同。</p>
+<p>HTTP方法的语义天然有区分：GET是幂等的（查多少次都一样），POST不是幂等的（提交两次创建两条数据），PUT是幂等的（更新同一条记录，执行多次结果一样），DELETE是幂等的（删两次和删一次效果一样）。</p>
+<p>但实际业务中，POST创建订单、POST支付这种操作，如果用户重复提交或者消息重复投递，就会出问题。</p>
+<p>## 二、怎么实现幂等</p>
+<p>最直接的方案：给每个请求一个唯一的请求ID。客户端生成一个唯一ID（UUID或者雪花ID），和请求一起发给服务端。服务端先查这个ID有没有处理过——处理过就直接返回上次的结果，不重复执行。</p>
+<p>这个方案本质上是用一个唯一键做去重。数据库里建一张请求记录表，请求ID做唯一索引。处理前先插入记录，插入成功说明是第一次请求，执行业务；插入失败说明是重复请求，直接返回。</p>
+<p>## 三、天然幂等的操作</p>
+<p>有些操作天然幂等，不需要额外处理：
+- 查询操作：查多少次结果都一样。
+- 更新固定值：update set status = 1 where id = 123。执行多少次结果都是status=1。
+- 删除操作：delete from where id = 123。删一次和删十次，结果都是这条记录没了。</p>
+<p>不幂等的操作：
+- 新增：insert into orders ...。执行两次创建两条订单。
+- 累加：update set balance = balance + 100。执行两次加200，不对。</p>
+<p>对于累加操作，改成set balance = balance + 100 where order_id = 'xxx' and processed = false——用条件控制，已经处理过的就不再累加。</p>
+<p>## 四、消息队列的幂等</p>
+<p>前面说过消息队列可能重复投递。消费端必须做到幂等——同一个消息消费两次，结果和消费一次一样。</p>
+<p>最常见的做法：消息带一个唯一业务ID（比如订单号），消费前先查这个ID是不是已经处理过了。处理过就跳过。数据库唯一约束也能兜底——同一个订单号的积分记录唯一，重复插入会失败。</p>
+<p>## 五、总结</p>
+<p>幂等性不是可选项，而是分布式系统的必备设计。网络会超时、用户会重复点击、消息会重复投递——你无法保证操作只执行一次。但你可以保证执行多次结果和一次一样，这就是幂等性的价值。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

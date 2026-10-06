@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API接口设计规范：前后端怎么对接才不吵架 - Cr工具箱</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
+.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
+h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
+.meta{font-size:13px;color:#999;margin-bottom:20px}
+p{margin-bottom:16px;text-indent:2em}
+a{color:#2563eb;text-decoration:none}
+.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>API接口设计规范：前后端怎么对接才不吵架</h1>
+<div class="meta">2026-10-06 · 技术教程</div>
+<p>前后端对接最怕什么？接口文档写得模糊、字段名随便取、返回格式不统一，两个人各说各话。一套好的API设计规范能省很多麻烦。</p><p>最流行的是RESTful风格。用HTTP方法表示操作：GET查数据、POST新增、PUT修改、DELETE删除。URL用名词不用动词，比如/users而不是/getUsers。</p><p>返回格式要统一，不管成功失败都返回JSON，里面带code状态码、message提示信息、data数据体。前端只需要判断code就知道成功还是失败，不用看HTTP状态码猜。</p><p>版本管理也很重要，接口改版了不影响老版本。URL前面加版本号，比如/api/v1/users、/api/v2/users。</p><p>文档工具推荐用Swagger或Apifox，自动生成接口文档，前后端对着文档开发，减少沟通成本。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

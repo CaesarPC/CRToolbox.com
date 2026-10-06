@@ -4,5 +4,11 @@
   "hash": "38bcb44e306d3d29c36b0f21e9d5d2eea01988d5dc1b4b7498077d1936092c75",
   "created": "2026-10-05 15:41",
   "role": "user"
+ },
+ "CaesarPC": {
+  "salt": "0fbb17d7391d7f6e0ccdd4d1b452b085",
+  "hash": "950aff82b06bd15281cab43e7ad19b816031d928d987cd07d755f9f0e62a9569",
+  "created": "2026-10-06 15:14",
+  "role": "user"
  }
 }

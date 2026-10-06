@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事件驱动架构 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>事件驱动架构</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>事件驱动架构：用事件解耦系统的设计哲学</h2>
+<p>传统的系统设计是命令式的：A调用B，B调用C，同步等待结果。这种紧耦合在系统变复杂后很难维护。事件驱动架构换一种思路：系统不直接调用其他服务，而是发布事件（"订单已创建"），感兴趣的服务自己订阅事件做处理。发布者不知道谁在听，订阅者不知道谁发布的，双方完全解耦。</p>
+<p>事件的本质是状态变更的记录。"订单已创建"事件记录了"订单从无到有"这个事实。事件一旦发布就是事实，不可篡改。这和命令（"请创建订单"）不同：命令是要求对方做什么，事件是记录已经发生了什么。</p>
+<p>事件驱动的实现：消息队列做事件总线。订单服务发布OrderCreated事件到Kafka/RabbitMQ，库存服务、通知服务、积分服务各自订阅这个事件，做自己的处理。新增一个下游（比如推荐服务想订阅订单事件），只需要新增订阅者，订单服务完全不用改。</p>
+<p>事件溯源（Event Sourcing）是进阶模式：不存储当前状态，而是存储所有事件序列。当前状态是事件回放的结果。要查订单历史，直接看事件流就行。这种模式在审计要求高、需要完整历史的场景很有用，但复杂度高。</p>
+<p>CQRS（命令查询职责分离）常和事件驱动配合：写操作走一套模型（命令端），读操作走另一套模型（查询端）。写侧保证业务一致性，读侧为查询优化（可以有冗余数据、物化视图）。读写分离到不同模型，各自优化。</p>
+<p>事件驱动的优势：解耦（新增订阅者不影响发布者）、异步（发布者不用等订阅者处理完）、可重放（事件存下来，新服务上线可以重放历史事件初始化）。</p>
+<p>挑战：事件顺序（要保证同一实体的事件按顺序处理）、事件重复（消费端幂等）、调试困难（调用链是异步的，追踪一次业务要串联多个事件）、最终一致性（不是实时一致，要有容忍度）。</p>
+<p>事件驱动适合：业务事件多、需要多系统联动、希望系统解耦的场景。简单CRUD系统用事件驱动是过度设计。判断标准：是否有"一个业务动作触发多个后续动作"的需求？是就考虑事件驱动。</p>
+</div>
+</body>
+</html>

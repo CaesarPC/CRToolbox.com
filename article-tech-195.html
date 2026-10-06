@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web安全攻防基础 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Web安全攻防基础</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># Web安全攻防：开发者必须知道的常见漏洞与防御</p>
+<p>很多开发者写代码只关注功能能不能跑通，完全不考虑安全问题。在本地开发环境里一切正常，一旦部署到公网，各种扫描器、爬虫、黑客脚本立刻找上门来。XSS打你的用户Cookie、SQL注入拖你的数据库、CSRF伪造你的用户请求、文件上传拿到服务器权限——这些不是电影里的情节，而是每天都在发生的真实攻击。Web安全不是安全团队的事，每个写Web代码的开发者都应该掌握最基本的安全常识。因为漏洞往往就藏在你写的那一行拼接SQL、那个直接渲染用户输入的innerHTML里。</p>
+<p>## 一、XSS：把脚本注入到别人的浏览器里</p>
+<p>跨站脚本攻击（XSS）是最常见的Web漏洞。原理很简单：你把用户输入的内容未经处理直接显示在页面上，恶意用户就可以在输入里塞一段JavaScript代码，其他用户浏览这个页面时，这段脚本就在他们的浏览器里执行了。</p>
+<p>XSS分两种。存储型XSS是恶意脚本被存到了数据库里——比如有人在评论区发了一段带script标签的评论，所有看评论的用户都会中招。反射型XSS是恶意脚本放在URL参数里，诱骗用户点击那个链接，服务器把脚本"反射"回页面执行。</p>
+<p>XSS的危害很大：攻击者可以窃取用户的Cookie和登录状态、冒充用户操作、篡改页面内容、甚至挖矿。防御XSS的核心原则很简单：永远不要信任用户输入。输出到HTML页面的时候，对特殊字符做转义——把<转成&lt;、>转成&gt;、"转成&quot;。现代前端框架（Vue、React）默认就做了HTML转义，这是为什么用框架开发不容易出XSS。但如果你用v-html或者dangerouslySetInnerHTML直接渲染原始HTML，转义就失效了。</p>
+<p>## 二、SQL注入：最古老也最致命的漏洞</p>
+<p>SQL注入是Web安全的经典漏洞，存在了二十多年，现在依然榜上有名。原理同样简单：你把用户输入直接拼接到SQL语句里，攻击者输入一段特殊的SQL代码，篡改了你原本要执行的查询逻辑。</p>
+<p>比如登录验证的代码是这样写的：String sql = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "'"; 如果攻击者在用户名输入框填 ' OR '1'='1 --，拼出来的SQL就变成了 SELECT * FROM users WHERE username = '' OR '1'='1 --' AND password = '...'。这个查询永远为真，攻击者不需要密码就能登录任何账号。</p>
+<p>防御SQL注入的方案非常明确：永远不要拼接SQL字符串。使用参数化查询（预编译语句），用户输入作为参数传给数据库，数据库自动处理转义。用ORM框架也能天然避免SQL注入——它生成的SQL都是参数化的。另外，最小权限原则：数据库用户不要给太高权限，哪怕被注入了，损失也有限。</p>
+<p>## 三、CSRF：冒充用户发请求</p>
+<p>跨站请求伪造（CSRF）和XSS不一样。XSS是往你的页面里塞脚本，CSRF是诱骗你的用户在已登录状态下访问恶意网站，恶意网站自动向你的站点发请求。因为浏览器会自动带上Cookie，如果用户刚登录过你的银行网站，又打开了一个恶意页面，那个页面就可以偷偷以用户的身份发转账请求。</p>
+<p>防御CSRF的核心思路是：给每个表单或者请求加一个随机的Token，这个Token存在Session里，同时渲染到页面上。提交请求的时候必须带上这个Token，服务器验证Token是否匹配。恶意网站拿不到这个Token（跨域读不到你的Cookie和页面内容），所以构造的请求通不过验证。</p>
+<p>现在的现代框架和浏览器都有一些自动防护措施（SameSite Cookie属性），但关键操作（改密码、转账、删除）最好还是加二次确认或者二次验证。</p>
+<p>## 四、文件上传漏洞：上传个木马就拿到服务器</p>
+<p>很多网站都有文件上传功能——用户头像、附件、图片。如果上传功能没做校验，攻击者就可以上传一个WebShell（比如PHP脚本），然后访问那个文件，直接在服务器上执行任意命令。</p>
+<p>防御文件上传漏洞有几个层面。第一，校验文件类型：不要只看文件后缀名（攻击者把shell.php改成shell.jpg也能绕过去），要检查文件的MIME类型和文件头的魔数。第二，上传的文件存到独立的域名或者对象存储里，不要和应用在同一个域名下——就算上传了脚本，浏览器也不会把它当代码执行。第三，重命名上传的文件，用随机文件名，不要保留用户给的原始文件名。第四，限制上传目录的执行权限。</p>
+<p>## 五、越权访问：该看的不该看的都能看</p>
+<p>水平越权和垂直越权是业务逻辑层面最常见的漏洞。</p>
+<p>水平越权：用户A可以看到用户B的数据。比如订单查询接口是 /api/order?id=123，用户A登录后把id改成124，就看到了用户B的订单。原因是后端只验证了"你登录了"，没有验证"这个订单是不是你的"。</p>
+<p>垂直越权：普通用户可以调用管理员接口。比如 /api/admin/deleteUser 这个接口，后端只写了接口逻辑，没检查当前用户是不是管理员，普通用户登录后直接调用就能删除用户。</p>
+<p>防御越权的核心原则：每个请求都要做权限校验，不能只靠前端隐藏按钮。前端把管理员按钮藏起来是给用户体验用的，真正的权限校验必须在后端做。后端拿到请求后，不仅要验证"你是谁"，还要验证"你能不能做这件事"。</p>
+<p>## 六、敏感信息泄露：密钥不要写在代码里</p>
+<p>这不是什么高明的攻击，但出问题的概率极高。很多开发者把数据库密码、API密钥、Secret Key直接写在代码里，然后把代码推到GitHub公开仓库。各种爬虫机器人会全天候扫描GitHub里的密钥，几分钟内你的密钥就被滥用了。</p>
+<p>防御很简单：敏感配置全部放在环境变量或者配置文件里，配置文件加入.gitignore不要提交。定期检查代码历史里有没有不小心提交过的密钥——如果有，立刻轮换（重置）那个密钥，因为git历史可以被恢复。</p>
+<p>## 七、HTTPS：加密传输是基本要求</p>
+<p>HTTP是明文传输的，网络上任何人都可以窃听甚至篡改传输内容。在公共WiFi下，你登录网站的账号密码可能被中间人直接看到。HTTPS通过TLS加密，保证数据在传输过程中既不被窃听也不被篡改。</p>
+<p>现在HTTPS已经是标配了，Let's Encrypt提供免费证书，配置也很简单。所有线上站点都应该强制HTTPS，把HTTP请求自动跳转到HTTPS。Cookie也要设置Secure标志，只在HTTPS下传输。</p>
+<p>## 八、安全是持续过程，不是一次性任务</p>
+<p>安全不是上线前做一次扫描就完事的。新的漏洞不断被发现，依赖库的安全公告要持续关注，定期用工具扫描项目的依赖有没有已知漏洞。最小权限原则贯穿始终：数据库账号只给需要的权限、API密钥只给需要的范围、服务器端口不要全部对外开放。</p>
+<p>对于普通开发者来说，不需要成为安全专家，但必须建立最基本的安全意识：用户输入永远不可信、敏感数据永远不硬编码、权限校验永远在后端做、永远用参数化查询。把这些变成肌肉记忆，就能挡住90%以上的常见攻击。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

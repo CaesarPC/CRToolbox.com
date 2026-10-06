@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript类型系统进阶 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>TypeScript类型系统进阶</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2># TypeScript类型系统：从any到类型体操的进阶之路</h2>
+<p>JavaScript是一门动态类型语言——变量可以随便赋值，今天是数字明天变成字符串，运行时才会发现类型不匹配。这种灵活性让JS写起来很快，但项目一大就痛苦了：改了一个字段名，调用处全崩，IDE也不会提前告诉你。TypeScript通过在JS外面加一层静态类型系统，在开发阶段就帮你抓住类型错误。很多人刚开始写TS觉得麻烦——到处写类型注解，比JS啰嗦多了。但一旦项目超过几千行，你就会体会到类型系统带来的安全感：重构的时候编译器帮你兜底，IDE补全精准到字段，读代码的时候类型本身就是最好的文档。</p>
+<h2>## 一、基础类型：从标注开始</h2>
+<p>TypeScript最基础的用法就是给变量、函数参数、返回值加类型注解。let count: number = 1; function add(a: number, b: number): number { return a + b; }。这样你要是不小心传了字符串进去，编辑器立刻标红告诉你类型不对，不用等到运行时才报错。</p>
+<p>基础类型包括number、string、boolean、array、object这些。数组的类型写法是number[]或者Array&lt;number&gt;。对象类型可以用接口（interface）或者类型别名（type）来定义：interface User { id: number; name: string; }。</p>
+<p>刚开始写TS，最容易犯的错就是到处用any。any相当于关闭了类型检查，跟写JS没区别。很多人图省事，接口返回的数据直接标any，那TS的好处就完全没享受到。要养成习惯：哪怕类型写得麻烦一点，也不要随便用any。</p>
+<h2>## 二、接口与类型别名：定义你的数据结构</h2>
+<p>interface和type都可以用来定义对象的形状，大部分场景下可以互换。但它们有几个关键区别。</p>
+<p>interface支持声明合并——同名的interface会自动合并成一个。这在扩展第三方库类型的时候特别有用。type不支持合并，定义了就是定义了。</p>
+<p>interface更适合描述对象和类的结构。type更灵活，可以定义联合类型、交叉类型、基本类型别名、元组等。实际项目中，描述API返回的数据结构、组件的Props，用interface居多；做类型运算和灵活组合的时候用type。</p>
+<p>一个好习惯是：把所有API接口的请求和响应类型都定义好，放在单独的types文件里。这样前端调用接口的时候，返回值的类型是完整的，IDE能自动补全字段，不用翻文档。后端改了字段名，前端编译阶段就会报错。</p>
+<h2>## 三、联合类型与窄化：让类型更精确</h2>
+<p>联合类型表示一个值可以是几种类型之一。function printId(id: number | string) { ... }。这个函数接受数字或者字符串都行。但函数内部如果直接调用id.toUpperCase()就会报错——因为number没有toUpperCase方法。</p>
+<p>这时候就需要类型窄化（Narrowing）：通过if判断把联合类型收窄成具体类型。if (typeof id === 'string') { id.toUpperCase() }，在这个分支里TS知道id是string类型，可以安全地调用字符串方法。这种自动窄化是TS类型系统的精妙之处——你写普通的JS判断代码，TS自动帮你推断出类型收窄后的结果。</p>
+<p>字面量类型也是联合类型的一种应用。type Status = 'pending' | 'success' | 'error'。状态只能是这三个值之一，写错了字符串TS会立刻报错。比用字符串常量安全得多。</p>
+<h2>## 四、泛型：类型层面的函数</h2>
+<p>泛型是TS进阶的核心概念。想象你要写一个identity函数：function identity&lt;T&gt;(arg: T): T { return arg; }。这个函数接收一个参数，返回和参数同样类型的值。T是一个类型参数，调用的时候根据传入的值自动推断T是什么类型。</p>
+<p>泛型的价值在于：写一段通用逻辑，同时保持类型安全。比如一个API请求函数：function fetchData&lt;T&gt;(url: string): Promise&lt;T&gt; { ... }。调用的时候指定T是User类型，返回的Promise就是Promise&lt;User&gt;，自动获得User的类型补全。</p>
+<p>在实际项目中，泛型最常见的用途是封装通用组件和工具函数。比如一个通用的列表组件，不同页面传不同的数据类型进来，组件内部照样能正确提示每个item的字段。没有泛型的话，你只能用any或者为每种数据类型写一个组件。</p>
+<h2>## 五、工具类型：类型体操的基础</h2>
+<p>TS内置了一堆工具类型，帮你快速地从已有类型派生新类型。</p>
+<p>Partial&lt;T&gt;把T的所有属性变成可选。Required&lt;T&gt;反过来，全部变成必填。Pick&lt;T, K&gt;从T中挑几个属性组成新类型。Omit&lt;T, K&gt;从T中排除几个属性。Record&lt;K, V&gt;构造一个键为K、值为V的对象类型。</p>
+<p>举个实际例子：你已经定义了完整的User类型。现在要写一个更新用户信息的接口，请求体里不需要传id（因为已经在URL里了），其他字段都是可选的。你可以这样写：type UpdateUserRequest = Partial&lt;Omit&lt;User, 'id'&gt;&gt;。一行代码就派生出了新类型，不用重新写一遍所有字段。</p>
+<p>这些工具类型组合起来非常强大。熟练使用它们，可以避免重复定义类型，让类型定义保持DRY（Don't Repeat Yourself）。</p>
+<h2>## 六、类型守卫与自定义类型保护</h2>
+<p>有时候你需要判断一个值是不是某种类型，TS自带的typeof和instanceof不够用。这时候可以写自定义类型守卫函数：function isUser(obj: any): obj is User { return obj &amp;&amp; obj.id !== undefined &amp;&amp; obj.name !== undefined; }。</p>
+<p>调用这个函数做判断之后，TS会自动把obj的类型收窄成User。这种模式在处理API返回数据、解析JSON的时候特别有用——你不知道拿到的对象是不是符合预期的结构，写一个类型守卫验证一下，后续代码就可以安全地访问字段了。</p>
+<h2>## 七、unknown vs any：更安全的选择</h2>
+<p>很多人用any，但TS提供了一个更安全的选择：unknown。unknown表示"我现在不知道它是什么类型"。和any的区别是：你不能直接对unknown类型的值做任何操作——不能调用方法、不能访问属性，必须先做类型收窄。</p>
+<p>这在处理外部输入的时候特别有用。比如JSON.parse返回的是any，你不知道解析出来的是什么。更安全的做法是标注成unknown，然后写类型守卫验证结构。这样就不会因为直接假设数据结构而出错。</p>
+<h2>## 八、总结</h2>
+<p>TypeScript的类型系统不是一天就能精通的。初学者先掌握基本类型、接口、联合类型，能写出类型安全的业务代码就够了。随着项目复杂度提升，再慢慢学习泛型、工具类型、类型体操这些高级特性。</p>
+<p>学习TS最大的误区是把它当成"带类型的JavaScript"，只是在JS代码上到处加类型注解。真正用好TS，是把类型系统当成设计工具——先想清楚数据长什么样、函数接收什么返回什么，用类型把这些约束表达出来。好的类型定义本身就是文档，它告诉你这个函数能处理什么、不能处理什么。编译器成了你的结对编程伙伴，帮你抓住低级错误，让重构变得大胆。类型系统不是负担，是你代码质量的保险。</p>
+</div>
+</body>
+</html>

@@ -333,9 +333,14 @@ function spawnDm(item) {
   var bCls = item.admin ? 'admin' : (item.mod ? 'mod' : '');
   if (bold === 'bold' || bold === 'heavy') bCls += ' bold';
   el.className = 'dm ' + bCls;
+  /* 长弹幕截断显示，避免超长内容导致渲染卡顿 */
+  var displayContent = String(item.content || '');
+  if (displayContent.length > 80) displayContent = displayContent.slice(0, 80) + '…';
   el.innerHTML = '<span class="nm">' + esc(item.name) +
-    (item.admin ? ' \uD83D\uDC51' : (item.mod ? ' \uD83E\uDD48' : '')) + '</span>' + esc(item.content);
+    (item.admin ? ' \uD83D\uDC51' : (item.mod ? ' \uD83E\uDD48' : '')) + '</span>' + esc(displayContent);
   el.style.top = (idx * DM_TRACK_H + 2) + 'px';
+  el.style.willChange = 'transform';
+  el.style.backfaceVisibility = 'hidden';
   stage.appendChild(el);
 
   var stageW = stage.clientWidth || window.innerWidth;

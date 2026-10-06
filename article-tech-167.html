@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web_Components原生组件化 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Web_Components原生组件化</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>Web Components原生组件化：浏览器自带的组件标准</p>
+<p>React和Vue的组件化很好用，但它们是框架级别的方案。Web Components是浏览器原生支持的组件标准，不需要任何框架就能实现组件封装、复用、跨框架使用。它由三个核心技术组成：Custom Elements、Shadow DOM、HTML Templates。</p>
+<p>Custom Elements让你定义自定义HTML标签。比如<user-card>，浏览器把它当成真正的DOM元素处理。通过class继承HTMLElement，定义组件的生命周期：connectedCallback（元素插入DOM时触发）、disconnectedCallback（移除时触发）、attributeChangedCallback（属性变化时触发）。这就是组件的"钩子"。</p>
+<p>Shadow DOM是封装的关键。普通DOM里，组件内部的元素和外部是通的——外部CSS会污染组件内部，组件内部CSS也会泄漏到外部。Shadow DOM提供了一个隔离的"影子树"，组件内部的DOM和CSS完全封装，外部碰不到。这和React的样式隔离思路一致，但它是浏览器原生的。</p>
+<p>HTML Template用<template>标签定义组件的HTML结构。template里的内容不会立刻渲染，JavaScript可以克隆它、填充数据、插入到Shadow DOM里。这样组件的结构和逻辑分离，清晰可维护。</p>
+<p>Web Components的最大优势是跨框架。你用原生写的组件，可以在React、Vue、Angular甚至纯HTML项目里直接用。不存在"React组件不能给Vue用"的问题。这对于做组件库的团队特别有价值——一套组件，所有技术栈都能用。</p>
+<p>Polymer是Google早期的Web Components框架，现在更推荐直接用原生API或Lit（Google维护的轻量级库）。Lit提供了响应式属性、模板渲染、性能优化，比裸写原生Web Components开发效率高很多。</p>
+<p>实际应用场景：设计系统组件库（跨团队、跨框架复用）、微前端场景下的子组件封装、嵌入第三方内容的独立widget。它不是要取代React/Vue，而是作为底层标准——很多框架其实在底层借鉴了它的思想。</p>
+<p>Web Components的学习曲线比框架平缓，因为它就是浏览器原生API。一旦掌握，你就拥有了不依赖任何框架的组件化能力。这在长期维护性上有巨大优势：框架会过时，但浏览器标准不会。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

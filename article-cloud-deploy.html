@@ -3,21 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>网站云端部署与轻量化运维：静态托管、CDN加速与服务稳定化技术 - Cr工具箱</title>
+<title>网站云端部署与轻量化运维：静态托管、CDN加速与服务稳定化技术详解 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
-.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
-h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
-.meta{font-size:13px;color:#999;margin-bottom:20px}
-p{margin-bottom:16px;text-indent:2em}
-a{color:#2563eb;text-decoration:none}
-.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
+.back:hover{color:#50fa7b}
+.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
+h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
+.meta{font-size:12px;color:#6272a4;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #44475a}
+p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-<div class="box">
+<div class="wrap">
 <a href="articles.html" class="back">← 返回文章列表</a>
+<div class="card">
 <h1>网站云端部署与轻量化运维：静态托管、CDN加速与服务稳定化技术详解</h1>
 <div class="meta">2026-10-06 · 技术教程</div>
 <p>现代个人站点、工具站与轻量商业网站的开发逻辑，已经彻底从传统本地服务器部署转向云端托管模式。相较于老旧的本地主机部署，云端部署具备免常驻开机、防宕机、全球节点加速、低成本甚至零成本上线等优势，是目前个人开发者、小型技术项目、工具类网站的主流落地方案。多数新手开发者在完成前后端代码编写后，常会卡在部署环节，出现页面无法访问、静态资源加载失败、外网无法穿透、域名解析异常、缓存错乱等问题，本质原因是对云端托管、静态分发、网络加速与基础运维逻辑认知缺失。本文系统拆解现代网站云端部署的核心技术、主流方案、避坑要点与运维规范，覆盖静态站部署、反向代理、CDN加速、防访问失效、跨域配置等刚需技术点。</p>
@@ -31,6 +35,8 @@ a{color:#2563eb;text-decoration:none}
 <p>自动化持续集成与持续部署（CI/CD）是现代开发运维的标准化流程。传统手动上传文件部署效率极低，且容易出现文件遗漏、版本混乱的问题。CI/CD流水线可以实现代码推送自动构建、自动测试、自动部署、自动更新，开发者仅需要本地修改代码并推送，云端自动完成全部上线流程，实现迭代零成本、秒级更新。这套技术体系也是企业级开发与个人高质量项目的核心差距。</p>
 <p>综合来看，现代网站技术不再是单一写代码的能力，而是开发、部署、加速、运维、安全一体化的完整闭环。前端负责交互体验，后端负责数据逻辑，云端部署负责永久在线，CDN负责高速分发，运维配置负责稳定安全。熟练掌握云端托管、自动化部署、缓存优化、反向代理、跨域与基础安全配置，能够彻底解决个人网站掉线、加载慢、更新难、易崩溃、不安全等所有常见问题，是独立开发者搭建高质量工具站、展示站、交互站、AI功能站的必备核心能力。</p>
 <p><a href="articles.html">← 返回文章列表</a></p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
 </div>
 </body>
 </html>

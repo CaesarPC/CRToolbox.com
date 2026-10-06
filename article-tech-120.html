@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>虚拟列表与长列表性能优化 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>虚拟列表与长列表性能优化</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>虚拟列表与长列表性能优化：万条数据不卡顿的渲染方案</p>
+<p>一个订单列表有十万条数据，直接全部渲染到DOM里会怎样？浏览器可能直接卡死。DOM节点太多是前端性能的头号杀手：每增加一个DOM节点，渲染、样式计算、内存都有开销。虚拟列表（Virtual List）是解决长列表性能问题的标准方案。</p>
+<p>虚拟列表的核心思想很简单：只渲染可视区域内的列表项。屏幕只能显示10条数据，就只渲染10个DOM节点，上下滚动时动态替换内容。哪怕总共有十万条数据，DOM节点始终只有十几个，性能完全不卡。</p>
+<p>实现原理：计算列表总高度（项数×每项高度），用一个可滚动容器撑出这个高度；根据滚动位置计算当前应该显示哪几条数据（开始索引、结束索引），只渲染这几条；用transform把渲染的列表项偏移到正确的位置。用户滚动时，实时更新可见范围，动态替换DOM内容。</p>
+<p>定高列表是最简单的场景：每个列表项高度固定。计算很简单：开始索引=滚动位置÷项高，结束索引=开始索引+屏幕可显示条数。库如react-window、vue-virtual-scroller默认支持这种场景。</p>
+<p>不定高列表是难点：每条数据高度不一样（消息列表，有的长有的短）。预先测量所有项的高度不现实（数据太多）。解决方案是：先预估高度，渲染后实际测量，动态修正位置。滚动时根据已知的高度缓存计算偏移。复杂的虚拟列表库都内置了这种动态高度处理。</p>
+<p>虚拟滚动不仅用于纵向列表，也用于横向表格、甚至二维网格（虚拟表格，行和列都虚拟化）。数据表格成千上万行成千上万列，只有可视区域渲染，是大数据量表格的标准做法。</p>
+<p>除了虚拟列表，长列表优化还有其他手段：分页加载（滚动到底部加载下一页，这是最简单的做法，适合不需要快速滚动的场景）；分页和虚拟列表结合（每一页数据虚拟化渲染）；图片懒加载（列表里的图片进入可视区才加载）；减少列表项的复杂度（列表项里不要放重组件、不要放太多嵌套）。</p>
+<p>常见坑：滚动时白屏（快速滚动时新数据还没渲染出来，显示空白），解决方法是多渲染一些缓冲区（可视区上下各多渲染几条）；滚动跳动（动态高度修正时位置跳变），需要平滑调整；列表项内部的交互状态在滚动后丢失（因为DOM被替换了），需要把状态提升到外部数据层管理。</p>
+<p>成熟的虚拟列表库：React生态用react-window（轻量）或react-virtuoso（功能全）；Vue生态用vue-virtual-scroller。不要自己从零写虚拟列表，边界情况太多，用成熟库更可靠。</p>
+<p>长列表性能优化是前端面试和实战的高频话题。理解虚拟列表的原理，遇到大数据量渲染场景就不会慌。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

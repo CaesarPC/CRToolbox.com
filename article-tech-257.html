@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webhook - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Webhook</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 什么是Webhook：事件推送的反向API</p>
+<p>你调用API是主动请求别人的数据。Webhook反过来——别人在事件发生时主动把数据推给你。它就是一个"反向API"。</p>
+<p>## 一、怎么工作</p>
+<p>你在GitHub上配置一个WebhookURL：当有人给你的项目提Issue时，GitHub自动向这个URL发一个POST请求，带上Issue的数据。你的服务器收到后做处理——比如自动创建内部任务、发通知到群里。</p>
+<p>你不需要轮询GitHub"有没有新Issue"，GitHub主动推给你。省请求、实时性高。</p>
+<p>## 二、常见用途</p>
+<p>GitHub/GitLab事件通知。
+支付平台回调：用户付款成功后，支付平台主动通知你的服务器。
+第三方集成：Stripe、Slack、微信支付都用Webhook。</p>
+<p>## 三、安全</p>
+<p>Webhook接收端要验证请求确实来自合法平台——用签名验证。平台给你一个Secret，请求带签名头，你用Secret验证签名对不对。防止有人伪造请求打你的Webhook端点。</p>
+<p>## 四、总结</p>
+<p>Webhook是事件驱动架构的基础。与其轮询，不如让对方在事件发生时推给你。简单高效，但要做好签名验证和重试处理。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

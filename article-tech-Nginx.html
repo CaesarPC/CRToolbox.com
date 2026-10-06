@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nginx反向代理与负载均衡配置实战 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>Nginx反向代理与负载均衡配置实战</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>Nginx反向代理与负载均衡配置实战：从单服务器到集群入口</h2>
+<p>Nginx是互联网上使用最广泛的Web服务器和反向代理。超过三分之一的网站用Nginx做入口。它的核心能力有三个：静态资源服务、反向代理、负载均衡。理解Nginx的配置，是后端运维和部署的基本功。</p>
+<p>静态资源服务是Nginx最基础的用途。直接把HTML、CSS、JS、图片文件放在服务器上，Nginx配置一个root路径，用户请求就返回文件。Nginx处理静态文件的性能极高，因为它用事件驱动模型，单机可以扛住几万并发。这就是为什么静态网站托管（前面讲的Cloudflare Pages、Vercel）底层都是类似的Web服务器。</p>
+<p>反向代理是Nginx的核心功能。和正向代理（代理客户端访问外网）不同，反向代理是代理服务器接收外部请求，转发给内部的应用服务器，再把结果返回给客户端。客户端不知道后面的服务器是谁。这样做的好处是：隐藏内部架构、统一入口、做负载均衡、实现HTTPS终止（SSL证书只在Nginx配置一份，后端用HTTP就行）。</p>
+<p>负载均衡是反向代理的进阶用法。当一台服务器扛不住流量时，就部署多台应用服务器，Nginx作为入口把请求分发到不同服务器。常见的分发策略：轮询（默认，每个请求按顺序分）、加权轮询（性能好的服务器多分点）、ip_hash（同一个用户总是分到同一台服务器，解决Session问题）、最少连接（分给当前连接最少的服务器）。健康检查也是自动的：某台服务器挂了，Nginx自动把它从轮询列表移除，恢复后再加回来。</p>
+<p>Nginx配置文件的结构要理解。main块是全局配置（worker进程数、日志路径）；events块配置连接处理；http块是核心，包含所有虚拟主机配置；server块定义一个虚拟主机（一个域名）；location块匹配URL路径，定义具体处理规则。一个完整的配置就是在server里写多个location，不同路径走不同处理。</p>
+<p>常见配置场景：前端静态站配置root指向打包后的dist目录；API请求反向代理到后端服务（location /api/ { proxy_pass http://backend:8080/; }）；WebSocket代理要加Upgrade头；gzip压缩减少传输体积；缓存控制头配置静态资源缓存时间；HTTPS配置SSL证书路径和协议版本。</p>
+<p>CORS跨域配置在Nginx层做也很方便。在location里加add_header Access-Control-Allow-Origin等响应头，所有API的跨域问题在入口统一解决，不用每个后端服务都配一遍。</p>
+<p>日志和监控是运维的眼睛。access_log记录每个请求的URL、状态码、响应时间、客户端IP。通过分析日志可以发现：哪些接口慢、哪些路径404多、有没有异常IP在扫描。错误日志记录Nginx自身和后端代理的错误。结合状态监控模块（stub_status），可以实时看活跃连接数、请求量。</p>
+<p>性能调优方面：worker_processes设为CPU核心数；worker_connections调大连接数；开启sendfile和tcp_nopush减少网络开销；连接复用（keepalive到后端）减少TCP握手开销。这些参数调优后，单机并发能力可以提升数倍。</p>
+<p>Nginx配置错误是部署失败最常见的原因。改完配置一定要用nginx -t测试语法，再reload。路径错了、proxy_pass末尾多了少了斜杠、location匹配顺序不对，都是新手常踩的坑。理解Nginx的配置规则，部署一个网站就不再是玄学。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技术债管理 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>技术债管理</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>技术债管理：像还债一样管理代码质量问题</p>
+<p>每个项目都有技术债：为了赶进度写的临时方案、没写的测试、重复的代码、过时的依赖。短期看加快了进度，长期看拖慢了开发速度——改代码要绕弯路、出Bug要花时间查。技术债和金融债务一样：不还，利息越滚越大。</p>
+<p>技术债的来源：赶进度用快速但不优雅的方案；需求变更仓促改代码没重构；不熟悉技术栈写出低效代码；业务迭代快，没时间优化。</p>
+<p>识别技术债：Code Review时记录、架构评审时标记、定期盘点。把技术债记在Backlog里，和业务需求一起排优先级。</p>
+<p>偿还策略：不要专门停业务开发去还债（业务不答应）。小步持续还：每次新功能开发顺带还相关的债；安排一定比例的时间（比如20%）专门处理技术债；高利息的债（经常导致Bug的模块）优先还。</p>
+<p>预防新技术债：代码规范、Code Review、自动化测试、CI流水线，从源头减少债务。好的工程习惯就是最好的债务管理。</p>
+<p>判断技术债要不要还：看这段代码是否高频修改。经常改的模块，技术债要还（每次改都在付利息）；很少碰的代码，放着就行（没利息）。</p>
+<p>不是所有"不优雅"的代码都是要还的债。完美主义会导致过度工程。技术债管理的核心是权衡：业务速度和代码质量的平衡。完全不还债，系统最终会慢到无法开发；全部时间还债，业务停滞。找到中间点。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

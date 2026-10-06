@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monorepo多包管理 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>Monorepo多包管理</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>Monorepo多包管理：一个仓库管理多个相关项目</h2>
+<p>项目拆成了好几个包：组件库、工具函数、主应用、SSR入口。每个包一个Git仓库？改一个组件要发多个PR、跨仓库调试麻烦、版本同步困难。Monorepo把所有相关包放在一个Git仓库里统一管理。</p>
+<p>Monorepo的优势：代码共享方便（改一个包，其他包立刻能用，不用发版再安装）；原子提交（一次提交可以同时改多个包，保证一致性）；统一工具链和版本（ESLint、TS配置一份）；跨包重构容易（全局搜索替换）。</p>
+<p>挑战：仓库变大（虽然Git处理得不错）；构建要做依赖管理（改了A包，只构建依赖A的包，不要全量构建）；权限粒度变粗（整个仓库一组权限，不能按包分权）。</p>
+<p>工具链：pnpm workspace是轻量选择（pnpm自带，配置简单）；Turborepo做构建编排（缓存构建结果，只重新构建变化的包）；Nx是全功能解决方案（依赖图、代码生成、 affected构建）。中小团队pnpm+Turborepo足够。</p>
+<p>实际场景：组件库和主应用放一个monorepo；前端多个相关子项目共享工具库；全栈项目（前端+后端+共享类型）放一个仓库。</p>
+<p>不是所有项目都适合monorepo。无关的项目放一起是噪音。判断标准：这些包是否经常一起改、是否共享代码？是就monorepo，不是就分开。</p>
+</div>
+</body>
+</html>

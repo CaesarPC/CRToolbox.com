@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>响应式设计与移动端适配全指南 - Cr工具站</title>
+<title>响应式设计与移动端适配全指南 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>响应式设计与移动端适配全指南</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
-<h2>响应式设计与移动端适配全指南：一套代码适配手机平板桌面全终端</h2>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>移动互联网时代，超过一半的网站流量来自手机。但很多网站在手机上打开要么排版错乱、要么按钮小到点不到、要么需要左右横滑。响应式设计（Responsive Design）的目标，就是让一套代码自动适配所有屏幕尺寸。从320px的手机屏到4K的桌面显示器，页面都能优雅展示。这不是简单的"缩小"，而是根据屏幕尺寸重新布局内容。</p>
 <p>响应式设计的三大核心技术是弹性布局、媒体查询和相对单位。弹性布局包括Flexbox和Grid：Flexbox擅长一维排列（导航栏、卡片横排），Grid擅长二维网格（整体页面布局）。传统的固定宽度布局（写死width: 960px）在手机上必然溢出，而用百分比、auto、minmax等弹性单位，容器会自动伸缩。媒体查询（@media）是响应式的开关：根据屏幕宽度应用不同的CSS规则。比如屏幕小于768px时，把侧边栏从右边挪到底部、把横向导航改成汉堡菜单。</p>
 <p>相对单位的选择直接影响适配效果。px是绝对单位，在手机上不会缩放；rem是相对于根字体大小的单位，配合根字体大小的媒体查询，可以整体缩放页面；vw/vh是视口单位，1vw等于屏幕宽度的1%，非常适合做全屏适配。现在推荐的做法是：布局尺寸用rem或vw，字体大小用rem，边框和细线用px（不需要缩放）。这样调整根字体大小，整个页面的尺寸等比缩放。</p>
@@ -32,6 +36,7 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>常见的移动端适配坑包括：横向滚动条莫名出现（某个元素宽度超出了屏幕，用overflow-x检查）、1px边框在高分屏变粗（用transform: scale缩放解决）、固定定位元素被手机键盘顶起（用visualViewport处理）、安全区适配（iPhone刘海屏底部横条，用env(safe-area-inset-bottom)）。这些细节问题不解决，移动端体验就大打折扣。</p>
 <p>测试覆盖各种尺寸是必须的。Chrome DevTools的设备模拟器可以模拟各种手机型号，但真实设备测试永远不能省。不同品牌的手机浏览器（Safari、Chrome、国产浏览器）渲染差异不小，尤其是iOS Safari有很多独有的bug。响应式设计不是写一次就完事，要在真机上反复验证。</p>
 <p>响应式设计已经不是"加分项"，而是网站的基本要求。搜索引擎对移动端不友好的网站会降权，用户在手机上打不开的网站等于流失一半流量。掌握响应式布局，是前端开发者的基本功。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

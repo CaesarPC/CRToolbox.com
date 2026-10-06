@@ -212,6 +212,7 @@ function setupEgg67() {
 var DM_TRACK_H = 34;       // 每条轨道高度(px)，弹幕高度约33px
 var DM_BASE_STAGE_H = 420; // 基础舞台高度
 var DM_MAX_STAGE_H = 1560; // 舞台最高可扩展到约46条轨道
+var DM_MAX_ON_SCREEN = 30; // 最多同时显示的弹幕数（性能保护）
 var DM_TRACKS = [];        // 轨道占用状态: true=占用
 var DM_PENDING = [];       // 排队中的弹幕
 var DM_SPAWNED = {};       // 已生成的弹幕id(去重，供增量刷新)
@@ -296,6 +297,12 @@ function dmShrinkIfIdle() {
 function spawnDm(item) {
   var stage = document.getElementById('stage');
   if (!stage || !item) return;
+  /* 性能保护：同时显示弹幕不超过上限，超出的排队等待 */
+  var onScreen = stage.querySelectorAll('.dm').length;
+  if (onScreen >= DM_MAX_ON_SCREEN) {
+    DM_PENDING.push(item);
+    return;
+  }
   var bold = document.getElementById('dmBold').value || 'normal';
   var pos = document.getElementById('dmPos').value || 'full';
   var speed = document.getElementById('dmSpeed').value || 'mid';
@@ -521,7 +528,7 @@ setInterval(function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006a';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c';
     s.onload = function () { setupAdmin(); setupEgg67(); loadWall(); };
     s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
     (document.head || document.body).appendChild(s);
@@ -540,6 +547,6 @@ setInterval(function () {
   });
 });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006a"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

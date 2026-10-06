@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCP与UDP协议对比 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>TCP与UDP协议对比</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># TCP与UDP：传输层两大协议的本质区别</p>
+<p>网络协议栈里，传输层是最核心的一层——它负责端到端的数据传输。而TCP和UDP是传输层最重要的两个协议，几乎所有网络应用都在它们之上构建。很多人背过"TCP面向连接、可靠传输；UDP无连接、不可靠"这句话，但一到实际场景就不知道该选哪个。理解这两个协议的设计哲学和适用场景，是后端开发和网络编程的基本功。</p>
+<p>## 一、TCP：可靠但重</p>
+<p>TCP的设计目标是在不可靠的IP网络上，提供可靠的、面向连接的、字节流服务。它做了很多事情来保证可靠性：</p>
+<p>三次握手建立连接——确认双方都能发能收。序列号确认——每个字节都有编号，接收方确认收到了哪些。超时重传——发出去的包如果一段时间没收到确认，重发。流量控制——接收方告诉发送方自己还能收多少，别发太快。拥塞控制——感知网络拥堵程度，自动调整发送速度。保证数据按顺序到达，不丢不乱不重复。</p>
+<p>这些机制让TCP非常可靠，但代价是开销大、延迟高。三次握手就要一个RTT，确认和重传增加了额外往返，拥塞控制在网络波动时会主动降速。</p>
+<p>TCP适合什么场景？对数据完整性要求高、不能出错的场景：网页浏览、文件传输、数据库连接、API调用。你传一个HTML文件，少一个字节都可能导致页面渲染错误，必须用TCP。</p>
+<p>## 二、UDP：快但简单</p>
+<p>UDP完全相反——它只管发，不管到没到。不建立连接、不确认、不重传、不保证顺序、不做拥塞控制。发出去就完事了，丢了就丢了。</p>
+<p>UDP的好处是极快极轻。没有握手延迟，没有确认开销，没有重传等待。包头只有8个字节（TCP要20个以上），传输效率极高。</p>
+<p>UDP适合什么场景？对实时性要求高、偶尔丢几个包无所谓的场景：视频通话、直播、在线游戏、DNS查询。视频通话丢了一个包，这一帧花屏几毫秒就过去了，你不可能等重传这一帧——等来了也没用，已经过了播放时间。DNS查询丢了就重发一次，简单粗暴。</p>
+<p>## 三、一个经典对比：视频通话为什么用UDP</p>
+<p>视频通话如果用TCP：丢一个包，TCP会停下来等重传。但视频是时间敏感的——这一帧过了就过了，等重传来了，这一帧已经应该播放完了。结果就是画面卡住，等半天继续播，体验极差。</p>
+<p>用UDP：丢了就丢了，下一帧继续发。这一帧花屏或者绿一下，用户根本感知不到。延迟低、画面流畅。牺牲了一点点完整性，换来了实时性。</p>
+<p>反过来，如果你传一份合同PDF用UDP，中间丢了几个包，文件损坏打不开，那就完蛋了。必须用TCP保证完整。</p>
+<p>## 四、UDP上的可靠传输：QUIC</p>
+<p>你可能会问：能不能既要UDP的快，又要TCP的可靠？可以，QUIC就是这么做的。它在UDP之上自己实现了可靠传输、拥塞控制、加密，但比TCP更灵活——比如stream级别的独立重传，一个流丢包不影响其他流。HTTP/3就是跑在QUIC上的。</p>
+<p>这说明TCP和UDP不是非此即彼的选择。UDP提供了一个裸的传输层，你可以在上面自己实现需要的可靠性、安全性。但对于大多数应用，直接用TCP就够了——自己实现可靠传输是一个非常复杂的工程。</p>
+<p>## 五、总结</p>
+<p>选TCP还是UDP，核心就一个判断：你能不能容忍丢包？能容忍、追求实时性，用UDP。不能容忍、要求数据完整，用TCP。网页、文件、数据库、API——TCP。直播、游戏、语音视频、DNS——UDP。没有好坏，只有合不合适。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

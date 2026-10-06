@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>服务端渲染SSR与同构应用 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>服务端渲染SSR与同构应用</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>服务端渲染SSR与同构应用：解决SPA首屏慢和SEO问题</h2>
+<p>单页应用（SPA）体验好，但有两个痛点：首屏慢（要下载整个JS才开始渲染）、SEO不友好（初始HTML是空的，爬虫抓不到内容）。服务端渲染（SSR）解决这两个问题：服务器把页面渲染成完整HTML再发给浏览器，用户打开就看到内容，爬虫也能抓到完整页面。</p>
+<p>传统多页应用就是SSR：服务器用模板引擎（Jinja2、Thymeleaf）渲染HTML返回。现代SSR指的是React/Vue的服务端渲染：在服务器上运行React/Vue代码，把组件渲染成HTML字符串，发给浏览器。浏览器接收后hydration（注水）：把静态HTML绑定上JS事件，变成可交互的应用。</p>
+<p>Next.js（React生态）和Nuxt（Vue生态）是现代SSR框架，把复杂的SSR工程化问题封装好了。开发者写组件，框架自动处理服务端渲染、客户端注水、路由、数据获取。开发体验接近纯客户端开发，但拥有SSR的性能和SEO优势。</p>
+<p>SSR的优势：首屏快（服务器直接发HTML，不用等JS下载执行完）；SEO友好（爬虫拿到完整渲染的HTML）；社交媒体分享卡片正确（分享链接时能抓到标题、缩略图）。</p>
+<p>但SSR不是没有代价。服务器要承担渲染工作，CPU压力大；Node.js服务器的运维复杂度高于纯静态托管；首屏快了，但hydration过程如果JS包大，交互还是要等；开发复杂度提升（要区分服务端和客户端能跑的代码，不能在组件里直接用window等浏览器API）。</p>
+<p>静态站点生成（SSG）是SSR的一个特例：构建时就把所有页面渲染成静态HTML，部署到CDN。速度极快（纯静态文件），适合博客、文档、营销站这种内容不常变的场景。Next.js的SSG模式、Astro、Hexo都是这种思路。</p>
+<p>ISR（增量静态再生）是折中方案：页面首次访问时服务端渲染并缓存，之后按时间间隔重新生成。兼顾静态速度和内容新鲜度。</p>
+<p>现在的趋势是：混合渲染。一个应用里，首页用SSG（快且SEO好）、个人中心用CSR（不需要SEO，交互复杂）、详情页用ISR（内容定期更新）。Next.js App Router支持按页面选择渲染方式，这是最灵活的方案。</p>
+<p>选择渲染策略的判断：内容型网站（博客、新闻、文档）优先SSG；需要SEO但内容动态的用SSR或ISR；纯后台管理系统不需要SEO，CSR就行。不要所有页面都用SSR，那会浪费服务器资源。</p>
+</div>
+</body>
+</html>

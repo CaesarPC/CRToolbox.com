@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git与版本控制工作流 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Git与版本控制工作流</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># Git与版本控制：从单人提交到团队协作的完整工作流</p>
+<p>Git是每个开发者每天都在用的工具，但绝大多数人只掌握了最基础的几条命令——add、commit、push、pull。一旦遇到分支冲突、历史回滚、多人协作、代码审查这些稍微复杂的场景，就开始手忙脚乱，甚至用删除仓库重新克隆这种"核武器"级别的操作来解决问题。版本控制不是简单的备份工具，它是一套完整的工程协作体系。理解Git的底层原理、掌握分支管理策略、熟悉团队协作流程，能让开发效率提升一个量级，也能避免因为误操作导致几天的代码付诸东流。</p>
+<p>## 一、Git的本质：快照而非差异</p>
+<p>很多人以为Git是记录文件每次修改了哪些行——类似Word里的修订模式。实际上Git的工作方式完全不同：它记录的是每次提交时整个项目的快照。如果文件没有变化，Git不会再存一份副本，而是指向之前已经存储的那份。这种设计让Git的提交极其轻量，创建分支几乎是零成本的操作。</p>
+<p>理解这个底层设计，很多Git的特性就顺理成章了。为什么Git分支这么快？因为分支本质上只是一个指向某次提交的指针，创建分支就是新增一个40字节的文件，写一个哈希值进去而已。为什么切换分支很快？因为Git只是把工作目录的文件替换成目标分支快照的内容，没有复杂的差异合并计算。</p>
+<p>每次commit在Git里都是一个完整的快照对象，包含了指向父提交的指针、作者信息、时间戳、提交说明，以及指向项目根目录树的指针。这就是为什么Git可以轻松回退到任何历史版本——每个提交都是完整的项目快照，不需要从初始版本一步步计算差异。</p>
+<p>## 二、三种状态：理解文件在Git中的旅程</p>
+<p>Git里的文件有三种状态：已修改（modified）、已暂存（staged）、已提交（committed）。这个三态模型是理解Git工作流的关键。</p>
+<p>你编辑了一个文件，它处于modified状态——Git知道它和上次提交不一样了，但还没有标记它要被包含在下一次提交里。你运行git add，这个文件就进入staged状态——你告诉Git"下次提交把这个改动包含进去"。然后你运行git commit，staged区域的改动被永久记录到仓库里，文件变成committed状态。</p>
+<p>很多新手困惑为什么我改了文件、commit了，push上去却没有变化。大概率是忘了git add，直接commit了——这时候staged区域是空的，commit出来的是一个空提交，改动还停留在工作区。理解这三个状态的流转，就能避免这类低级错误。</p>
+<p>## 三、分支策略：GitFlow不如Trunk Based</p>
+<p>很多团队一上来就照搬GitFlow那套复杂的分支模型：master主分支、develop开发分支、feature功能分支、release发布分支、hotfix紧急修复分支，分支命名规则一大堆。小团队用这套流程，光是管理分支就把开发效率拖没了。</p>
+<p>现代主流的趋势是Trunk Based Development（主干开发）：所有人都往main分支提交，每个人的开发分支生命周期很短——一两天就合并回主干。需要发布的时候，从main打一个tag或者建一个release分支做最后的修复。这种模式的核心是小步快跑、频繁集成，避免大家在各自的feature分支上开发几周后合并时地狱级冲突。</p>
+<p>feature分支还是要有的，但应该很小、很短。一个功能开一个分支，一两天做完就合并。不要一个feature分支挂几周不动，等到合并的时候代码已经天翻地覆了。</p>
+<p>## 四、解决冲突：最不可怕的噩梦</p>
+<p>合并分支时出现冲突，是很多新手最害怕的时刻。打开文件看到<<<<<<< HEAD、=======、>>>>>>> feature这样的标记，完全不知道该怎么办。</p>
+<p>其实冲突并不可怕。冲突的意思很简单：同一个文件的同一行，你改了一版，别人改了另一版，Git不知道该保留哪个。你需要手动打开文件，看看两边分别改了什么，然后决定保留什么——有时候全留、有时候只留一边、有时候需要融合两边的改动。改完之后删掉那些冲突标记，git add，再git commit就好了。</p>
+<p>解决冲突的关键原则是：不要盲目选择" ours"或"theirs"。要真正读懂两边的代码在做什么，理解为什么会冲突，然后做出正确的合并决定。很多冲突其实是两个人改了同一段代码做了不同的事，需要坐下来聊一下到底要哪个逻辑。</p>
+<p>## 五、Rebase vs Merge：线性历史的美学</p>
+<p>合并分支有两种方式：merge和rebase。merge会产生一个新的合并提交，把两条分支历史连在一起，历史图上会出现分叉和汇合的线条。rebase则是把你当前分支的提交"摘下来"，接到目标分支的最新提交后面，历史变成一条直线。</p>
+<p>很多团队规定"禁止rebase已推送的公共分支"，这是对的。因为rebase会改写提交历史——原来的commit哈希会变。如果你rebase了一个别人也在基于开发的公共分支，其他人拉代码的时候就会出现混乱。</p>
+<p>但在你自己的feature分支上，rebase是非常好用的。在合并到主干之前，先把main分支最新的改动rebase到你的feature分支上，解决冲突后再合并，主干的历史就干净利落，一条直线。不要把一大堆merge commit的噪音带进主干历史。</p>
+<p>## 六、回滚：后悔药的正确吃法</p>
+<p>代码写错了想回退，新手的做法是git reset --hard到某个版本，然后发现——完了，刚才写的代码全没了。</p>
+<p>回退要分情况。如果改动还没提交、就在工作区，git checkout -- file可以丢弃单个文件的改动。如果已经commit了但还没push，git reset --soft HEAD~1可以撤销最近一次commit，但保留改动在暂存区，你可以重新整理后再提交。如果已经push到远程了，不要强行reset后force push——别人可能已经基于那个提交开发了。正确的做法是用git revert创建一个新的"反向提交"，把那次提交的改动撤销掉，历史保持不变。</p>
+<p>git reflog是后悔药中的后悔药。哪怕你reset --hard把代码丢了，只要reflog里还记录着之前的HEAD位置，你就能找回来。Git几乎不会真正丢失你的提交，只要它曾经进入过Git的对象数据库。</p>
+<p>## 七、Commit规范：写好提交信息</p>
+<p>一个好的commit message应该说清楚"为什么改"，而不是"改了什么"。代码本身已经说明了改了什么，而为什么要改这个代码——是修了什么BUG、加了什么功能、为什么这么设计——这些信息才是未来看历史的人最需要的。</p>
+<p>业界常用的约定式提交格式：type(scope): subject。type是feat/fix/docs/refactor/test/chore，说明这次提交的类型；scope是影响范围；subject是一句话描述。比如feat(user): 增加手机号登录方式，fix(order): 修复满减计算精度问题。这种规范的好处是可以自动生成CHANGELOG，也让你一眼就能从git log里找到某次改动的目的。</p>
+<p>## 八、总结</p>
+<p>Git是一个设计非常优雅的工具，但它的学习曲线确实陡峭。大多数人卡在基础操作上，是因为不理解底层的数据模型——快照、指针、三态。理解了这些，分支、合并、rebase这些概念就不再是黑盒。</p>
+<p>团队协作中，好的Git工作流不是越复杂越好，而是越简单越能坚持下去。小分支、频繁合并、干净的提交历史、规范的commit message，这些习惯看起来不起眼，但在项目生命周期里会持续产生价值。代码仓库不只是代码存储的地方，它是团队集体记忆的载体。善待你的Git历史，就是善待三个月后回来维护代码的自己。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

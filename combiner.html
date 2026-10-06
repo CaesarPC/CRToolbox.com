@@ -44,7 +44,9 @@ td.dom a:hover{text-decoration:underline;color:#50fa7b}
   <a class="btn btn-ghost" href="index.html">← 返回工具箱</a>
 </div>
 <div class="wrap">
-  <div class="bar">⚠️ 判定方式：DNS 解析探测。域名<b>有解析记录 = 已占用</b>，<b>无解析记录 = 可能空闲</b>。此方式与本地 HTTP 探测逻辑不同，结果仅供参考。</div>
+  <div class="bar">⚠️ <b>判定方式：</b>DNS 解析探测（通过 Cloudflare 服务器查询，不在你本地设备上直接探测）。<br>
+  <b>有解析记录 = 已占用</b>（返回快），<b>无解析记录 = 可能空闲</b>（等待超时会稍慢）。<br>
+  ⚠️ <b>注意：</b>短后缀域名（如 .cc、.top 等）可能指向恶意/病毒网站，请勿随意点击访问。</div>
   <div class="panel">
     <h2>组合设置</h2>
     <div class="row">

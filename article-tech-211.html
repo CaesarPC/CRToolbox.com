@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNS解析全过程 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>DNS解析全过程</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># DNS解析全过程：从域名到IP地址的旅程</p>
+<p>你输入www.example.com，浏览器怎么知道这个域名对应的服务器IP是多少？答案是DNS——域名系统。它就像互联网的电话簿，把人类好记的域名翻译成机器用的IP地址。这个过程通常在几十毫秒内完成，但它涉及一系列分布式查询，任何一环出问题，网站就打不开。理解DNS的工作原理，是排查网络问题的基础。</p>
+<p>## 一、递归查询与迭代查询</p>
+<p>当浏览器需要解析www.example.com时，它先查本地缓存——自己之前解析过吗？操作系统缓存里有吗？ hosts文件里写了吗？都没有的话，就向配置的DNS服务器（通常是运营商或者公共DNS如8.8.8.8）发起递归查询。</p>
+<p>递归查询的意思是：我要查www.example.com的IP，你帮我查到底，最终告诉我结果。DNS服务器收到请求后，自己开始迭代查询：</p>
+<p>先查根域名服务器（.）。根服务器说：我不知道.com的IP，但我知道.com顶级域服务器的地址，你去问它。然后DNS服务器去问.com服务器：example.com的IP是什么？.com服务器说：我不知道，但我知道example.com的权威DNS服务器地址，你去问它。最后问example.com的权威DNS服务器，得到www.example.com的IP地址，返回给浏览器。</p>
+<p>整个过程：根→顶级域→权威DNS，三层迭代查询。</p>
+<p>## 二、缓存加速</p>
+<p>如果每次都走完整的三层查询，DNS会很慢。所以每一层都有缓存。浏览器缓存、操作系统缓存、DNS服务器缓存，都会把解析结果存一段时间（TTL，生存时间）。在TTL有效期内，直接从缓存返回，不需要走完整查询。</p>
+<p>这就是为什么第一次访问一个网站可能慢一点，第二次就快了——DNS结果已经缓存了。</p>
+<p>## 三、常见DNS记录类型</p>
+<p>A记录：把域名指向一个IPv4地址。
+AAAA记录：把域名指向一个IPv6地址。
+CNAME记录：把一个域名指向另一个域名（别名），比如www.example.com指向example.github.io。
+MX记录：指定邮件服务器。
+TXT记录：存储文本信息，常用于域名验证、SPF反垃圾邮件。</p>
+<p>配置域名的时候最常用的就是A记录和CNAME。A记录直接指向IP，CNAME指向另一个域名。如果你用的是云服务商的静态托管，通常需要配CNAME把你的域名指向平台提供的地址。</p>
+<p>## 四、DNS故障排查</p>
+<p>网站打不开，首先要确认是不是DNS的问题。在命令行用nslookup或者dig命令查询域名解析结果。如果能解析出IP但网站打不开，问题在服务器或者网络。如果解析不出来或者解析到错误的IP，问题在DNS配置。</p>
+<p>常见问题：域名刚改了DNS记录，但是全球DNS缓存还没生效——需要等TTL过期。或者配置写错了——CNAME后面多了个点、A记录IP写错了。</p>
+<p>## 五、公共DNS与DoH</p>
+<p>运营商默认的DNS可能慢、可能被劫持（把你导向广告页面）。公共DNS如8.8.8.8（Google）、114.114.114.114（国内）通常更快更可靠。DoH（DNS over HTTPS）把DNS查询加密在HTTPS里，防止运营商窃听和篡改。现代浏览器默认支持DoH，进一步提升了隐私和安全性。</p>
+<p>## 六、总结</p>
+<p>DNS是互联网最基础也最容易被忽视的基础设施。没有DNS，你只能记一串数字IP上网。理解域名解析的完整过程——本地缓存→递归查询→根→顶级域→权威DNS——能帮你在网站打不开的时候，快速定位问题出在哪一环。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

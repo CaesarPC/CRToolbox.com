@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>什么是Base64编码？一分钟看懂 - Cr工具箱</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; line-height: 1.8; }
+    .container { max-width: 720px; margin: 0 auto; padding: 20px; }
+    h1 { font-size: 26px; margin: 20px 0; line-height: 1.4; }
+    .meta { font-size: 13px; color: #999; margin-bottom: 24px; }
+    .content { background: #fff; border-radius: 12px; padding: 28px; }
+    .content p { margin-bottom: 16px; }
+    .content h2 { font-size: 20px; margin: 24px 0 12px; color: #2563eb; }
+    .content code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+    .back { display: inline-block; margin-bottom: 16px; color: #666; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="articles.html" class="back">← 返回文章列表</a>
+    <h1>什么是Base64编码？一分钟看懂</h1>
+    <div class="meta">2026-10-06 · 教程</div>
+    <div class="content">
+      <p>你有没有见过这样一串奇怪的字符：<code>SGVsbG8gV29ybGQh</code>？</p>
+      <p>这就是 Base64 编码。它不是加密，而是一种"把二进制数据变成纯文字"的方法。</p>
+
+      <h2>为什么需要 Base64？</h2>
+      <p>网络传输的时候，有些地方只认文字，不认图片、音频这些二进制数据。于是人们发明了 Base64，把图片等文件"翻译"成一串纯字母数字，就能在网页里直接显示了。</p>
+      <p>你在网页上看到的小图标、头像，很多就是用 Base64 嵌进去的，不用额外发请求加载图片。</p>
+
+      <h2>Base64 用在哪？</h2>
+      <p>1. 网页里嵌小图片（不用单独请求图片文件）</p>
+      <p>2. 邮件里传附件（邮件协议只认文字）</p>
+      <p>3. API 接口里传二进制数据</p>
+
+      <h2>怎么用？</h2>
+      <p>本站的编码解码工具就能一键搞定 Base64 编码和解码，纯本地处理，不上传服务器，隐私安全。</p>
+      <p><a href="encoder.html" style="color:#2563eb;">→ 打开 Base64 编码解码工具</a></p>
+    </div>
+  </div>
+</body>
+</html>

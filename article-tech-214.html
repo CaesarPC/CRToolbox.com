@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>排序算法效率对比 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>排序算法效率对比</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 排序算法：从冒泡到快速排序的效率演进</p>
+<p>排序是计算机科学中最基础的操作之一。你每天都在用排序——商品按价格排序、消息按时间排序、搜索结果按相关度排序。看似简单的"把一列数字从小到大排好"，背后有好几种不同的算法，效率天差地别。理解常见排序算法的原理和适用场景，是数据结构基本功。</p>
+<p>## 一、冒泡排序：最直观但最慢</p>
+<p>冒泡排序的思路：重复遍历数组，比较相邻两个元素，如果前面的比后面的大就交换。每一轮遍历，最大的元素像气泡一样"浮"到最后。</p>
+<p>实现简单，逻辑直观，但效率极低——时间复杂度O(n²)。n=1000要比较50万次。n=100万就完全跑不动了。实际工程中几乎不用冒泡排序，它只出现在教科书和面试入门题里。</p>
+<p>## 二、选择排序与插入排序</p>
+<p>选择排序：每次遍历找到最小的元素，放到已排序部分的末尾。也是O(n²)，比冒泡稍微好一点点，但本质一样慢。</p>
+<p>插入排序：像打扑克牌整理手牌——拿到一张新牌，从右往左找到它应该在的位置插进去。对于基本有序的小数组，插入排序非常快——因为大部分元素已经在正确位置了。很多高级排序算法在小数组时会切换到插入排序，利用它在小规模数据上的优势。</p>
+<p>## 三、归并排序：分治的力量</p>
+<p>归并排序用分治思想：把数组从中间分成两半，递归地排好左半边和右半边，然后把两个有序数组合并成一个。</p>
+<p>合并两个有序数组很简单：两个指针分别指向两个数组头部，每次取较小的那个放进结果数组。</p>
+<p>归并排序时间复杂度O(n log n)，稳定且可预测——最好最坏都是O(n log n)。缺点是需要额外的O(n)空间来存放合并后的数组。在链表排序中归并排序特别有用，因为链表不需要额外空间。</p>
+<p>## 四、快速排序：工程界的标杆</p>
+<p>快速排序也是分治，但策略不同。选一个基准元素（pivot），把数组分成两部分：比pivot小的放左边，比pivot大的放右边。然后递归地对左右两部分再排序。</p>
+<p>快速排序平均时间复杂度O(n log n)，常数因子很小——实际跑起来比归并排序还快，因为数据都在内存里操作，缓存友好。它是绝大多数编程语言标准库排序函数的底层实现（C的qsort、Java的Arrays.sort）。</p>
+<p>最坏情况（每次选的pivot都是最大或最小元素）是O(n²)，但通过随机选pivot可以几乎避免这种情况。</p>
+<p>## 五、堆排序：利用堆数据结构</p>
+<p>堆是一种特殊的完全二叉树——大顶堆每个父节点都比子节点大。先把数组建成大顶堆，堆顶就是最大元素。把堆顶和最后一个元素交换，然后重新调整堆。重复n次，数组就排好了。</p>
+<p>堆排序也是O(n log n)，原地排序不需要额外空间。但实际性能比快速排序差——因为堆排序的内存访问模式不连续，缓存不友好。</p>
+<p>## 六、实际开发中用什么</p>
+<p>你不需要手写排序算法——编程语言标准库已经实现了高效的排序函数。JS的Array.sort()、Python的sorted()、Java的Collections.sort()，底层都是优化过的快速排序或归并排序。你需要知道的是：排序是O(n log n)的操作，不要自己写O(n²)的排序。</p>
+<p>选择排序算法的关键不是记住每种算法怎么写，而是理解为什么O(n log n)比O(n²)快得多，以及分治思想如何把一个O(n²)的问题优化到O(n log n)。</p>
+<p>## 七、总结</p>
+<p>从冒泡的O(n²)到快排的O(n log n)，排序算法的演进就是效率不断提升的过程。实际开发中用库函数就行，但理解底层原理，能帮你在需要自定义排序逻辑时做出正确的性能判断。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

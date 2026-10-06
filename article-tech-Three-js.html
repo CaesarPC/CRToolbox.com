@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端可视化与Three.js三维网页开发入门 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>前端可视化与Three.js三维网页开发入门</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<p>前端可视化与Three.js三维网页开发入门：从2D页面到3D交互的技术跃迁</p>
+<p>Web前端的表现力正在从二维向三维扩展。早期的网页是平面的：文字、图片、按钮，都是在二维平面上排列。但随着WebGL技术的成熟，在浏览器里渲染三维场景已经成为可能。产品3D展示、数据可视化大屏、交互式网页游戏、虚拟展厅，这些场景都需要3D技术。Three.js是WebGL的封装库，让开发者不需要直接和复杂的OpenGL着色器打交道，用JavaScript就能快速构建三维场景。</p>
+<p>理解3D开发的基本概念是入门的第一步。和2D开发完全不同，3D场景有几个核心概念必须建立：场景（Scene）是所有物体的容器；相机（Camera）决定从哪个角度看场景；渲染器（Renderer）把场景和相机的视角绘制到Canvas上。这三者是最基础的组合。相机又分透视相机（近大远小，符合人眼视觉）和正交相机（没有透视变形，适合工程绘图）。</p>
+<p>物体（Mesh）是场景中可见的东西。一个Mesh由两部分组成：几何体（Geometry）定义形状，材质（Material）定义外观。几何体有内置的立方体、球体、圆锥、平面等，也可以加载外部的3D模型文件（.obj、.gltf、.fbx）。材质决定了物体怎么渲染：基础材质不受光照影响（纯颜色）、标准材质响应光照（有反光）、物理材质更真实（支持透明、粗糙、金属度等属性）。</p>
+<p>灯光是3D场景真实感的关键。没有灯光，材质再好看也是黑的。环境光提供全局基础照明；方向光模拟太阳光（有明确方向和阴影）；点光像灯泡一样向四周发光；聚光灯像手电筒。阴影需要手动开启：灯光投射阴影、物体接收和投射阴影。合理的灯光组合，是让3D场景看起来真实的关键。</p>
+<p>坐标系和变换是3D开发的基本功。每个物体都有position（位置）、rotation（旋转）、scale（缩放）三个属性。Three.js使用右手坐标系，X轴向右、Y轴向上、Z轴朝向屏幕外。理解坐标系方向，才能正确摆放物体。层级结构（Group）可以把多个物体组合在一起，移动Group时里面的所有子物体跟着一起动，这和CSS的嵌套DOM结构类似。</p>
+<p>动画是3D网页的灵魂。requestAnimationFrame是浏览器提供的每帧回调，在里面更新物体位置、旋转角度，就能实现动画效果。让一个立方体缓缓旋转，只需要在每帧渲染前修改它的rotation.y。复杂的动画可以用缓动函数（Easing）让运动更自然；关键帧动画可以用GSAP等动画库；骨骼动画（角色走路、跑步）需要加载带骨骼的模型和动画文件。</p>
+<p>交互是3D网页区别于3D视频的关键。OrbitControls让用户可以用鼠标拖拽旋转视角、滚轮缩放、平移。射线投射（Raycasting）实现点击3D物体：从鼠标位置发射一条射线，检测穿过了哪些物体，判断用户点中了什么。这些交互让3D场景从"观看"变成"可操作"。</p>
+<p>性能优化在3D开发中尤为重要。一个复杂的3D场景如果不做优化，很容易卡顿。主要优化手段包括：几何体合并（把多个小物体合并成一个，减少绘制调用）、纹理压缩、合理控制多边形数量（面数越多渲染越慢）、使用实例化渲染（大量重复物体用InstancedMesh，性能提升几十倍）。在移动端尤其要注意性能，手机GPU性能远不如桌面。</p>
+<p>实际项目中，大部分3D模型不是代码里写出来的，而是用Blender、Maya等专业建模软件制作，导出为glTF格式加载到网页中。glTF被称为"3D领域的JPEG"，是Web3D的标准格式。模型加载、材质调整、动画播放，是Three.js项目的常规工作流。</p>
+<p>WebGPU是下一代Web图形API，比WebGL性能更好、能力更强。Three.js已经在逐步支持WebGPU渲染器。对于新项目，了解WebGPU的发展方向很有必要。但Three.js作为成熟的库，生态丰富、文档齐全，仍然是入门3D Web开发的最佳选择。</p>
+<p>前端3D化是一个明确的趋势。电商网站用3D模型展示商品（可以360度旋转查看、换颜色）、数据大屏用3D地图展示地理数据、品牌官网用沉浸式3D动画提升格调。掌握Three.js基础，前端开发者就能拓展自己的能力边界，从做平面页面升级到做三维交互体验，这在当前的前端就业市场上是明显的加分技能。</p>
+</div>
+</body>
+</html>

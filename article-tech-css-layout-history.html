@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS布局进化史 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>CSS布局进化史</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>CSS布局进化史：从float定位到Grid栅格的技术变迁</h2>
+<p>CSS布局是前端最基础也最容易踩坑的领域。十几年前做网页布局，靠float加负margin各种hack；现在Flexbox和Grid让布局变得自然直观。理解CSS布局的进化过程，才能写出优雅、易维护的样式代码。</p>
+<p>早期网页布局用table表格，把内容放在表格单元格里控制位置。这种方式简单但僵硬，改布局要改HTML结构，语义也不清晰。后来div+css兴起，float成为主流：左浮动、右浮动，模拟两栏三栏布局。float本意是让文字环绕图片，被拿来做布局后带来大量问题：高度塌陷（父元素高度为0）、清除浮动hack、居中困难。margin负值布局更是像走钢丝。</p>
+<p>Flexbox弹性布局彻底改变了这一切。它是为一维布局设计的：一行或者一列的排列。容器设置display: flex，子元素自动排成一行。justify-content控制主轴对齐，align-items控制交叉轴对齐。一行代码就能实现水平垂直居中，这在以前要三四行hack。Flexbox还能让子元素自动伸缩分配空间（flex: 1），响应式布局变得非常简单。导航栏、卡片排列、居中和分布，都是Flexbox的主场。</p>
+<p>Grid网格布局是二维布局的终极方案。和Flexbox的一维不同，Grid同时控制行和列。display: grid后，用grid-template-columns定义列宽，grid-template-rows定义行高，子元素自动放入网格。grid-area可以精确指定某个元素占哪几行几列。复杂的页面整体布局（头部、侧边栏、主内容、底部），用Grid几行代码就搞定，不需要嵌套div和float。</p>
+<p>现代布局的组合用法：页面整体框架用Grid（头部一行、内容区分两列），内容区内部的卡片排列用Flexbox。Grid管宏观布局，Flexbox管微观排列。两者配合，覆盖99%的布局需求。</p>
+<p>常见布局模式的现代实现：圣杯布局（中间先加载、三栏等高）用Grid一行grid-template: auto 1fr auto / auto 1fr auto搞定；垂直居中用Flexbox的align-items + justify-content；等分卡片用Flexbox的flex: 1；不规则网格用Grid的span。以前需要大量hack的布局，现在都变得简洁。</p>
+<p>响应式布局在现代CSS下也变得简单。容器查询（Container Queries）是新特性：不是根据屏幕宽度，而是根据组件所在容器的宽度调整样式。这样组件真正做到了可复用——放在不同宽度的容器里自动适配。clamp()函数让字号、间距流畅缩放，不需要写一堆媒体查询。</p>
+<p>CSS逻辑属性（margin-inline-start等）让多语言布局（从右到左的阿拉伯语）变得容易，不用写两套方向样式。</p>
+<p>CSS布局的进化方向是：从hack到声明式，从复杂到简单。掌握Flexbox和Grid，就掌握了现代CSS布局的核心。那些float布局时代的hack技巧，现在了解原理即可，不用再实际使用。</p>
+</div>
+</body>
+</html>

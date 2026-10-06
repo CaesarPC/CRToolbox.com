@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>栈与队列 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>栈与队列</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 栈与队列：最基础也最常用的数据结构</p>
+<p>在所有数据结构中，栈和队列是最简单的两个。但简单不代表不重要——它们是无数算法和系统的底层基石。函数调用栈、浏览器历史记录、消息队列、任务调度，背后都是栈和队列的思想。理解它们的特性和适用场景，是编程基本功。</p>
+<p>## 一、栈：后进先出</p>
+<p>栈就像一叠盘子——你只能从最上面放盘子、取盘子。最后放上去的盘子最先被取走。这就是LIFO（Last In First Out，后进先出）。</p>
+<p>栈只有两个核心操作：push（压栈，放一个元素到顶部）和pop（弹栈，从顶部取走一个元素）。栈顶是唯一可以操作的位置，不能直接访问中间的元素。</p>
+<p>栈在编程中无处不在。函数调用栈：你调用函数A，A调用B，B调用C。C执行完返回B，B执行完返回A，A执行完回到主程序——后调用的先返回，就是栈。浏览器的前进后退：你访问页面1→2→3，点后退回到2→1，后访问的先退回。括号匹配：左括号压栈，遇到右括号弹栈匹配，最后栈空说明括号配对正确。</p>
+<p>## 二、队列：先进先出</p>
+<p>队列就像排队买饭——先到的人先买到，后到的后买。FIFO（First In First Out，先进先出）。</p>
+<p>队列也只有两个核心操作：enqueue（入队，从尾部加元素）和dequeue（出队，从头部取元素）。</p>
+<p>队列在编程中同样无处不在。消息队列：先发的消息先被消费。任务队列：服务器收到的请求排队处理。打印队列：先提交的文档先打印。BFS广度优先搜索：按层遍历节点，用队列记录下一层要访问的节点。</p>
+<p>## 三、两者对比</p>
+<p>栈是后进先出，队列是先进先出。看似相反，但它们解决的问题不同。</p>
+<p>你要处理"最近的、最新的"事情——用栈。浏览器历史、函数调用、撤销操作（Ctrl+Z）——都是栈。</p>
+<p>你要处理"先来先服务"的事情——用队列。请求处理、消息分发、任务调度——都是队列。</p>
+<p>## 四、实际应用：浏览器的前进后退</p>
+<p>浏览器的前进后退就是两个栈。你访问新页面，压入前进栈。点后退，从前进栈弹出，压入后退栈。点前进，从后退栈弹出，压入前进栈。这个经典设计就是栈的完美应用。</p>
+<p>## 五、总结</p>
+<p>栈和队列看似简单，但它们定义了数据访问的顺序规则。选择栈还是队列，取决于你要"后进先出"还是"先进先出"。理解这两个简单结构，能帮你在很多场景下选择正确的数据组织方式。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

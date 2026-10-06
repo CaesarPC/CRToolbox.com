@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统设计方法论 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>系统设计方法论</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>系统设计方法论：从需求到架构的思考框架</p>
+<p>面试或实战中遇到"设计一个短链接系统"、"设计一个聊天系统"，怎么思考？系统设计不是背答案，是有方法论的。</p>
+<p>第一步：明确需求。功能需求（做什么）和非功能需求（性能、可用性、规模）。问清楚：用户量多少？QPS多少？数据量多大？这些决定架构规模。</p>
+<p>第二步：容量估算。预估数据量、QPS、存储。比如1亿用户，日活1000万，每人每天产生10条数据，一天1亿条，一年365亿条。这个量级决定要分库分表。</p>
+<p>第三步：高层设计。画出核心组件：客户端、API网关、应用服务、数据库、缓存、消息队列。画出数据流。</p>
+<p>第四步：深入细节。数据库选什么（关系型还是NoSQL）？怎么分片？缓存策略？异步处理？一致性怎么保证？</p>
+<p>第五步：权衡。每个方案有优缺点。强一致还是高可用？同步还是异步？单机还是分布式？根据业务需求做选择，没有完美方案。</p>
+<p>第六步：识别瓶颈。哪里会成为瓶颈？数据库写压力？缓存失效？网络带宽？提前识别，提前优化。</p>
+<p>系统设计没有标准答案。关键是展示思考过程：需求澄清→容量估算→高层设计→细节深入→权衡讨论。这比背"短链接系统用哈希表"有价值得多。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

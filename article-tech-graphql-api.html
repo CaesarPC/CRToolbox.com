@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphQL_API设计 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>GraphQL_API设计</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>GraphQL API设计：让前端按需取数的新范式</h2>
+<p>RESTful API有个经典痛点：后端返回的数据要么太多（列表接口带了一堆前端不用的字段），要么太少（还要再发一个请求获取详情）。前端要反复找后端加字段、改接口。GraphQL是Facebook提出的API查询语言，解决这个问题：前端精确声明需要哪些数据，后端按声明返回。</p>
+<p>GraphQL的核心是类型系统。后端定义一张Schema：有哪些类型、每个类型有哪些字段、字段之间什么关系。前端写一个查询（Query），描述自己需要哪些字段，后端执行查询，返回的JSON结构和查询结构完全一致。</p>
+<p>举个例子：REST要拿用户信息和他的最新文章，可能要调/user/123和/user/123/posts两个接口。GraphQL一个查询搞定：query { user(id: 123) { name avatar posts(first: 5) { title date } } }。后端知道你要name、avatar，以及5篇文章的title和date，一次返回。</p>
+<p>GraphQL的优势：按需取数（不多不少）、强类型（Schema就是文档）、内省（工具自动生成API文档）、前端灵活（不用等后端改接口）。这些特点在多端、复杂数据关系的场景下特别有价值。</p>
+<p>但GraphQL不是银弹。它的缺点：学习曲线（要学Schema定义、Resolver、查询语法）；缓存复杂（REST用URL做缓存键很自然，GraphQL所有请求都打到同一个URL，缓存需要专门处理）；性能风险（前端可以写很深的嵌套查询，一次请求打爆后端，需要限制查询深度和复杂度）；文件上传、实时订阅（Subscriptions）比REST麻烦。</p>
+<p>实际使用建议：复杂的、数据关系多的BFF层用GraphQL很合适；简单的CRUD接口用REST更直接。不要全栈Graph化，选择适合的场景。</p>
+<p>Apollo是最流行的GraphQL框架，前后端都有成熟库。后端用Apollo Server定义Schema和Resolver，前端用Apollo Client发查询、做缓存、管理加载状态。工具链完善，开发体验好。</p>
+<p>REST和GraphQL不是替代关系，而是互补。很多公司的做法是：内部微服务之间用REST/gRPC，对外的BFF层用GraphQL服务前端。各取所长。</p>
+</div>
+</body>
+</html>

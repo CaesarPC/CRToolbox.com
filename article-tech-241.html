@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git分支策略 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Git分支策略</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># Git分支策略：从个人项目到团队协作</p>
+<p>前面讲过Git基础，这次专门聊聊分支策略。个人项目可能就一个main分支随便搞，但团队协作时，分支怎么管理、代码怎么合并、发布怎么切，直接影响开发效率。</p>
+<p>## 一、main分支永远可发布</p>
+<p>最基本的原则：main（或master）分支永远保持可发布状态。不要把没测试过的、半完成的代码直接合进main。main上的代码任何时候都能部署上线。</p>
+<p>## 二、功能分支</p>
+<p>每个新功能开一个feature分支：feature/user-login。从main拉出来，开发完提PR（Pull Request），代码审查通过后合并回main。</p>
+<p>分支要小、要短——一个分支一两天就合并。不要一个feature分支开两周还不合，到时候合并冲突解决到崩溃。</p>
+<p>## 三、Pull Request工作流</p>
+<p>PR不只是"合并代码"的入口，它是代码审查的场所。提交PR后，团队成员看代码、提意见、作者修改，直到大家满意才合并。这是保证代码质量的重要环节。</p>
+<p>PR描述要写清楚：做了什么、为什么做、怎么测试的。reviewer不用去猜这个PR干了啥。</p>
+<p>## 四、发布分支</p>
+<p>要发布新版本时，从main切一个release分支：release/1.2.0。这个分支只修BUG，不加新功能。测试通过后打tag发布。发布后发现的紧急BUG在release分支上修，然后合并回main。</p>
+<p>## 五、Hotfix紧急修复</p>
+<p>线上出紧急BUG，从main切hotfix分支：hotfix/payment-bug。修复后合并回main，同时也合并到当前release分支。紧急修复走快速通道，不用等正常发布周期。</p>
+<p>## 六、Trunk Based vs GitFlow</p>
+<p>GitFlow是上面这套完整流程：main + develop + feature + release + hotfix。适合发布周期长的产品（App）。</p>
+<p>现代趋势是Trunk Based：大家直接往main提交小改动，feature分支生命周期很短（一两天）。需要发布就从main打tag。简单直接，配合CI/CD自动化。</p>
+<p>小团队推荐Trunk Based——简单，不要搞太多分支。</p>
+<p>## 七、总结</p>
+<p>分支策略不是越复杂越好。核心原则：main永远可发布、功能分支小而短、PR做代码审查、发布打tag。适合团队规模的策略就是最好的策略。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

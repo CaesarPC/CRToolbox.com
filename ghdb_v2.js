@@ -455,6 +455,44 @@
     });
   }
 
+  /* 版本管理：读取当前版本 + 变更日志 */
+  function versionGet(cb) {
+    ghRead('api_data/meta.json', function (err, meta) {
+      if (err) meta = {};
+      meta = meta || {};
+      cb(ok({
+        version: meta.version || 'alpha-1.0',
+        changelog: meta.changelog || [],
+        updated: meta.versionUpdated || ''
+      }));
+    });
+  }
+
+  /* 版本管理：设置新版本 + 记录变更日志 */
+  function versionSet(data, cb) {
+    if (!isAdmin(data.token)) return cb(fail('需要管理员权限'));
+    ghRead('api_data/meta.json', function (err, meta) {
+      meta = meta || {};
+      var oldV = meta.version || 'alpha-1.0';
+      meta.version = data.version || oldV;
+      meta.versionUpdated = new Date().toISOString();
+      /* 变更日志追加到数组头部，最多保留20条 */
+      if (data.note) {
+        meta.changelog = meta.changelog || [];
+        meta.changelog.unshift({
+          version: meta.version,
+          note: data.note,
+          date: meta.versionUpdated
+        });
+        if (meta.changelog.length > 20) meta.changelog.length = 20;
+      }
+      ghWrite('api_data/meta.json', meta, function (e2) {
+        if (e2) return cb(fail(e2.error));
+        cb(ok({ version: meta.version, changelog: meta.changelog }));
+      });
+    });
+  }
+
   /* 开源专区 */
   function projectsList(data, cb) {
     var cat = data.cat || '';
@@ -718,6 +756,7 @@
       if (p === 'note') return noteGet({ token: q.token }, cb);
       if (p === 'projects') return projectsList({ q: q.q, cat: q.cat, mine: q.mine }, cb);
       if (p === 'report') return report(cb);
+      if (p === 'version') return versionGet(cb);
       if (p === 'admin/users') return adminUsersList({ token: q.token }, cb);
       if (p === 'admin/feedback') return adminFeedbackList({ token: q.token }, cb);
       if (p === 'admin/visits') return adminVisitsList({ token: q.token }, cb);
@@ -738,6 +777,7 @@
       case 'admin/user/delete': return adminUserDelete(data, cb);
       case 'admin/user/setrole': return adminUserSetRole(data, cb);
       case 'visit/log': return visitLog(data, cb);
+      case 'version': return versionSet(data, cb);
       default: return cb(fail('接口不存在: ' + p));
     }
   }

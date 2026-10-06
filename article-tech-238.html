@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端模块化 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>前端模块化</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 前端模块化：从script标签到ES Module</p>
+<p>早期JS没有模块系统，所有变量都挂在全局作用域。两个文件声明了同名变量，后加载的覆盖先加载的——各种冲突。文件多了之后，加载顺序也成了问题——A依赖B，B必须在A之前加载。模块化就是为了解决这些问题。</p>
+<p>## 一、IIFE与命名空间</p>
+<p>最早的方案：用立即执行函数（IIFE）把代码包起来，变量不外泄。(function() { var secret = '...'; window.myApp = { ... }; })();。把需要暴露的挂到全局对象上，内部变量私有。jQuery就是这么做的。</p>
+<p>但这只是权宜之计——文件加载顺序还是要手动管，依赖关系不清晰。</p>
+<p>## 二、CommonJS与AMD</p>
+<p>Node.js用CommonJS：require引入模块，module.exports导出。同步加载，适合服务端。</p>
+<p>浏览器早期用AMD（RequireJS）：异步加载模块，定义时声明依赖。但语法繁琐，现在基本没人用了。</p>
+<p>## 三、ES Module</p>
+<p>ES6（2015）正式在语言层面加入了模块系统：import和export。</p>
+<p>// math.js
+export function add(a, b) { return a + b; }
+export const PI = 3.14;</p>
+<p>// main.js
+import { add, PI } from './math.js';</p>
+<p>或者默认导出：
+export default function() { ... }
+import myFunc from './myFunc.js';</p>
+<p>ES Module是静态的——import语句必须在顶层，不能写在if里。这让打包工具可以静态分析依赖树，做Tree Shaking（删除没用到的导出）。现代浏览器和Node.js都原生支持ES Module。</p>
+<p>## 四、打包工具</p>
+<p>浏览器原生ES Module需要服务器支持，而且大量小文件请求慢。Vite/Webpack把所有模块打包成少数几个文件，配合Tree Shaking和代码分割，既享受模块化开发又有加载性能。</p>
+<p>## 五、总结</p>
+<p>模块化的核心是：每个文件是独立作用域，显式导出需要暴露的，显式导入需要依赖的。ES Module是现代标准，import/export语法简洁。理解模块化，前端工程化才有意义。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

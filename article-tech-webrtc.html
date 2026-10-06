@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebRTC音视频通话技术 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>WebRTC音视频通话技术</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>WebRTC音视频通话技术：浏览器里的实时视频通话原理</h2>
+<p>你有没有好奇过，网页版的腾讯会议、网页版视频聊天是怎么实现的？不需要下载任何软件，打开浏览器就能和对方视频通话。背后的技术叫WebRTC（Web Real-Time Communication）。它是浏览器原生支持的实时音视频通信标准。</p>
+<p>WebRTC的核心能力是：获取本地摄像头和麦克风、在浏览器之间建立点对点连接、实时传输音视频流。整个过程不需要安装插件，浏览器原生支持。</p>
+<p>第一步是获取本地媒体流。getUserMedia API请求用户授权摄像头和麦克风，授权后拿到MediaStream对象，显示在本地video标签里。这一步很简单，几行代码就能实现本地视频预览。</p>
+<p>第二步是建立连接。这是WebRTC最复杂的部分。两个浏览器不在同一个网络里，怎么直接找到对方？需要信令服务器（Signaling Server）做中介：双方通过信令服务器交换"我是谁、我在哪、我用什么编码"这些信息（SDP交换），然后才能建立直接连接。NAT穿透（STUN/TURN）解决的是：两个人都在路由器后面，外部看不到他们的内网地址，怎么让它们直连。大多数情况下STUN服务器能帮双方找到对方的公网地址；实在打不通的，用TURN服务器做中转（流量经过服务器转发）。</p>
+<p>第三步是传输。连接建立后，音视频数据在浏览器之间点对点传输，不经过服务器（除非需要中转）。这就是为什么WebRTC通话延迟低——数据直接在两端之间跑，不需要经过中间服务器转发。延迟通常在几百毫秒以内，满足实时通话需求。</p>
+<p>WebRTC不只是视频通话。它还能传输任意数据（DataChannel）：实时文件传输、游戏数据同步、文件共享。基于WebRTC可以做很多实时协作应用。</p>
+<p>实际应用中的复杂场景：多人会议不是简单的点对点。两个人通话用P2P，三个人以上怎么办？常见方案是用SFU（选择性转发单元）服务器：每个人把音视频流发给SFU服务器，服务器转发给其他所有人。服务器只做转发，不处理音视频内容，性能开销可控。Google Meet、Jitsi都是这种架构。</p>
+<p>幕布、屏幕共享也是WebRTC的能力：getDisplayMedia API可以捕获整个屏幕或某个标签页的内容，作为视频流传输。降噪、美颜、虚拟背景这些效果，是在本地用WebAssembly处理视频帧后再传输的。</p>
+<p>WebRTC的浏览器兼容性已经很好，Chrome、Firefox、Safari都支持。但调试比较困难：涉及网络、编码、加密多个层面，连接建立失败的原因多种多样。成熟的开源项目（Jitsi、LiveKit）封装了这些复杂性，开发者直接用SDK就能做视频通话。</p>
+<p>WebRTC让实时音视频从"需要专门客户端"变成"浏览器就能做"，大幅降低了实时通信应用的门槛。这也是为什么在线教育、远程办公、直播互动这些技术近几年发展这么快。</p>
+</div>
+</body>
+</html>

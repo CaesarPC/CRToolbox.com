@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实时协同编辑技术解析 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>实时协同编辑技术解析</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>实时协同编辑技术解析：多人同时编辑一个文档的实现原理</h2>
+<p>Google Docs最让人惊叹的功能是：多人同时编辑同一个文档，你能看到别人的光标在动，别人也能实时看到你的修改。这种实时协同编辑技术，背后是一套复杂的算法和工程体系。理解它的原理，对理解现代Web应用的实时协作能力很有帮助。</p>
+<p>协同编辑的核心问题是：两个人同时修改同一段文字，怎么合并？如果用户A输入"你好"，用户B同时输入"Hello"，最终文档应该是什么？顺序怎么定？冲突怎么解决？这就是协同算法要解决的问题。</p>
+<p>OT（Operational Transformation，操作转换）是最早的协同算法。每个编辑操作（插入、删除）带上位置信息，当两个操作并发时，通过转换函数调整位置，保证所有用户最终看到一致的结果。OT算法复杂，需要中心服务器做操作排序和转换，Google Docs早期用的就是OT。</p>
+<p>CRDT（Conflict-free Replicated Data Type，无冲突复制数据类型）是新一代协同算法。它的设计让并发操作天然不冲突，不需要中心服务器做复杂转换，每个客户端本地应用操作后，最终所有副本自动收敛到一致状态。Yjs、Automerge是流行的CRDT实现。CRDT比OT更简洁，也支持离线编辑（离线时本地修改，联网后自动合并），是现在的主流选择。</p>
+<p>技术架构上，协同编辑基于WebSocket实时同步。每个编辑操作（插入了什么文字、删了什么）作为消息实时广播给所有在线协作者。其他人收到操作后应用到自己的文档上。操作而不是文档内容同步，这样流量小、延迟低。</p>
+<p>光同步操作还不够，还要解决光标的实时显示：谁在编辑、他的光标在哪个位置、选中了哪段文字。光标位置也是一种"状态"，通过WebSocket实时广播。用户在线状态（谁在线、谁正在输入）也要同步。</p>
+<p>历史记录和撤销重做是协同编辑的难点。单人文档的撤销很简单，撤回上一步操作。多人协同时，A撤销的操作是B做的，怎么处理？CRDT天然支持分布式的撤销重做。文档历史版本也要保留，能回溯到任何时间点。</p>
+<p>富文本协同比纯文本复杂得多。文字格式（加粗、颜色、标题层级）、图片、表格、评论，这些元素都要参与协同。ProseMirror、Slate.js是支持协同的富文本编辑器框架，底层集成了Yjs等协同引擎。</p>
+<p>实际产品中，飞书文档、腾讯文档、Notion都用了类似的技术栈。除了文字编辑，白板（多人画流程图）、代码协同编辑（多人写同一段代码）也是类似的原理——都是基于CRDT的实时操作同步。</p>
+<p>实时协同编辑是Web应用从"单人工具"走向"多人协作平台"的关键技术。它的背后是CRDT算法、WebSocket实时通信、富文本引擎的结合。理解这套技术，能帮助我们理解为什么在线文档、在线白板这些产品体验这么流畅。</p>
+</div>
+</body>
+</html>

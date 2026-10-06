@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>监控告警系统建设 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>监控告警系统建设</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>监控告警系统建设：让系统出问题时你比用户先知道</h2>
+<p>系统上线只是开始，稳定运行才是挑战。服务器突然CPU打满、数据库连接耗尽、某个接口报错率飙升、磁盘快满了——这些问题如果等用户反馈才知道，损失已经造成。监控告警系统的目标，是在出问题的第一时间发现、通知到人、快速定位。</p>
+<p>监控分为三个层次：基础设施监控、应用性能监控、业务监控。</p>
+<p>基础设施监控看的是服务器和运行环境：CPU使用率、内存占用、磁盘空间、网络流量、磁盘IO。Prometheus + Grafana是最经典的开源方案。Prometheus采集各项指标，Grafana做可视化大盘。这些指标异常意味着底层资源出问题：CPU高了可能是有死循环、磁盘满了写不进数据、内存高了可能有泄漏。</p>
+<p>应用性能监控（APM）看的是应用本身：接口响应时间、错误率、吞吐量、慢查询、外部依赖调用耗时。每个接口P99响应时间多少、哪个接口报错率最高、数据库查询慢在哪一步，这些都要监控。OpenTelemetry是现在的标准，自动埋点采集请求链路数据。Jaeger/Zipkin做分布式链路追踪：一个请求经过多个服务，链路追踪能看到每一步花了多少时间，哪一步慢了一目了然。</p>
+<p>日志是排错的依据。结构化日志（JSON格式，带时间、级别、traceId）集中收集到Elasticsearch或Loki，通过Web界面查询。错误日志、慢请求日志、关键业务事件日志，都要记录。出问题时，通过traceId串联一次请求经过的所有日志，快速定位。</p>
+<p>告警规则是监控系统的大脑。采集了数据但不告警，等于白监控。告警要分级：P0级（服务完全不可用）立刻电话通知；P1级（部分功能异常）发企业微信/钉钉；P2级（潜在风险）记录但不打扰人。告警阈值要合理：太敏感会导致"告警疲劳"（天天响狼来了，真出问题没人理）；太迟钝又会漏掉问题。</p>
+<p>告警要有降噪机制：同类告警合并、重复告警抑制、告警收敛。一个数据库挂了可能引发几十个相关告警（所有依赖数据库的服务都报错），要聚合处理，不要轰炸人。</p>
+<p>业务监控经常被技术团队忽视但非常重要。技术指标正常不代表业务正常：接口响应200ms很快，但下单成功率掉了一半；页面访问量正常，但支付转化率突然跌了。业务指标监控（订单量、支付成功率、活跃用户数）才能反映真实业务健康度。</p>
+<p>值班和On-Call制度配合告警系统：谁在值班，告警就通知谁。值班人员负责响应P0/P1告警，紧急处理。事故复盘是事后改进：出了什么问题、为什么没早发现、怎么避免再发生。监控系统的完善，是一次次事故堆出来的。</p>
+<p>好的监控系统让你对系统状态了如指掌：大盘看整体、下钻看细节、告警及时通知。没有监控的系统是盲人骑瞎马，出问题全靠猜。</p>
+</div>
+</body>
+</html>

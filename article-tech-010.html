@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS响应式单位 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CSS响应式单位</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CSS响应式单位：rem、em、vw、vh、%的选择</p>
+<p>响应式设计需要相对单位。em是相对于父元素字体大小；rem是相对于根元素（html）字体大小，全局统一；vw/vh是视口宽度/高度的1%；%是相对于父元素。</p>
+<p>选择原则：字体大小用rem（全局一致，配合根字体缩放）；布局尺寸用%或vw；视口单位vw/vh做全屏布局；em用于组件内部相对缩放（父元素字体变了，内部em跟着变）。</p>
+<p>rem是最常用的响应式单位：html设font-size: 16px，1rem=16px。媒体查询调整html的font-size，整个页面等比缩放。这是移动端适配的经典方案。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

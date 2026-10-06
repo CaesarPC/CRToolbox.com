@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux命令行与服务器运维 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Linux命令行与服务器运维</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># Linux命令行与服务器运维：开发者的必备基本功</p>
+<p>很多前端开发者写代码很溜，但一到服务器上就犯怵。SSH连上服务器，面对黑底白字的命令行，就像进了一个陌生的房间，不敢随便敲命令，生怕把服务器搞崩。但实际上，Linux命令行没有那么神秘——它就是一套文件操作和进程管理的工具。作为现代开发者，不管你是前端、后端还是全栈，基本的Linux操作能力都是必须的。部署项目、查看日志、排查线上问题、管理进程，这些都离不开命令行。掌握了常用命令，你会发现服务器上的工作效率比在图形界面里点来点去高得多。</p>
+<p>## 一、文件系统：一切皆文件</p>
+<p>Linux的设计哲学是"一切皆文件"。硬盘是文件、进程是文件、网络连接也是文件。整个文件系统是一棵从根目录/开始的树。</p>
+<p>常用的目录结构：/home是普通用户的家目录，/etc存放配置文件，/var/log存放日志，/tmp是临时文件目录，/usr/local是用户编译安装的软件位置。不需要死记硬背，用多了自然就熟了。</p>
+<p>基本的文件操作命令：ls列出目录内容，cd切换目录，pwd显示当前路径，mkdir创建目录，rm删除文件，cp复制，mv移动或重命名。这些命令和Windows里的资源管理器操作是一样的，只是用文字代替了鼠标点击。</p>
+<p>几个实用参数：ls -la显示所有文件包括隐藏文件和详细信息；rm -rf强制递归删除（这个命令威力很大，千万别在/下面随便用）；cp -r递归复制目录。</p>
+<p>## 二、查看文件内容：cat、less、tail</p>
+<p>查看文件内容是最常用的操作之一。cat是把整个文件打印到屏幕上——适合看小文件。大文件用less打开，可以上下翻页、搜索、按q退出。</p>
+<p>tail -f是运维最常用的命令之一。它实时追踪文件的新增内容——你运行了之后，日志文件每新增一行，屏幕上立刻显示一行。看服务日志的时候，开一个终端窗口tail -f app.log，然后触发一个操作，就能立刻看到日志输出。这是排查线上问题的第一手段。</p>
+<p>head看文件开头几行，tail看末尾几行。默认都是10行，用-n 50指定看50行。</p>
+<p>## 三、进程管理：谁在占CPU和内存</p>
+<p>服务器变慢了，怎么找到是哪个进程在搞鬼？top命令实时显示系统状态：CPU使用率、内存使用、每个进程的资源占用。按P按CPU排序，按M按内存排序。找到占用异常的进程，记住它的PID（进程号）。</p>
+<p>然后用kill命令结束它：kill PID。默认发一个终止信号，进程优雅退出。如果进程卡住了不响应，用kill -9 PID强制杀死。注意kill -9是直接杀掉，不给进程清理的机会，可能导致数据不一致，能不用就不用。</p>
+<p>ps aux可以列出当前所有进程。配合grep搜索你要找的进程：ps aux | grep nginx。这样你就知道nginx是不是在运行、有几个worker进程。</p>
+<p>systemctl是现代Linux的服务管理工具。systemctl status nginx查看nginx状态，systemctl restart nginx重启服务。大部分通过包管理器安装的服务都可以用systemctl管理。</p>
+<p>## 四、权限管理：文件的读、写、执行</p>
+<p>Linux文件有三组权限：文件所有者、所属组、其他人。每组有读（r=4）、写（w=2）、执行（x=1）三种权限。</p>
+<p>chmod用来修改权限。chmod 755 script.sh表示所有者有读写执行权限（4+2+1=7），组和其他人有读和执行权限（4+1=5）。这个755是最常见的可执行文件权限——别人可以运行但不能修改。</p>
+<p>chown用来修改文件的所有者。部署项目的时候经常遇到"Permission denied"的错误，十有八九是文件权限不对。要么用chown把文件改成运行服务的用户所有，要么调整权限。但注意不要图省事用chmod 777——所有人都能读写执行，安全隐患极大。</p>
+<p>## 五、网络排查：服务为什么访问不了</p>
+<p>部署了服务但是外部访问不了，怎么排查？首先确认服务有没有在监听端口：netstat -tlnp或者ss -tlnp，列出所有监听的端口和对应的进程。如果你的服务应该监听8080端口但列表里没有，说明服务根本没启动成功。</p>
+<p>然后测试端口通不通：curl http://localhost:8080在服务器本机测试。如果本机curl通了但外部访问不了，那就是防火墙的问题。firewalld或者ufw配置里要开放对应的端口。</p>
+<p>看日志永远是排查问题的第一步。服务启动失败了、端口被占用了、配置文件写错了——大部分错误信息都在日志里。不要盯着屏幕猜，去看日志。</p>
+<p>## 六、文本处理三剑客：grep、awk、sed</p>
+<p>Linux命令行真正强大的地方在于可以组合管道。把一个命令的输出作为另一个命令的输入，像流水线一样处理文本数据。</p>
+<p>grep是搜索：在文件里找包含某个关键词的行。grep "error" app.log找出所有错误日志。加-v反向匹配（不包含关键词的行），加-n显示行号，加-i忽略大小写。</p>
+<p>awk是按列处理文本。日志文件每一行有空格分隔的多个字段，awk '{print $1}'提取第一列。这个在分析日志、统计数据的时候非常好用。</p>
+<p>sed是流编辑器，可以做替换。sed 's/old/new/g' file.txt把文件里所有old替换成new。批量改配置文件的时候，sed一条命令就能搞定，不用手动编辑。</p>
+<p>组合使用：ps aux | grep nginx | awk '{print $2}'——找到nginx进程，然后提取它的PID。这种管道组合是Linux命令行的精髓。</p>
+<p>## 七、SSH与远程操作</p>
+<p>SSH是登录远程服务器的标准方式。ssh user@server-ip连接服务器。每次输密码很麻烦，可以配置SSH密钥对：本地生成公钥私钥对，把公钥放到服务器上，以后连接就不用密码了。</p>
+<p>scp和rsync用来在本地和服务器之间传文件。scp file.txt user@server:/path/简单粗暴地复制文件。rsync更智能——只传输有变化的部分，同步大量文件的时候效率高很多。部署项目的时候，rsync是比scp更好的选择。</p>
+<p>## 八、总结</p>
+<p>Linux命令行的学习曲线确实存在，但核心命令就那么几十个。不要试图一次学完所有命令——遇到什么问题学什么。部署的时候学systemctl和日志查看，排查性能问题学top和ps，处理文件学grep和管道。用多了自然就熟了。</p>
+<p>对于开发者来说，Linux不是运维的专利。你写的代码最终要跑在Linux服务器上，能自己SSH上去看日志、重启服务、排查问题，就不用事事依赖运维。这种自主排障能力，是区分"只会写代码"和"能独立交付项目"的开发者的重要标志。命令行看起来古老，但它至今仍是最高效的服务器操作方式——学会它，你的开发效率会有质的飞跃。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

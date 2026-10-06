@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>虚拟列表与长列表优化 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>虚拟列表与长列表优化</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 虚拟列表：长列表流畅渲染的秘密</p>
+<p>你有没有遇到过一个页面渲染了上万条列表数据，然后滚动卡顿、滑动掉帧、CPU飙高？问题出在DOM节点太多——浏览器每渲染一个节点都有开销，10000个DOM节点同时存在，内存占用和重排成本都很高。虚拟列表就是解决这个问题的经典方案：不管数据有多少条，只渲染屏幕上可见的那十几条。</p>
+<p>## 一、问题本质</p>
+<p>一个列表有10000条数据，你把10000个div全部渲染到页面上。哪怕每个div很简单，10000个DOM节点的内存占用、布局计算、样式计算都是巨大的。滚动的时候浏览器要频繁重绘，自然卡顿。</p>
+<p>但实际上用户一次只能看到屏幕上的十几条。下面9900条根本看不到，渲染它们纯属浪费。</p>
+<p>## 二、虚拟列表的原理</p>
+<p>虚拟列表的核心思路：计算当前滚动位置，只渲染可视区域内的列表项。上面和下面不可见的区域用占位撑开高度。</p>
+<p>具体怎么做？假设每项高度固定50px，可视区域高600px，一屏能显示12项。滚动到第200项时，计算scrollTop = 200 * 50 = 10000px。可视区域应该显示第200到212项。渲染这12个DOM，上面用一个高度为10000px的空div占位，下面用一个高度为(10000-212*50)的空div占位。用户滚动时实时更新渲染的起始索引，DOM节点数始终保持在十几条。</p>
+<p>不管总数据是1万条还是100万条，DOM节点数永远是固定的十几条。性能问题迎刃而解。</p>
+<p>## 三、不定高列表</p>
+<p>上面假设每项高度固定。实际场景中列表项高度可能不同——有的长有的短。这种情况更复杂：需要预估每项高度，渲染后测量真实高度，动态修正。成熟的虚拟列表库（react-window、vue-virtual-scroller）已经处理好了这些边界情况。</p>
+<p>## 四、成熟方案</p>
+<p>不要自己从零写虚拟列表——边界情况太多了（滚动到顶部回弹、快速滚动时闪烁、动态高度变化）。直接用现成的库：React用react-window或react-virtualized，Vue用vue-virtual-scroller。这些库经过大量项目验证，性能和稳定性都有保证。</p>
+<p>## 五、什么时候需要</p>
+<p>数据量超过几百条就可以考虑虚拟列表了。少于100条的普通列表，浏览器完全扛得住，没必要引入虚拟列表的复杂度。</p>
+<p>## 六、总结</p>
+<p>虚拟列表是前端处理长列表的标准方案。它的思想极其简单——只渲染看得见的部分——但实现细节很多。好在成熟的开源库把这些细节都封装好了，直接用就行。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

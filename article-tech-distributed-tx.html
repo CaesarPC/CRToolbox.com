@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分布式事务方案对比 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>分布式事务方案对比</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>分布式事务方案对比：跨服务数据一致性的解决之路</h2>
+<p>本地事务很简单：数据库的ACID，一个事务里多个操作要么都成功要么都回滚。但微服务架构下，一个业务操作涉及多个服务、多个数据库：下单要扣库存服务、扣余额服务、创建订单服务，这三个操作在三个数据库里，本地事务管不了。分布式事务就是解决跨服务的数据一致性问题。</p>
+<p>2PC（两阶段提交）是经典的强一致性方案。协调者先问所有参与者"能提交吗"（Prepare阶段），全部回答能再通知大家提交（Commit阶段）；任何一个回答不能就全部回滚。理论完美，但实际很少用：同步阻塞（所有参与者锁定资源等协调者）、协调者单点故障、性能差。</p>
+<p>3PC做了改进但更复杂，实际也很少用。</p>
+<p>本地消息表方案是实战中常用的最终一致性方案。业务数据库里建一张消息表，业务操作和写消息放在同一个本地事务里——要么都成功。后台任务扫描消息表，把消息发到消息队列，消费者处理完删除消息。这样保证了"业务成功则消息一定发出"。消费者处理失败就重试，最终一致。</p>
+<p>事务消息是RocketMQ提供的方案：半消息机制。先发半消息（消费者不可见），执行本地事务，成功就提交消息让消费者可见，失败就回滚消息。保证本地事务和消息发送的一致性。</p>
+<p>TCC（Try-Confirm-Cancel）是业务层面的两阶段：Try阶段预留资源（冻结库存）、Confirm确认执行（扣减库存）、Cancel取消（释放冻结）。需要业务代码实现三个接口，侵入性强但控制力强。适合对一致性要求高的资金类业务。</p>
+<p>Saga模式是长事务的拆分：把大事务拆成一系列本地事务，每个本地事务有对应的补偿操作。正向执行一步步走，某步失败就反向执行已完成步骤的补偿。适合流程长、涉及步骤多的业务（如订票：订机票→订酒店→租车，失败了依次取消）。</p>
+<p>实际选型：大多数互联网业务用最终一致性就够了（本地消息表+MQ重试），几秒内一致用户可接受。资金类、强一致要求的用TCC。不要一开始就上强一致性方案，性能代价太大。</p>
+<p>分布式事务没有银弹。理解每种方案的代价和适用场景，根据业务对一致性的要求做权衡，才是成熟的做法。</p>
+</div>
+</body>
+</html>

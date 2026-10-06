@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>容灾备份与多活架构 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>容灾备份与多活架构</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>容灾备份与多活架构：保证系统永不宕机</h2>
+<p>服务器宕机、机房断电、云厂商故障——这些意外总会发生。区别在于成熟的系统早就准备好了预案，出问题自动切换，用户几乎无感知。容灾就是为此设计的。</p>
+<p>数据备份是基础。数据库定期全量备份+增量备份，备份文件存到不同地方（异地、对象存储）。定期演练恢复——备份了但恢复不出来等于没备份。RTO（恢复时间目标）和RPO（数据丢失量）是两个关键指标：多快恢复、能容忍丢多少数据。</p>
+<p>主从切换是高可用的基本。数据库主库挂了，自动提升从库为主库（前面讲过）。应用服务器多实例部署，前面挂负载均衡，一台挂了流量自动切到其他台。</p>
+<p>同城双活：两个机房都在同一城市，同时提供服务，数据实时同步。一个机房挂了，另一个立刻接管。延迟低（同城网络快），但遭遇城市级灾难（地震、火灾）两个机房都受影响。</p>
+<p>异地多活：在不同城市部署多个机房，都对外提供服务，数据跨地域同步。一个城市的机房整体挂了，其他城市照常服务。这是最高可用级别，但实现复杂：数据同步延迟、跨地域事务、一致性问题。成本也最高。</p>
+<p>并不是所有系统都需要异地多活。要看业务对可用性的要求。一个内部管理系统，宕机几小时问题不大；一个支付系统，一秒宕机都是巨大损失。根据业务重要性选择容灾级别，不要过度建设。</p>
+<p>混沌工程是验证容灾能力的方法：主动在生产环境注入故障（杀一个实例、断网络、延迟注入），看系统是否真的能自动恢复。Netflix的Chaos Monkey是代表。平时演练，真出问题才不慌。</p>
+<p>容灾是花钱买保险。平时看不到价值，出问题时挽回的损失远超过投入。但要按业务需求分级投入，不是每个系统都要做到五九个九。</p>
+</div>
+</body>
+</html>

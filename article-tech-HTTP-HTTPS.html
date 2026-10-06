@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网络协议HTTP与HTTPS完全指南 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>网络协议HTTP与HTTPS完全指南</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<p>网络协议HTTP与HTTPS完全指南：从TCP三次握手到接口安全防护全链路解析</p>
+<p>网站的一切交互，本质上都是HTTP请求。浏览器加载页面、前端调用后端接口、APP和服务器通信，都基于HTTP协议。但很多开发者天天写接口，对HTTP协议的理解却停留在"GET和POST的区别"这个层面。深入理解HTTP协议的工作原理，尤其是HTTPS的加密机制和常见的接口安全问题，才能写出真正安全可靠的Web应用。</p>
+<p>HTTP协议是一种无状态的应用层协议。所谓无状态，就是服务器不会记录两次请求之间的任何关联。这在早期Web（主要是静态页面）时代不是问题，但当Web应用需要登录状态、购物车等功能时，无状态就成了障碍。Cookie机制的引入解决了这个问题：服务器在响应头里Set-Cookie，浏览器后续请求自动带上Cookie，服务器就能识别用户身份了。后来的Session、JWT等身份认证方案，本质上都是在无状态的HTTP协议之上，构建有状态的会话管理。</p>
+<p>HTTP方法和状态码是协议的基础。GET用于获取资源，POST用于创建资源，PUT用于更新资源，DELETE用于删除资源。RESTful API的设计规范就是基于这些标准方法。状态码同样重要：2xx表示成功，3xx表示重定向，4xx表示客户端错误，5xx表示服务器错误。401未认证、403无权限、404资源不存在、500服务器内部错误、502网关错误、503服务不可用，这些常见状态码的含义和使用场景，每个开发者都必须烂熟于心。</p>
+<p>HTTP/1.1的性能瓶颈催生了HTTP/2。HTTP/1.1同一个连接同时只能处理一个请求，后面的请求必须排队等待，这就是队头阻塞。一个网页往往要加载几十个资源，串行加载严重拖慢速度。HTTP/2引入了多路复用：一个连接上可以同时交错发送多个请求和响应，二进制分帧层让不同请求的帧可以混在一起而不混乱。头部压缩（HPACK）也减少了重复数据传输。服务器推送（Server Push）让服务器可以主动向客户端推送资源，不用等客户端请求。这些改进让HTTP/2的性能比HTTP/1.1提升数倍。</p>
+<p>HTTPS是HTTP的安全版本，也是现在所有网站的标配。HTTP是明文传输，数据在网络上传输时，任何中间节点都可以窃听甚至篡改。HTTPS在HTTP和TCP之间加了一层TLS加密层。TLS握手过程比较复杂，但核心要理解几个关键点：非对称加密用于安全交换密钥，对称加密用于后续的数据传输。服务器有公钥和私钥，客户端用公钥加密预主密钥，只有服务器的私钥能解开。双方基于预主密钥生成本次会话的对称密钥，之后所有通信都用这个对称密钥加密传输。数字证书则解决了公钥的身份认证问题：由受信任的CA机构签发证书，证明这个公钥确实属于这个域名，防止中间人攻击。</p>
+<p>混合内容是HTTPS网站常见的问题。HTTPS页面里如果引用了HTTP的资源（图片、脚本、样式），浏览器会拦截或警告。因为HTTP资源不加密，存在被篡改的风险。网站从HTTP迁移到HTTPS时，必须把所有内部资源链接改成相对路径或HTTPS路径，否则就会出现样式丢失、脚本不加载等问题。</p>
+<p>接口安全是后端开发的重中之重。最常见的攻击方式是SQL注入：用户输入的恶意SQL语句被拼接到查询中，执行非预期的操作。防御方法很简单：永远不要拼接SQL字符串，使用参数化查询（预编译语句），数据库驱动会自动转义特殊字符。XSS跨站脚本攻击则是在页面中注入恶意JavaScript脚本，窃取用户Cookie或执行未授权操作。防御方法是对所有用户输入做转义，输出到HTML时转义特殊字符，设置HttpOnly Cookie让JavaScript无法读取。</p>
+<p>CSRF跨站请求伪造是另一种常见攻击。攻击者诱导已登录用户访问恶意页面，恶意页面自动向目标网站发起请求，利用用户的登录状态执行操作。防御方法包括：验证Referer头、使用CSRF Token（表单里带一个随机令牌，服务器验证）、设置SameSite Cookie属性。SameSite=Lax或Strict让Cookie不会在跨站请求中发送，从根源上解决了大部分CSRF问题。</p>
+<p>接口限流和防刷是生产环境必须做的防护。恶意用户可以写脚本批量调用接口，刷取数据、消耗服务器资源、甚至进行暴力破解。限流方案包括：基于IP的限流（每个IP单位时间最多N次请求）、基于用户ID的限流、基于接口维度的限流。漏桶算法和令牌桶算法是两种经典的限流算法。超出限流阈值的请求直接返回429状态码。配合黑名单机制，对异常IP直接封禁。</p>
+<p>身份认证的最佳实践也在不断演进。早期的Session-Cookie方案适合传统Web应用，但在跨端、跨域场景下不够灵活。JWT（JSON Web Token）将用户身份信息编码在Token里，服务器不需要存储Session状态，验证签名即可。但JWT也有缺点：Token一旦签发，在过期前无法撤销，泄露了风险很大。Access Token + Refresh Token的组合方案是目前的主流：短期有效的Access Token用于接口认证，长期的Refresh Token用于刷新Access Token，平衡了安全性和用户体验。</p>
+<p>理解HTTP协议的每一个细节，不是为了应试，而是为了在出问题的时候能定位根因。接口超时了，是网络层问题还是应用层问题？返回的数据不对，是请求没发出去还是服务器处理错了？抓包工具（Charles、Wireshark）配合对协议的理解，才能高效排查问题。网络协议是Web开发的底层基石，基础越扎实，遇到复杂问题时越从容。</p>
+</div>
+</body>
+</html>

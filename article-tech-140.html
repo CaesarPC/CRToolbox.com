@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>整洁架构与六边形架构 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>整洁架构与六边形架构</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>整洁架构与六边形架构：如何组织代码层次</p>
+<p>很多项目的代码层次混乱：Controller里写业务逻辑、Service里直接操作数据库、工具类到处调。改代码不知道该改哪，测试不知道怎么写。整洁架构（Clean Architecture）和六边形架构（Ports & Adapters）提供了一套分层原则，让代码结构清晰、依赖方向明确。</p>
+<p>核心原则是依赖方向：内层不依赖外层，外层依赖内层。最内层是领域实体和业务规则（纯Java/JS对象，不依赖任何框架）；往外一层是用例（应用业务逻辑）；再往外是接口适配器（Controller、Repository实现）；最外层是框架和驱动（数据库、Web框架、外部API）。</p>
+<p>关键规则：内层不知道外层的存在。业务逻辑层不依赖Spring、不依赖MySQL，它只定义接口，外层去实现。这样业务逻辑可以独立测试、独立更换技术实现。</p>
+<p>六边形架构的形象说法：核心是业务逻辑，外面一圈是端口（接口），各种适配器（数据库适配器、API适配器、消息队列适配器）通过端口接入核心。业务逻辑不关心数据从哪来、到哪去，只通过接口交互。</p>
+<p>实际分层：Entity（领域对象）→ UseCase（业务用例）→ Interface（接口定义）→ Infrastructure（接口实现：数据库、外部API）。Web请求进来：Controller（外层）调用UseCase（内层），UseCase调用Repository接口，Repository的实现在Infrastructure（外层）。</p>
+<p>这样做的好处：业务逻辑集中且独立，不被框架污染；单元测试容易（Mock掉外层接口）；换数据库、换框架不影响业务逻辑。</p>
+<p>常见反模式：业务逻辑写在Controller里（太薄的Service）；Service直接SQL操作（没有Repository抽象）；领域对象和数据库Entity混用。这些都让业务逻辑和技术细节耦合在一起。</p>
+<p>整洁架构不是教条，是指导原则。小项目可以简化，不要为了分层而分层搞出过度抽象。但随着项目变大，这种分层思想能帮你保持代码可维护。判断标准：你的业务逻辑能不能脱离数据库独立测试？如果不能，说明层次有问题。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

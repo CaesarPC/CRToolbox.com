@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>番茄钟 | Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.hd{background:#282a36;width:100%;padding:16px;display:flex;align-items:center;gap:12px;border-bottom:2px solid #50fa7b}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+.hd h1{font-size:18px;color:#50fa7b}
+.card{background:#282a36;border:1px solid #44475a;border-radius:16px;padding:30px;margin:30px auto;max-width:400px;width:90%;text-align:center}
+.timer{font-size:72px;font-weight:900;color:#50fa7b;letter-spacing:2px;margin:20px 0;font-variant-numeric:tabular-nums}
+.mode{font-size:14px;color:#6272a4;margin-bottom:10px}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btns button{border:none;border-radius:10px;padding:12px 24px;font-size:15px;cursor:pointer;font-weight:bold;transition:.15s}
+.btns button:active{transform:scale(.95)}
+#start{background:#50fa7b;color:#1e1e2e}
+#reset{background:#44475a;color:#e6e6e6}
+#skip{background:#ffb86c;color:#1e1e2e}
+.settings{display:flex;gap:16px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.set{font-size:12px;color:#6272a4}
+.set input{width:60px;padding:6px;border-radius:6px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;text-align:center}
+.stats{margin-top:20px;font-size:13px;color:#bdc3c7}
+.stats b{color:#50fa7b}
+</style>
+</head>
+<body>
+<div class="hd"><a href="index.html">← 首页</a><h1>🍅 番茄钟</h1></div>
+<div class="card">
+  <div class="mode" id="modeText">专注时间</div>
+  <div class="timer" id="timer">25:00</div>
+  <div class="btns">
+    <button id="start">▶ 开始</button>
+    <button id="reset">🔄 重置</button>
+    <button id="skip">⏭ 跳过</button>
+  </div>
+  <div class="settings">
+    <div class="set">专注(分钟)<br><input type="number" id="workMin" value="25" min="1" max="120"></div>
+    <div class="set">短休息<br><input type="number" id="shortMin" value="5" min="1" max="30"></div>
+    <div class="set">长休息<br><input type="number" id="longMin" value="15" min="1" max="60"></div>
+  </div>
+  <div class="stats">已完成番茄：<b id="count">0</b> 个</div>
+</div>
+<script>
+var total = 25*60, remaining = total, timerId = null, running = false, phase = 'work', cycles = 0;
+function fmt(s){var m=Math.floor(s/60),sec=s%60;return (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;}
+function render(){
+  document.getElementById('timer').textContent = fmt(remaining);
+  var mt = {work:'🍅 专注时间',short:'☕ 短休息',long:'🌴 长休息'}[phase];
+  document.getElementById('modeText').textContent = mt;
+  document.title = fmt(remaining) + ' - ' + (phase==='work'?'专注':'休息');
+}
+function setPhase(p){
+  phase = p;
+  var mins = p==='work' ? parseInt(document.getElementById('workMin').value)||25
+    : p==='short' ? parseInt(document.getElementById('shortMin').value)||5
+    : parseInt(document.getElementById('longMin').value)||15;
+  total = mins*60; remaining = total; render();
+}
+document.getElementById('start').onclick = function(){
+  if(running){clearInterval(timerId);running=false;this.textContent='▶ 继续';return;}
+  running=true;this.textContent='⏸ 暂停';
+  timerId=setInterval(function(){
+    remaining--;render();
+    if(remaining<=0){
+      clearInterval(timerId);running=false;
+      document.getElementById('start').textContent='▶ 开始';
+      if(phase==='work'){
+        cycles++;document.getElementById('count').textContent=cycles;
+        setPhase(cycles%4===0?'long':'short');
+      } else { setPhase('work'); }
+    }
+  },1000);
+};
+document.getElementById('reset').onclick=function(){clearInterval(timerId);running=false;document.getElementById('start').textContent='▶ 开始';remaining=total;render();};
+document.getElementById('skip').onclick=function(){clearInterval(timerId);running=false;document.getElementById('start').textContent='▶ 开始';if(phase==='work'){cycles++;document.getElementById('count').textContent=cycles;setPhase(cycles%4===0?'long':'short');}else{setPhase('work');}};
+render();
+</script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
+</body>
+</html>

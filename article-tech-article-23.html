@@ -3,46 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>前端框架演进史 - Cr工具站</title>
+<title>前端框架演进史 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>前端框架演进史</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p># 前端框架演进史：从jQuery到React，再到AI驱动的开发新时代</p>
 <p>前端开发的技术栈变化之快，在整个软件开发领域都是出了名的。十年前前端工程师的核心技能是jQuery和CSS兼容性，五年前是Angular、React、Vue三大框架之争，今天是Vite、Server Components、AI代码生成重塑开发流程。很多前端开发者感叹"学不动了"，每年都有新框架、新工具、新概念冒出来，刚学会一个又出来一个新的。但如果我们拨开这些表面的技术名词，梳理前端框架演进的内在逻辑，就会发现所有变化都围绕着几个核心问题：如何更高效地管理状态、如何更流畅地渲染界面、如何更轻松地组织代码。理解了这些底层逻辑，就不会被层出不穷的新技术牵着鼻子走。</p>
-<h2>## 一、上古时代：jQuery与命令式DOM操作</h2>
 <p>2010年前后的前端开发，主流方案是jQuery。那时候网页还比较简单，主要是静态内容加少量动态交互。开发者用jQuery选中DOM元素，然后手动修改它的属性、样式、内容。比如要更新一个列表，你需要先找到ul元素，然后创建li节点，设置文本，append进去。要删除一条数据，你需要找到对应的DOM节点，然后remove掉。</p>
 <p>这种开发模式叫做"命令式"：你告诉浏览器每一步该做什么——选哪个元素、改哪个属性、加还是删。问题在于，当页面交互变复杂之后，DOM操作和数据逻辑会搅在一起。数据变了，你要手动更新UI；用户点了按钮，你要手动改DOM。代码写得越多，状态和UI的同步就越难维护，很容易出现"数据是对的，但页面显示错了"的诡异BUG。</p>
 <p>jQuery时代也催生了一堆UI库和插件轮播、弹窗、表单验证，都是基于jQuery封装的。但本质上还是手动操作DOM，当应用规模变大，这种模式就走到了尽头。</p>
-<h2>## 二、MVVM时代：数据驱动视图的思想革命</h2>
 <p>2014年Vue.js发布，2013年React开源，前端开发进入了一个全新的时代。它们带来的核心思想是"数据驱动视图"：你不再需要手动操作DOM，只需要修改数据，框架会自动帮你更新对应的界面。</p>
 <p>以Vue为例，你在模板里写{{ message }}，然后在JS里修改this.message的值，页面上的内容会自动更新。你不需要去document.getElementById再改innerHTML。这种模式叫做MVVM（Model-View-ViewModel），数据和视图之间建立了双向绑定，数据变了视图自动更新，用户在输入框里输入内容数据也自动同步。</p>
 <p>React的思路略有不同，它引入了"虚拟DOM"的概念。当状态变化时，React会在内存中重新渲染整个组件树，生成一棵新的虚拟DOM树，然后和旧的树做diff比较，只把真正变化的部分更新到真实DOM上。这种方式让开发者可以用"声明式"的方式写UI：只需要描述"在这个状态下界面应该长什么样"，不需要关心具体怎么更新DOM。</p>
 <p>数据驱动视图是前端开发的一次思想革命。它把开发者从繁琐的DOM操作中解放出来，专注于业务逻辑本身。当数据和视图保持自动同步后，大型前端应用的可维护性提升了一个数量级。</p>
-<h2>## 三、组件化：大型前端应用的组织方式</h2>
 <p>框架解决了数据和视图同步的问题，但当应用越来越大，代码组织就成了新的挑战。如果所有HTML、CSS、JS都写在一个文件里，几千行代码之后没人能维护。组件化的思想就是解决这个问题的。</p>
 <p>组件化就是把页面拆分成一个个独立的、可复用的组件。比如一个按钮是一个组件，一个弹窗是一个组件，一个用户列表是一个组件。每个组件有自己的模板、样式、逻辑，可以独立开发、独立测试、在不同地方复用。</p>
 <p>Vue和React都内置了组件化的支持。一个组件就是一个JS文件（或单文件组件），里面定义了它长什么样、有什么行为、接收什么参数。页面就是由一个个组件嵌套组合而成的，就像搭积木一样。</p>
 <p>组件化带来的好处是显而易见的：代码复用、职责分离、并行开发。团队里每个人负责不同的组件，互不干扰。UI设计统一用组件库，不会出现同一个按钮在不同页面长得不一样的情况。</p>
-<h2>## 四、状态管理：当组件多了之后</h2>
 <p>组件化解决了代码组织的问题，但又带来了新的问题：组件之间怎么共享数据？</p>
 <p>简单场景下，数据可以通过父子组件的props传递。但当组件嵌套很深，或者多个不相关的组件需要共享同一份数据时，一层层props传递就变得非常痛苦，这就是所谓的"prop drilling"问题。</p>
 <p>状态管理库就是为了解决这个问题而生的。Vue有Vuex和Pinia，React有Redux和Zustand。它们的核心思路是：把需要全局共享的数据放到一个单一的"store"里，任何组件都可以直接从store读取数据，也可以修改store里的数据。数据变了，所有用到这个数据的组件都会自动更新。</p>
 <p>状态管理的核心原则是"单向数据流"：数据从store流向组件，组件通过触发action来修改store，不允许组件直接修改store里的数据。这样所有的数据变化都有迹可循，出了问题可以追踪是哪个action改了数据。</p>
-<h2>## 五、工程化：从写页面到建工程</h2>
 <p>随着前端应用越来越复杂，单纯靠框架已经不够了。代码压缩、模块化、打包构建、热更新、环境区分，这些工程化能力成了前端项目的标配。</p>
 <p>早期的前端构建工具是Webpack，它可以把散落的JS、CSS、图片模块打包成可以在浏览器里运行的静态资源。但Webpack配置复杂，构建速度慢，尤其是项目变大之后，启动一次开发服务器要等好几秒。</p>
 <p>2020年Vite出现了，它利用浏览器原生支持ES模块的特性，开发环境下不需要打包，浏览器请求哪个模块就即时编译哪个，冷启动速度从几十秒降到几百毫秒。生产环境再用Rollup打包优化。Vite已经成为目前前端新项目的默认构建工具。</p>
@@ -51,13 +51,12 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>最近几年最热门的前端架构变革，就是React Server Components（RSC）。传统的前端渲染是在浏览器里完成的：服务器返回一个空的HTML壳，然后下载JS，在浏览器里渲染出完整的页面。这种方式首屏加载慢，SEO也不好。</p>
 <p>RSC把组件分成了两类：Server Components在服务器上运行，可以直接访问数据库、文件系统，不需要把JS下载到浏览器；Client Components在浏览器里运行，可以交互、有状态。这样可以把大部分页面内容放在服务器上渲染，只有需要交互的部分才发到浏览器，大幅减少JS体积，提升加载速度。</p>
 <p>Next.js是第一个大规模采用RSC的框架，它带来的"App Router"模式重新定义了React项目的结构。这种架构趋势很明确：前端不再是纯粹的客户端应用，而是服务器和客户端混合渲染。</p>
-<h2>## 七、AI时代：前端开发会被取代吗？</h2>
 <p>2023年之后，AI代码生成工具爆发式增长。GitHub Copilot可以根据注释自动补全代码，Cursor可以根据自然语言描述生成整个组件，很多前端开发者发现写UI代码的速度越来越快了。</p>
 <p>但AI并没有取代前端开发者，而是改变了前端开发的工作内容。以前花大量时间写模板代码、调样式、查API，现在AI可以帮你做这些。开发者更多的精力放在了架构设计、用户体验优化、性能调优、问题排查上。</p>
 <p>AI生成代码也带来了新的挑战：AI写的代码可能有安全漏洞、性能问题、边界情况处理不当。开发者必须有足够的能力审查和优化AI生成的代码。会用AI工具的开发者效率远超不会用的，但前提是你得知道什么是好代码、什么是坏代码。</p>
-<h2>## 八、总结</h2>
 <p>从jQuery到Vue/React，从命令式操作DOM到数据驱动视图，从单页应用到服务端组件，前端框架的每一次演进，都是在解决上一代技术暴露出的痛点。但万变不离其宗：核心目标始终是让开发者更高效地构建用户界面，让用户获得更流畅的体验。</p>
 <p>对于前端开发者来说，不需要追逐每一个新框架。重要的是理解底层的设计思想：数据驱动、组件化、单向数据流、渲染优化。这些思想不会因为框架更替而过时。框架会变，但解决问题的思路是相通的。掌握了底层原理，无论未来出现什么新框架，都能快速上手。而那些只会背API、套模板的开发者，才是真正容易被技术淘汰的人。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

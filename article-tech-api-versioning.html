@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API版本管理 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>API版本管理</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>API版本管理：接口升级不破坏老客户端</h2>
+<p>API改了，老版本APP还在用旧接口。怎么办？API版本管理让新旧接口共存，老客户端不受影响。</p>
+<p>版本策略：URL路径加版本前缀（/api/v1/users、/api/v2/users）；或者Header里带版本号；或者子域名（v1.api.example.com）。最常见是URL路径版本。</p>
+<p>什么时候需要新版本：不兼容的改动（删字段、改字段含义、改参数）。向后兼容的改动（加新字段）不需要版本。</p>
+<p>版本废弃流程：提前通知（文档标注废弃日期）；保留旧版本一段时间（等老用户升级）；监控旧版本调用量，降到零再下线。</p>
+<p>不要轻易开新版本。能兼容就兼容，版本越多维护越累。但一旦不兼容，必须版本化，不能让老客户端挂掉。</p>
+</div>
+</body>
+</html>

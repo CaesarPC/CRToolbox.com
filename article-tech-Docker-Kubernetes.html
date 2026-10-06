@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>容器化技术Docker与Kubernetes实战 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>容器化技术Docker与Kubernetes实战</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<p>容器化技术Docker与Kubernetes实战：从环境一致性到自动伸缩的云原生之路</p>
+<p>"在我电脑上是好的"是开发和运维之间最经典的矛盾。开发环境跑着没问题的代码，部署到测试环境就报错；测试环境正常，上线又出问题。追根溯源，是环境不一致导致的：操作系统版本不同、依赖库版本不同、配置不同。容器化技术的出现，彻底解决了这个问题。Docker将应用和它的所有依赖打包在一起，形成一个标准镜像，开发、测试、生产环境跑的是完全一样的东西。环境一致性的问题，从根源上被消灭了。</p>
+<p>Docker的核心思想，是利用Linux内核的Namespace和Cgroup技术，实现进程级别的隔离。容器不是虚拟机，它不需要模拟完整的操作系统，所有容器共享宿主机的内核。这意味着一个容器启动只需要几毫秒，占用的资源也非常少。一台服务器可以同时跑几十上百个容器，资源利用率远高于虚拟机。镜像则是容器的模板，采用分层文件系统设计：底层是操作系统基础层，上面是依赖安装层，再上面是应用代码层。分层设计让镜像可以复用，不同镜像共享相同的基础层，节省存储空间和传输带宽。</p>
+<p>Dockerfile是构建镜像的蓝图。FROM指定基础镜像，RUN执行安装命令，COPY复制代码文件，EXPOSE声明端口，CMD指定启动命令。编写Dockerfile有很多最佳实践：选择精简的基础镜像（Alpine比Ubuntu小得多），合并RUN层减少镜像层数，合理利用构建缓存加速构建，不要在镜像里硬编码敏感信息。一个写得好的Dockerfile，构建出来的镜像可能只有几十MB；写得差的，可能几个GB。多阶段构建是优化镜像体积的利器：第一阶段用完整的编译环境构建应用，第二阶段只把编译产物复制到精简的运行时镜像里，最终镜像不包含任何编译工具和源码。</p>
+<p>Docker Compose解决的是多容器编排问题。一个Web应用通常需要Web服务、数据库、缓存、消息队列等多个容器。手动一个个启动、配置网络、挂载数据卷，非常麻烦。docker-compose.yml文件可以定义所有服务，一条docker compose up命令全部启动，一条docker compose down命令全部销毁。对于本地开发和小型项目，Compose足够用了。</p>
+<p>但当容器数量增长到几十上百个，分布在多台服务器上，手动管理就不现实了。这时候就需要Kubernetes（K8s）。K8s是Google开源的容器编排系统，现在已经成为云原生时代的事实标准。它解决了容器集群管理的所有核心问题：服务发现与负载均衡、容器自动重启、自动伸缩、滚动更新、存储编排、配置管理。</p>
+<p>K8s的架构分为控制平面和工作节点。控制平面负责整个集群的管理调度，包括API Server（所有操作的入口）、Scheduler（决定容器调度到哪台机器）、Controller Manager（维持系统状态）、etcd（存储集群数据）。工作节点上运行kubelet（管理本节点容器）、kube-proxy（网络规则）和容器运行时。理解这个架构，才能理解为什么K8s出问题时要先看控制平面的组件状态。</p>
+<p>Pod是K8s的最小调度单位。一个Pod可以包含一个或多个紧密耦合的容器，它们共享网络命名空间和存储卷。通常一个Pod只跑一个主容器，边车容器做辅助功能（日志收集、代理等）。Deployment是最常用的工作负载资源，它管理Pod的副本数量，保证始终有指定数量的Pod在运行。当某个Pod挂了，Deployment会自动创建新的Pod补上。滚动更新策略让应用升级时不中断服务：逐步创建新版本的Pod，逐步销毁旧版本的Pod，整个过程零停机。</p>
+<p>Service是Pod的稳定访问入口。Pod是短暂的，随时可能被销毁重建，IP地址会变。Service提供一个固定的虚拟IP和DNS名，后端自动关联一组Pod。通过标签选择器，Service将请求负载均衡到后端的多个Pod上。Ingress则是集群外部访问的统一入口，基于域名和路径将外部请求路由到不同的Service。</p>
+<p>自动伸缩是K8s最强大的能力之一。HPA（水平Pod自动伸缩）根据CPU利用率、内存利用率或自定义指标，自动增加或减少Pod副本数量。流量高峰时自动扩容，流量低谷时自动缩容，既保证了系统稳定，又节省了资源成本。集群层面还有Cluster Autoscaler，可以自动增加或减少节点数量，当Pod资源不足时自动添加新节点，节点空闲时自动释放。</p>
+<p>配置管理和密钥管理是生产环境的刚需。ConfigMap存储非敏感的配置信息，Secret存储密码、密钥等敏感数据（加密存储）。配置和镜像分离，同一份镜像可以部署到不同环境，只需要换配置。配置变更后滚动重启Pod，不需要重新构建镜像。</p>
+<p>容器化和K8s不是银弹，它带来了技术复杂度的提升。学习曲线陡峭，调试困难，网络和存储的概念都和传统方式不一样。但对于中大型团队和微服务架构，它带来的标准化、自动化、弹性能力，是值得付出学习成本的。云原生已经成为行业标配，掌握Docker和K8s，是现代后端工程师的必备技能。</p>
+</div>
+</body>
+</html>

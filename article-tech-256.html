@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端SEO - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>前端SEO</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 前端SEO：让搜索引擎找到你的页面</p>
+<p>做了一个漂亮的网站，但搜不到？SEO（搜索引擎优化）就是让你的网站在Google/百度搜索结果中排名靠前。前端框架让SEO变得更难了——SPA默认对搜索引擎不友好。</p>
+<p>## 一、为什么SPA不SEO</p>
+<p>爬虫访问你的SPA，看到的是空HTML——只有一个div和一个script标签。JS执行后才渲染内容。虽然Google能执行JS，但渲染慢、可能抓不全。其他搜索引擎更差。</p>
+<p>## 二、怎么优化</p>
+<p>服务端渲染（SSR）：前面讲过，服务器直接返回完整HTML，爬虫看到完整内容。
+静态生成（SSG）：构建时预渲染所有页面，每个页面都是完整HTML。</p>
+<p>即使是SPA，也要做好基础SEO：
+- 每个页面有独特的title和meta description。
+- 语义化HTML（h1、article、nav标签）。
+- 有意义的URL（/blog/post-1 而不是/?p=123）。</p>
+<p>## 三、结构化数据</p>
+<p>在HTML里加结构化数据（JSON-LD），告诉搜索引擎这个页面是什么内容——文章、商品、面包屑。搜索结果可以展示更丰富的信息（评分、价格、日期）。</p>
+<p>## 四、总结</p>
+<p>SEO对内容站、电商站很重要，对后台管理系统完全不重要。需要SEO的站用SSR/SSG，做好title/meta和语义化HTML。不需要SEO的内部工具，不用纠结。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

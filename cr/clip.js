@@ -11,7 +11,7 @@
 (function () {
   if (window.CrGH) return;
   var s = document.createElement('script');
-  s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c';
+  s.src = 'ghdb_v2.js?v=20261006c';
   s.async = false;
   (document.head || document.body).appendChild(s);
 })();
@@ -218,7 +218,7 @@
 
   /* 后台管理（仅Server） */
   adminBtn.onclick = function () {
-    window.open('https://CaesarPC.github.io/website-finder/admin.html', '_blank');
+    window.open('admin.html', '_blank');
   };
 
   /* 备忘录 */

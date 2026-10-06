@@ -86,7 +86,7 @@ function doShare() {
   var m = location.search.match(/[?&]code=([0-9a-f]{8})/);
   if (!m) return;
   // 读后端地址
-  fetch('https://CaesarPC.github.io/api_config.json', { cache: 'no-store' })
+  fetch('api_config.json', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
     .then(function (cfg) {
       if (cfg && cfg.api_url) { apiUrl = cfg.api_url; localStorage.setItem('cr_api_url', apiUrl); }
@@ -104,6 +104,6 @@ function doShare() {
     });
 })();
 </script>
-<script src="https://CaesarPC.github.io/clip.js?v=20261005v2"></script>
+<script src="clip.js?v=20261005v2"></script>
 </body>
 </html>

@@ -58,7 +58,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
 <script>
 async function load(){
   try{
-    var r = await fetch('https://CaesarPC.github.io/website-finder/remote_status.json?t='+Date.now());
+    var r = await fetch('remote_status.json?t='+Date.now());
     var d = await r.json();
     var online = d && d.online;
     var url = d && d.url;
@@ -90,6 +90,6 @@ load();
 setInterval(load, 20000);
 </script>
 
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v2"></script>
+<script src="clip.js?v=20261005v2"></script>
 </body>
 </html>

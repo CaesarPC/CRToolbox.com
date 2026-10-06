@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>边缘渲染与下一代Web架构 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>边缘渲染与下一代Web架构</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>边缘渲染与下一代Web架构：从集中式到分布式的演进</h2>
+<p>Web架构正在从集中式向分布式演进。传统模式：代码部署在一个机房，全球用户访问。新模式：计算推到边缘节点，离用户最近的地方处理。前面讲过Cloudflare Workers，这是边缘计算。边缘渲染是它的进阶：在边缘节点做SSR，而不是只做静态托管。</p>
+<p>传统SSR：服务器在一个地方，美国用户访问要跨洋。边缘SSR：在全球几百个节点都渲染，用户从最近节点拿渲染好的HTML，延迟极低。</p>
+<p>好处：全球用户都快（不用跨洋）；源站压力小（边缘节点挡掉大部分请求）；天然抗DDoS（流量在边缘被清洗）。</p>
+<p>实现：Cloudflare Pages Functions、Vercel Edge Functions、Netlify Edge Functions。在边缘写SSR逻辑，部署后自动在全球节点运行。</p>
+<p>趋势：Web架构从"一个服务器服务所有人"变成"全球节点协同服务"。边缘计算、边缘渲染、边缘数据库，整个技术栈都在下移到离用户最近的地方。</p>
+<p>这是Web架构的大方向：更快、更近、更分布式。理解这个趋势，就理解了Cloudflare、Vercel这些公司为什么崛起。</p>
+</div>
+</body>
+</html>

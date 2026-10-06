@@ -326,5 +326,13 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.14 Safari/605.1.15",
   "ref": "https://caesarpc.github.io/website-finder/admin.html"
+ },
+ {
+  "id": 1791270692916,
+  "ts": 1791270692916,
+  "time": "2026-10-06 15:11",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (iPad; CPU OS 17_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 doubao_15.2.1 JsSdk/2.0 NetType/MOBILE Channel/App Store Rifle_15.2.1 WKWebView/1 Bullet/1 doubao/15.2.1 BulletTag/B870C7F5-6543-4E15-A947-8CDE9CA152EC FalconTag/6019BAED-7B23-4578-A90B-E5C59E2B45",
+  "ref": "https://caesarpc.github.io/website-finder/tools.html?webview_progress_bar=1&show_loading=0&push_animated=1&theme=light"
  }
 ]

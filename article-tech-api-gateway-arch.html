@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API网关架构设计 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>API网关架构设计</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>API网关架构设计：微服务世界的统一入口</h2>
+<p>微服务拆成几十个服务后，客户端要直接调用几十个服务吗？手机APP要知道订单服务地址、用户服务地址、商品服务地址？后端服务地址变了、增加了新服务，APP都要发版更新？这显然不现实。API网关就是解决这个问题的：所有客户端请求统一经过网关，网关负责路由到对应的后端服务。</p>
+<p>API网关是系统的统一入口。客户端只需要知道网关的地址，不用关心后面有多少个服务。网关根据请求的路径（如/order/*路由到订单服务，/user/*路由到用户服务）把请求转发到对应的后端服务。这样后端服务数量变化、地址变化，对客户端完全透明。</p>
+<p>网关承担了很多横切关注点（所有服务都需要但又不想每个服务都实现一遍的功能）：身份认证（验证Token，通过后才转发）、权限检查、限流（防止某个客户端刷爆）、日志记录（所有请求统一记录）、监控统计（请求量、响应时间）、HTTPS终止（SSL证书在网关配置）。这些通用逻辑在网关统一做一次，后端服务只关注业务逻辑。</p>
+<p>常见的API网关实现：Kong（开源，基于Nginx+Lua）、Spring Cloud Gateway（Java生态）、APISIX（开源，高性能）、云厂商的托管API网关（阿里云API网关、AWS API Gateway）。中小项目直接用云厂商托管的，免运维；大型团队可能自建开源网关。</p>
+<p>除了基础路由，网关还能做很多高级功能：请求转换（把客户端发的格式转成后端需要的格式）、协议转换（HTTP转gRPC）、缓存（热点请求在网关层缓存，不打到后端）、灰度发布（按用户ID把10%的请求路由到新版本服务）。BFF（Backend For Frontend）模式是网关的进阶：为不同端（APP、Web、小程序）定制不同的聚合接口，在网关层聚合多个后端服务的数据，一次请求返回前端需要的全部数据，减少客户端请求数。</p>
+<p>网关也是安全防线。所有外部请求必须经过网关，后端服务不直接暴露公网。网关可以拦截恶意请求、SQL注入特征、异常IP。没有网关直接暴露后端服务，攻击者可以随意扫描探测。</p>
+<p>高可用是网关必须考虑的。网关是所有流量的入口，如果网关挂了，整个系统就不可用了。网关必须集群部署，多实例负载均衡，任何一台挂了其他顶上。网关自身的性能也要高：它要处理所有流量，不能成为瓶颈。</p>
+<p>API网关是微服务架构的标配组件。理解它的定位和功能，才能设计出合理的微服务系统。没有网关的微服务是一盘散沙，客户端和服务之间的关系会乱成一团。</p>
+</div>
+</body>
+</html>

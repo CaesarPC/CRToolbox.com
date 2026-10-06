@@ -181,6 +181,15 @@
   }
 
   /* ---------- 工具 ---------- */
+  /* XSS 防护：转义 HTML 特殊字符，防止用户输入的代码被执行 */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
   function sha256(str) {
     return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
       .then(function (buf) {
@@ -747,6 +756,7 @@
   window.CrGH = {
     token: TOKEN,
     route: route,
+    esc: esc,
     wallGet: wallGet, wallPost: wallPost, wallPin: wallPin, wallSync: wallSync,
     login: doLogin, register: doRegister,
     noteGet: noteGet, notePost: notePost,

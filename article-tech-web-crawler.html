@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网络爬虫基础与反爬对抗技术解析 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>网络爬虫基础与反爬对抗技术解析</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>网络爬虫基础与反爬对抗技术解析：数据采集的技术攻防</h2>
+<p>互联网上的数据是巨大的金矿。价格监控、竞品分析、舆情监测、学术研究，都需要从网站上采集数据。网络爬虫就是自动获取网页数据的程序。但网站方不想被随便爬（消耗服务器资源、数据被竞争对手拿走），于是就有了反爬。爬虫和反爬的攻防，是一场持续的技术博弈。</p>
+<p>爬虫的基本原理很简单：发送HTTP请求获取HTML，解析提取需要的数据。Python的requests库发请求，BeautifulSoup或lxml解析HTML，这是最基础的爬虫三件套。静态页面（服务端直接渲染好HTML）用这个方法就够了。</p>
+<p>但现代网站大量使用前端渲染（SPA），初始HTML里没有数据，数据是JavaScript异步加载的。这时候直接请求HTML拿不到内容，需要用浏览器自动化工具：Selenium或Playwright启动真实浏览器，等页面渲染完再提取数据。Playwright是现在更推荐的选择，速度快、API现代、自动等待元素出现。</p>
+<p>反爬的第一道防线是User-Agent检测。服务器检查请求头里的User-Agent，如果是Python-Requests之类的爬虫特征，直接拒绝。解决方法是伪装成正常浏览器的User-Agent。但这只是最基础的，现代网站的反爬远不止于此。</p>
+<p>第二道防线是频率限制。同一个IP短时间请求太多次，服务器会发现异常，封IP或者返回验证码。应对方法：使用代理IP池，每个请求换一个IP；控制请求间隔，模拟人类浏览速度；分布式爬取，从不同IP同时采。</p>
+<p>第三道防线是登录态验证。很多数据需要登录后才能看，爬虫要带Cookie。手动登录拿Cookie，或者用Playwright模拟登录流程。Cookie有有效期，过期要重新登录。</p>
+<p>第四道防线是JavaScript逆向工程。有些网站把数据加密后放在HTML里，需要执行特定的JS算法解密；或者请求参数是动态生成的签名（比如每次请求都要算一个token），不执行JS就发不出合法请求。这时候需要分析网站的JS代码，找到加密逻辑，用Python复现，或者直接用浏览器环境执行JS。这是反爬中最高级的对抗，需要扎实的前端和JS基础。</p>
+<p>第五道防线是验证码。图形验证码、滑块验证、点选验证码、行为验证码（分析鼠标轨迹判断是不是真人）。验证码的破解越来越难，简单的图形验证码可以用OCR识别；滑块验证需要模拟人类滑动轨迹；现在很多用第三方验证服务（reCAPTCHA、极验），识别成本很高。实战中通常用打码平台（人工或AI识别）来处理。</p>
+<p>第六道防线是字体反爬。网站把数字和文字用自定义字体渲染，HTML里的文字是乱码，需要解析字体文件映射出真实字符。这是比较小众但精妙的反爬手段。</p>
+<p>合规是爬虫必须重视的问题。爬取公开数据做研究一般没问题，但爬取用户隐私数据、绕过付费墙、高频爬取导致对方服务器故障，都可能涉及法律风险。遵守robots.txt、控制爬取频率、不要用于恶意用途，是基本底线。</p>
+<p>爬虫技术本质是模拟人类访问网站的行为。技术越高超的爬虫，越像一个真实用户。而反爬技术就是要把不像人类的流量挡在外面。这场攻防会一直持续下去。</p>
+</div>
+</body>
+</html>

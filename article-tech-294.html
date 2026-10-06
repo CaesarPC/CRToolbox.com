@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS浮动与清除浮动 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CSS浮动与清除浮动</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CSS浮动与清除浮动</p>
+<p>float最初用于文字环绕图片，后来被误用做布局。浮动元素脱离正常文档流，向左或向右浮动，文字环绕其周围。但浮动会导致父元素高度塌陷（子元素浮动后，父元素高度为0）。</p>
+<p>清除浮动的方法：给父元素设overflow: hidden（触发BFC，包含浮动子元素）；用clearfix伪元素（::after { content: ''; display: table; clear: both; }）；父元素也设浮动。现代布局用Flexbox/Grid，浮动主要用于文字环绕。</p>
+<p>理解浮动的机制和清除方法，是CSS布局的基础。虽然现代布局用Flexbox/Grid，但理解float的历史和清除方法，能处理遗留代码。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

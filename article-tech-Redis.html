@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redis缓存设计与穿透击穿雪崩防护 - Cr工具站</title>
+<title>Redis缓存设计与穿透击穿雪崩防护 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>Redis缓存设计与穿透击穿雪崩防护</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
-<h2>Redis缓存设计与穿透击穿雪崩防护：高并发系统的缓存实战</h2>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>缓存是提升系统性能最有效的手段。数据库每秒能处理几千次查询，而Redis作为内存数据库，每秒能处理十几万次。把热点数据放到缓存里，数据库压力骤降，响应速度大幅提升。但缓存不是简单地"查不到就存"，设计不当会引发各种问题：缓存穿透、缓存击穿、缓存雪崩，任何一个都能把系统打垮。</p>
 <p>Redis的数据结构丰富，不是只能存key-value。String最简单，存缓存值；Hash适合存对象（用户信息、商品信息）；List适合做消息队列、最新列表；Set适合去重、标签；ZSet（有序集合）适合排行榜、延迟队列。根据业务场景选对数据结构，性能和代码简洁度都翻倍。</p>
 <p>缓存的基本读写模式是Cache-Aside：读的时候先查缓存，命中就返回；没命中就查数据库，把结果写入缓存再返回。写的时候先更新数据库，再删除缓存（不是更新缓存，是删除——因为更新缓存可能有并发问题，删除后下次读会自动重建）。这个模式看起来简单，但细节很多。</p>
@@ -32,6 +36,7 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>缓存预热是系统上线前的必要操作。新系统缓存是空的，用户一上来就全部打数据库，可能直接崩掉。提前把热点数据加载到缓存里，系统上线时缓存已经有数据了。热点数据包括首页内容、热门商品、热门文章等访问量最大的内容。</p>
 <p>缓存监控也很重要。缓存命中率是核心指标，命中率低于90%说明缓存设计有问题。内存使用率、键数量、慢查询、连接数，都要监控。设置淘汰策略（LRU、LFU），内存满了自动淘汰不常用的key。</p>
 <p>Redis不仅仅是缓存，它还能做分布式锁、计数器、限流、排行榜、消息队列。用好Redis这一个组件，就能解决高并发系统中大量的常见问题。但缓存是双刃剑：设计得好性能起飞，设计得不好就是定时炸弹。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

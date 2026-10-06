@@ -366,5 +366,13 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (iPad; CPU OS 17_7_11 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 doubao_15.2.1 JsSdk/2.0 NetType/MOBILE Channel/App Store Rifle_15.2.1 WKWebView/1 Bullet/1 doubao/15.2.1 BulletTag/3F7B548C-FAA9-4A0A-A862-24F7D5C16897 FalconTag/CD4F07D8-E050-4E47-8F14-A6F28B9528",
   "ref": ""
+ },
+ {
+  "id": 1791274391426,
+  "ts": 1791274391426,
+  "time": "2026-10-06 16:13",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+  "ref": ""
  }
 ]

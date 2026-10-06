@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后端微服务架构与高并发设计实践 - Cr工具站</title>
+<title>后端微服务架构与高并发设计实践 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>后端微服务架构与高并发设计实践</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
-<h2>后端微服务架构与高并发设计实践：从单体应用到分布式系统的演进之路</h2>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>后端技术作为互联网产品的核心引擎，承担着数据存储、业务逻辑处理、接口服务输出等关键职能。随着用户规模的增长和业务复杂度的提升，传统的单体式后端架构逐渐暴露出部署困难、扩展受限、容错性差等问题，微服务架构应运而生。与此同时，高并发场景下的系统设计，也成为后端开发必须攻克的核心课题。深入理解后端架构的演进逻辑与高并发设计的核心原则，是后端开发者的必修课。</p>
 <p>单体应用架构是后端开发的最初形态。在项目初期，所有的业务逻辑都打包在一个应用中，使用同一个数据库，部署在同一台服务器上。这种架构的优点是开发简单、部署方便、调试容易，非常适合创业初期快速验证产品。但随着业务的发展，单体应用的弊端会逐渐显现。代码库变得越来越庞大，几百人甚至上千人维护同一个项目，任何一个小改动都需要全量回归测试。一个模块出现问题，整个应用都会崩溃。扩展也变得困难，即使只是某个模块需要更高的算力，也必须整体扩展，造成资源浪费。正是这些痛点，推动了微服务架构的兴起。</p>
 <p>微服务架构的核心思想，是将一个大型的单体应用，拆分为多个独立运行的小型服务。每个服务专注于单一的业务功能，拥有自己的数据库，独立开发、独立部署、独立扩展。比如电商系统可以拆分为用户服务、商品服务、订单服务、支付服务、库存服务等多个独立服务。每个服务都可以使用最适合自己的技术栈，用户服务用Java，推荐服务用Python，实时计算服务用Go，互不干扰。这种架构的优势非常明显：系统耦合度低，某个服务出问题不会影响整个系统；扩展灵活，哪个服务压力大就单独扩展哪个；技术栈自由，团队可以按需选择最合适的工具。</p>
@@ -33,6 +37,7 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>接口设计同样不可忽视。RESTful API是当前最主流的接口设计规范，使用标准的HTTP动词（GET、POST、PUT、DELETE）对应增删改查操作，接口路径语义清晰，便于理解和维护。GraphQL则是一种新的API查询语言，客户端可以精确指定需要返回哪些字段，避免了过度获取和获取不足的问题，特别适合移动端和多端复用场景。良好的接口设计，不仅提升开发效率，也降低了前后端协作的沟通成本。</p>
 <p>安全防护是后端系统的底线。SQL注入、XSS跨站脚本、CSRF跨站请求伪造等常见攻击手段，都需要在后端层面做好防护。参数校验、输入过滤、输出编码、权限校验，这些基础安全措施缺一不可。接口限流防止恶意刷请求，黑名单封禁异常IP，日志审计追踪操作记录，构成了后端安全的完整防线。</p>
 <p>总体来看，后端技术的发展方向，是从集中式走向分布式，从同步走向异步，从单体走向微服务。高并发设计的核心，是用缓存换性能、用异步换吞吐、用分布式换容量。掌握微服务架构的设计原则和高并发场景的应对策略，后端开发者才能应对日益复杂的互联网业务挑战，构建出稳定、高效、可扩展的后端系统。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

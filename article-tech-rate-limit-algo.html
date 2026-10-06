@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>限流算法实战 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>限流算法实战</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>限流算法实战：高并发系统的自我保护机制</h2>
+<p>秒杀活动开始，瞬间十万请求涌来，数据库每秒只能处理几千。不限流的话系统直接被打垮。限流就是在系统入口控制请求量，超出阈值的请求直接拒绝或排队，保护后端不被冲垮。</p>
+<p>计数器是最简单的限流：单位时间内计数，超过阈值就拒绝。比如每秒最多100个请求。缺点是临界问题：前一秒最后一刻来了100个，后一秒一开始又来了100个，实际瞬间200个穿过，系统可能扛不住。</p>
+<p>漏桶算法解决了临界问题。请求像水一样倒入漏桶，漏桶以固定速率出水（处理请求），桶满了多余的水溢出（拒绝）。这样无论请求多么突发，后端处理速率始终平稳。漏桶的特点是输出恒定，适合保护后端处理能力。</p>
+<p>令牌桶算法更灵活。系统以固定速率往桶里放令牌，请求要拿到令牌才能处理。桶里有剩余令牌时，突发请求可以全部处理（攒的令牌），没有令牌就排队或拒绝。令牌桶允许一定程度的突发，同时又限制了长期平均速率。Guava的RateLimiter、很多网关用的都是令牌桶。</p>
+<p>滑动窗口是计数器的改进：把时间窗口切成小格，滑动统计，解决临界突发问题。比固定计数器平滑。</p>
+<p>限流维度有多个：全局限流（整个系统每秒处理多少）、用户维度限流（每个用户每秒多少，防止单个用户刷爆）、接口维度限流（不同接口阈值不同，重接口限制更严）、IP维度限流。多层限流配合：网关层全局限流、服务层接口限流、数据库连接池限制。</p>
+<p>限流后的处理：返回429状态码提示"请求太多请稍后再试"；或者排队（请求进入队列，后端慢慢处理）；或者降级（返回兜底数据，不调用真实服务）。根据业务场景选择，不能简单粗暴拒绝。</p>
+<p>分布式限流：多台服务器，每台限流100，全局就是100×N。但要做精确的全局限流（所有机器加起来不超过1000），需要集中式计数器（Redis+Lua），所有机器共享一个限流计数。</p>
+<p>Nginx限流、API网关限流（Kong、Spring Cloud Gateway自带限流）、应用内限流（Resilience4j、Sentinel），是从外到内的多层防线。Sentinel是阿里开源的流控组件，功能全面，还支持熔断降级。</p>
+<p>限流是高并发系统的必备自保能力。系统的承载力是有限的，知道自己的极限在哪里、超出了怎么优雅处理，比硬扛导致崩溃重要得多。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebAssembly - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>WebAssembly</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 什么是WebAssembly：让其他语言跑在浏览器里</p>
+<p>JavaScript一直是浏览器唯一的原生语言。WebAssembly（Wasm）让C、C++、Rust编译成二进制格式在浏览器里运行，速度接近原生。</p>
+<p>## 一、用途</p>
+<p>图片编辑、视频处理、游戏引擎——这些计算密集型任务用JS写性能不够。把C/C++/Rust编译成Wasm在浏览器跑，性能接近原生。Figma、AutoCAD网页版都是Wasm驱动的。</p>
+<p>## 二、怎么工作</p>
+<p>你用Rust写代码，编译成.wasm二进制文件。浏览器加载.wasm，以接近原生的速度执行。JS和Wasm之间可以互相调用。</p>
+<p>## 三、不是替代JS</p>
+<p>Wasm不取代JS。它处理计算密集型任务，JS处理DOM操作和应用逻辑。两者配合使用。</p>
+<p>## 四、总结</p>
+<p>WebAssembly让高性能应用跑在浏览器里。计算密集任务用Rust/C++编译成Wasm，UI和逻辑还是JS。浏览器不再只有JS一种语言。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

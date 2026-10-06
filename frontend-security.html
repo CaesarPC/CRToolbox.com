@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端安全进阶：CSP、Cookie和JWT - Cr工具箱</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
+.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
+h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
+.meta{font-size:13px;color:#999;margin-bottom:20px}
+p{margin-bottom:16px;text-indent:2em}
+a{color:#2563eb;text-decoration:none}
+.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>前端安全进阶：CSP、Cookie和JWT</h1>
+<div class="meta">2026-10-06 · 技术教程</div>
+<p>做网站只考虑功能不考虑安全，等于没锁门。前端安全有几个核心概念必须懂。</p><p>CSP内容安全策略，就是服务器返回一个HTTP头，告诉浏览器这个网页允许加载哪些来源的脚本、样式、图片。这样即使被注入了恶意脚本，也执行不了。</p><p>Cookie安全，设置HttpOnly属性让JS读不到Cookie，设置Secure属性只在HTTPS下传输，设置SameSite属性防止CSRF攻击。很多人Cookie随便存，结果XSS一攻就偷了。</p><p>JWT是现在最流行的认证方案。用户登录后服务器发一个Token，以后每次请求带上这个Token，服务器验证通过就放行。JWT要注意设置过期时间，不要泄露密钥。</p><p>安全是持久战，没有绝对安全的网站，但基础防护做到位，能挡住90%的常见攻击。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

@@ -6,31 +6,31 @@
 <title>PWA入门：网页怎么变成像App一样 - Cr工具箱</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
 .wrap{max-width:720px;margin:0 auto}
-.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
-.back:hover{color:#50fa7b}
-.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
-h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
-.meta{font-size:12px;color:#6272a4;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #44475a}
-p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
 a{color:#50fa7b;text-decoration:none}
 a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="wrap">
 <a href="articles.html" class="back">← 返回文章列表</a>
-<div class="card">
 <h1>PWA入门：网页怎么变成像App一样</h1>
-<div class="meta">2026-10-06 · 技术教程</div>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>PWA全称Progressive Web App，渐进式网页应用。简单说就是让网页能加到手机桌面，像App一样全屏打开，还能离线访问。</p>
 <p>PWA需要三个东西：HTTPS、manifest.json配置文件、Service Worker。manifest.json告诉浏览器这个应用叫什么名字、图标是什么、启动页面是哪个。Service Worker是一段在后台运行的JS代码，负责缓存资源，让网页离线也能打开。</p>
 <p>做完PWA之后，用户打开网页时浏览器会提示"添加到主屏幕"。点一下，手机桌面就多一个图标，点开全屏运行，跟原生App几乎一样。</p>
 <p>PWA最大的好处是不用下载安装包，不用过应用商店审核。做一个小工具站、展示站，加上PWA支持，用户体验提升一大截。GitHub Pages天然支持HTTPS，特别适合做PWA。</p>
 <p><a href="articles.html">← 返回文章列表</a></p>
-<p><a href="articles.html">← 返回文章列表</a></p>
-</div>
 </div>
 </body>
 </html>

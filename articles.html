@@ -5,26 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>文章教程 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.6}
-.container{max-width:800px;margin:0 auto;padding:20px}
-h1{font-size:28px;margin:20px 0}
-.article-list{background:#fff;border-radius:12px;padding:20px;margin-top:20px}
-.article-item{padding:16px;border-bottom:1px solid #eee;cursor:pointer;transition:background .2s}
-.article-item:last-child{border-bottom:none}
-.article-item:hover{background:#f9f9f9}
-.article-item h3{font-size:18px;margin-bottom:6px;color:#2563eb}
-.article-item p{font-size:14px;color:#666}
-.article-item .date{font-size:12px;color:#999;margin-top:6px}
-a{color:#2563eb;text-decoration:none}
-.back{display:inline-block;margin-bottom:16px;color:#666}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.6;min-height:100vh}
+.hd{background:#282a36;padding:20px 26px;border-bottom:2px solid #50fa7b}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.wrap{max-width:800px;margin:26px auto;padding:0 16px}
+.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px}
+.back:hover{color:#50fa7b}
+.sub{color:#6272a4;font-size:13px;margin-bottom:20px}
+.article-list{display:grid;gap:12px}
+.article-item{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:16px 20px;cursor:pointer;transition:.15s}
+.article-item:hover{border-color:#50fa7b;box-shadow:0 4px 16px rgba(80,250,123,.08)}
+.article-item h3{font-size:15px;color:#e6e6e6;margin-bottom:4px}
+.article-item p{font-size:12px;color:#6272a4;margin:0}
+.article-item .date{font-size:11px;color:#6272a4;margin-top:8px}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="hd">
+<h1>📚 文章教程</h1>
+</div>
+<div class="wrap">
 <a href="index.html" class="back">← 返回工具箱首页</a>
-<h1>文章教程</h1>
-<p style="color:#666;margin-bottom:20px;">实用工具教程和使用指南（共25篇）</p>
+<p class="sub">实用技术教程和使用指南（共39篇）</p>
 <div class="article-list">
 <div class="article-item" onclick="location.href='article-network-server.html'"><h3>编程时代的技术底层：网络、服务器与代码工程化</h3><p>网络通信、HTTP/HTTPS、跨域、服务器部署、代码工程化核心逻辑。</p><div class="date">2026-10-06</div></div>
 <div class="article-item" onclick="location.href='article-opensource-security.html'"><h3>开源生态、代码安全与项目长期维护思路</h3><p>开源依赖管理、XSS/SQL注入防护、版本锁定、文档与变更管理。</p><div class="date">2026-10-06</div></div>

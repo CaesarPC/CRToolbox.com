@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSRHydration - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>SSRHydration</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 什么是SSR Hydration：注水过程</p>
+<p>SSR在服务端把React组件渲染成HTML发给浏览器。浏览器看到了完整内容，但还不能交互——按钮点了没反应。Hydration就是把静态HTML"激活"成可交互的SPA。</p>
+<p>## 一、过程</p>
+<p>服务端发送HTML → 浏览器显示内容（快速）→ 下载JS → React在已有HTML上"注水"：绑定事件监听、挂载状态、让组件可交互。</p>
+<p>用户先看到内容，然后几秒钟后交互可用。这个顺序很重要——先看到内容比先看到白屏好。</p>
+<p>## 二、Hydration的性能问题</p>
+<p>Hydration要下载和执行整个JS bundle。即使页面看起来已经渲染了，JS还在后台跑，可能阻塞交互。优化方向：选择性Hydration（只激活交互部分）、部分Hydration（按优先级注水）。</p>
+<p>## 三、总结</p>
+<p>Hydration是SSR从静态HTML到可交互SPA的桥梁。先展示内容，后激活交互。理解这个过程，你就知道为什么SSR首屏快但交互可能有延迟。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

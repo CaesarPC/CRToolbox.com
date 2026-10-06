@@ -3,30 +3,273 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cr工具站</title>
+<title>CaesarBase</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e6e6f0;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.box{text-align:center;padding:40px;max-width:500px}
-h1{font-size:42px;background:linear-gradient(135deg,#50fa7b,#8be9fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px}
-p{color:#6272a4;font-size:16px;line-height:1.8;margin-bottom:30px}
-.btn{display:inline-block;background:linear-gradient(135deg,#50fa7b,#8be9fd);color:#0f0f1a;text-decoration:none;padding:14px 40px;border-radius:28px;font-size:16px;font-weight:600;transition:transform .2s}
-.btn:hover{transform:scale(1.05)}
-.feats{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.feats span{padding:6px 14px;border:1px solid #2a2a4a;border-radius:16px;font-size:13px;color:#8be9fd}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:#0a0a14;color:#e6e6f0;min-height:100vh}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:20px 32px}
+.topbar .logo{display:flex;align-items:center;gap:8px}
+.topbar .logo .name{font-size:20px;font-weight:700;color:#50fa7b;letter-spacing:1px}
+.topbar .logo .ver{font-size:12px;color:#3a3a5a;font-weight:400}
+.enter-btn{background:linear-gradient(135deg,#50fa7b,#8be9fd);color:#0a0a14;border:none;padding:10px 28px;border-radius:24px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .2s;z-index:101;position:relative}
+.enter-btn:hover{transform:scale(1.05)}
+.center{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;transition:opacity .5s ease,filter .5s ease}
+.center h1{font-size:72px;font-weight:900;background:linear-gradient(135deg,#50fa7b,#8be9fd,#bd93f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-2px;margin-bottom:16px}
+.center .sub{font-size:18px;color:#6272a4;margin-bottom:8px}
+.center .tags{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.center .tags span{padding:6px 16px;border:1px solid #2a2a4a;border-radius:20px;font-size:13px;color:#8be9fd}
+.features{max-width:700px;margin:50px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:left}
+.feat{background:rgba(26,26,46,.6);border:1px solid #2a2a4a;border-radius:14px;padding:22px}
+.feat h3{font-size:16px;margin-bottom:8px;color:#8be9fd}
+.feat p{font-size:13px;color:#6272a4;line-height:1.6}
+.sponsor{margin-top:50px;padding-top:30px;border-top:1px solid #2a2a4a;width:100%;max-width:600px}
+.sponsor .label{font-size:12px;color:#6272a4;margin-bottom:12px}
+.sponsor-logos{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;min-height:40px}
+.sponsor-logos .placeholder{color:#3a3a5a;font-size:12px}
+/* 加载遮罩层 - 盖住所有内容，除了进入按钮 */
+.loader-mask{position:fixed;top:0;left:0;width:100%;height:100%;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(10,10,20,.4);backdrop-filter:blur(8px)}
+.loader-mask.show{display:flex}
+/* 圆环 */
+.loader-ring{width:140px;height:140px;position:relative}
+.loader-ring svg{width:100%;height:100%}
+.loader-ring circle{fill:none;stroke-linecap:round}
+.loader-ring .bg{stroke:#2a2a4a;stroke-width:5}
+.loader-ring .fg{stroke:url(#grad2);stroke-width:5;stroke-dasharray:251.2;stroke-dashoffset:251.2;transition:stroke-dashoffset .3s ease}
+.loader-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;font-weight:700;color:#8be9fd;white-space:nowrap}
+.center.fading{opacity:.1;filter:blur(6px)}
+@media(max-width:600px){.center h1{font-size:44px}.topbar{padding:16px 20px}.features{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="box">
-  <h1>Cr工具站</h1>
-  <p>免费在线工具合集<br>域名查找 · 编码转换 · 文件转换 · 小游戏 · 技术文章</p>
-  <a class="btn" href="index.html">进入工具站 →</a>
-  <div class="feats">
-    <span>🧰 工具</span>
-    <span>🎮 游戏</span>
-    <span>📝 文章</span>
-    <span>💬 社区</span>
+<canvas id="c"></canvas>
+<div class="topbar">
+  <div class="logo">
+    <span class="name">CB</span>
+    <span class="ver">alpha 1.1</span>
+  </div>
+  <button class="enter-btn" onclick="enter()">进入 →</button>
+</div>
+<div class="center" id="mainContent">
+  <h1>CaesarBase</h1>
+  <div class="sub">工具 · 社区 · 导流 · 代理</div>
+  <div class="tags">
+    <span>🧰 在线工具</span>
+    <span>💬 用户社区</span>
+    <span>📝 技术文章</span>
+    <span>⚾ 青少年棒球</span>
+  </div>
+  <div class="features">
+    <div class="feat">
+      <h3>🧰 Cr工具站</h3>
+      <p>域名查找、编码转换、文件转换、二维码生成，全部免费在线使用，打开即用。</p>
+    </div>
+    <div class="feat">
+      <h3>📝 技术文章库</h3>
+      <p>96篇深度技术文章，覆盖前端、后端、全栈开发，从入门到实战。</p>
+    </div>
+    <div class="feat">
+      <h3>📢 品牌导流合作</h3>
+      <p>广告位招商，双站曝光，适合青少年体育、教育科技类品牌合作。</p>
+    </div>
+    <div class="feat">
+      <h3>💬 用户社区</h3>
+      <p>留言墙、弹幕互动、用户系统，和站长直接交流。</p>
+    </div>
+  </div>
+  <div class="sponsor">
+    <div class="label">赞助支持</div>
+    <div class="sponsor-logos">
+      <span class="placeholder">（赞助商标识位 · 敬请期待）</span>
+    </div>
   </div>
 </div>
+<div class="loader-mask" id="loader">
+  <div class="loader-ring">
+    <svg viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#50fa7b"/>
+          <stop offset="100%" stop-color="#8be9fd"/>
+        </linearGradient>
+      </defs>
+      <circle class="bg" cx="50" cy="50" r="40"/>
+      <circle class="fg" id="fgRing" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2" transform="rotate(-90 50 50)"/>
+    </svg>
+    <div class="loader-text" id="loaderText">加载中</div>
+  </div>
+</div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');
+let meteors=[];
+let spawnTimer=null;
+function makeMeteor(){
+  const fromLeft=Math.random()<0.6;
+  let sx,sy,vx,vy;
+  if(fromLeft){
+    sx=-30;
+    sy=Math.random()*c.height*0.7;
+    const angle=(44+Math.random()*2)*Math.PI/180;
+    const speed=3+Math.random()*5;
+    vx=Math.cos(angle)*speed;vy=Math.sin(angle)*speed;
+  }else{
+    sx=Math.random()*c.width*0.8;sy=-30;
+    const angle=(44+Math.random()*2)*Math.PI/180;
+    const speed=3+Math.random()*5;
+    vx=Math.cos(angle)*speed;vy=Math.sin(angle)*speed;
+  }
+  const sp=Math.hypot(vx,vy);
+  meteors.push({x:sx,y:sy,vx:vx,vy:vy,size:1+sp*0.3,tail:20+sp*12,alpha:0.3+Math.random()*0.4});
+}
+function rz(){
+  c.width=innerWidth;c.height=innerHeight;
+  // 不清空已有流星，只调整画布尺寸
+  if(!spawnTimer){
+    // 初始spawm几个
+    for(let i=0;i<5;i++)makeMeteor();
+    // 开始循环发射
+    function loop(){
+      if(meteors.length<12)makeMeteor(); // 限制最多12颗
+      spawnTimer=setTimeout(loop,300+Math.random()*400);
+    }
+    loop();
+  }
+}
+function dr(){
+  x.clearRect(0,0,c.width,c.height);
+  meteors=meteors.filter(m=>m.x<c.width+200&&m.y<c.height+200);
+  meteors.forEach(m=>{
+    m.x+=m.vx;m.y+=m.vy;
+    const tx=m.x-m.vx/m.vy*m.tail;
+    const ty=m.y-m.tail;
+    const g=x.createLinearGradient(m.x,m.y,tx,ty);
+    g.addColorStop(0,'rgba(139,242,253,'+m.alpha+')');
+    g.addColorStop(1,'rgba(139,242,253,0)');
+    x.strokeStyle=g;
+    x.lineWidth=m.size;
+    x.beginPath();
+    x.moveTo(m.x,m.y);
+    x.lineTo(tx,ty);
+    x.stroke();
+  });
+  requestAnimationFrame(dr);
+}
+rz();dr();let rzT=null;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{c.width=innerWidth;c.height=innerHeight},300)})
+
+// 圆环从9点钟方向慢慢长出来填满
+const fg=document.getElementById('fgRing');
+const CIRC=251.2;
+function enter(){
+  document.getElementById('mainContent').classList.add('fading');
+  document.getElementById('loader').classList.add('show');
+  document.getElementById('loaderText').textContent='正在加载中';
+  // 从9点钟方向开始，2秒填满圆环
+  const t0=performance.now();
+  function grow(now){
+    const p=(now-t0)/2000; // 2秒
+    if(p>=1){
+      fg.style.strokeDashoffset=0;
+      document.getElementById('loaderText').textContent='加载完成';
+      // 停0.3秒后还原
+      setTimeout(()=>{
+        document.getElementById('loader').classList.remove('show');
+        document.getElementById('mainContent').classList.remove('fading');
+        // 再0.29秒跳转
+        setTimeout(()=>{window.location.href='index.html'},290);
+      },300);
+      return;
+    }
+    fg.style.strokeDashoffset=CIRC*(1-p);
+    requestAnimationFrame(grow);
+  }
+  requestAnimationFrame(grow);
+}
+</script>
+
+<script>
+// ===== 彩蛋：3分钟后出现巨大陨石 =====
+let meteorActive=false, meteorX=0, meteorY=0, meteorVX=0, meteorVY=0;
+let clicked=false, particles=[], easterShown=false;
+
+setTimeout(()=>{
+  if(clicked||easterShown)return;
+  meteorActive=true;
+  meteorX=innerWidth*0.3;
+  meteorY=-100;
+  meteorVX=2;
+  meteorVY=3;
+  // 陨石出现提示
+  showTip();
+}, 180000); // 3分钟
+
+function showTip(){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;background:rgba(255,85,85,.2);border:1px solid #ff5555;border-radius:20px;padding:8px 20px;font-size:13px;color:#ff5555;cursor:pointer;backdrop-filter:blur(8px)';
+  t.textContent='☄ 有一颗巨大的陨石正在靠近...点击它！';
+  t.id='meteorTip';
+  document.body.appendChild(t);
+}
+
+function drawMeteor(){
+  if(!meteorActive)return;
+  const x2=document.getElementById('c').getContext('2d');
+  meteorX+=meteorVX;meteorY+=meteorVY;
+  if(meteorY>innerHeight+200){meteorActive=false;return}
+  // 红色尾巴
+  const g=x2.createLinearGradient(meteorX,meteorY,meteorX-60,meteorY-120);
+  g.addColorStop(0,'rgba(255,85,85,.9)');
+  g.addColorStop(0.5,'rgba(255,165,0,.6)');
+  g.addColorStop(1,'rgba(255,200,0,0)');
+  x2.strokeStyle=g;x2.lineWidth=8;x2.lineCap='round';
+  x2.beginPath();x2.moveTo(meteorX,meteorY);x2.lineTo(meteorX-60,meteorY-120);x2.stroke();
+  // 陨石本体
+  x2.fillStyle='#ff5555';
+  x2.beginPath();x2.arc(meteorX,meteorY,12,0,Math.PI*2);x2.fill();
+  x2.fillStyle='#ffaa00';
+  x2.beginPath();x2.arc(meteorX-3,meteorY-3,5,0,Math.PI*2);x2.fill();
+  requestAnimationFrame(drawMeteor);
+}
+drawMeteor();
+
+// 点击陨石
+document.addEventListener('click',(e)=>{
+  if(!meteorActive)return;
+  const dx=e.clientX-meteorX, dy=e.clientY-meteorY;
+  if(Math.hypot(dx,dy)<50){
+    clicked=true;meteorActive=false;easterShown=true;
+    document.getElementById('meteorTip')?.remove();
+    boom(e.clientX,e.clientY);
+  }
+});
+
+function boom(x,y){
+  // 烟花粒子
+  const colors=['#ff5555','#ffaa00','#50fa7b','#8be9fd','#bd93f9','#ffd700'];
+  for(let i=0;i<80;i++){
+    const a=Math.random()*Math.PI*2,s=2+Math.random()*6;
+    particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,color:colors[i%colors.length],size:2+Math.random()*3});
+  }
+  // 恭喜文字
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:rgba(20,20,40,.9);border:2px solid #ffd700;border-radius:16px;padding:24px 40px;font-size:20px;font-weight:700;color:#ffd700;text-align:center;backdrop-filter:blur(8px)';
+  t.innerHTML='🎉 恭喜你发现了彩蛋！';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+  drawParticles();
+}
+function drawParticles(){
+  const c2=document.getElementById('c').getContext('2d');
+  particles=particles.filter(p=>p.life>0);
+  if(particles.length===0)return;
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life-=0.02;
+    c2.globalAlpha=p.life;
+    c2.fillStyle=p.color;
+    c2.beginPath();c2.arc(p.x,p.y,p.size,0,Math.PI*2);c2.fill();
+  });
+  c2.globalAlpha=1;
+  requestAnimationFrame(drawParticles);
+}
+</script>
 </body>
 </html>

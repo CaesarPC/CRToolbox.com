@@ -294,11 +294,11 @@
   if(params.get('from') === 'cb'){
     document.addEventListener('DOMContentLoaded', function(){
       document.querySelectorAll('a[href="articles.html"]').forEach(function(a){
-        a.href = 'https://caesarpc.github.io/caesarbase/main.html';
+        a.href = 'https://caesarpc.github.io/index.html';
         a.textContent = '← 返回 CaesarBase';
       });
       document.querySelectorAll('[onclick*="articles.html"]').forEach(function(el){
-        el.setAttribute('onclick', "location.href='https://caesarpc.github.io/caesarbase/main.html'");
+        el.setAttribute('onclick', "location.href='https://caesarpc.github.io/index.html'");
       });
     });
   }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端错误监控 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>前端错误监控</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 前端错误监控：让线上BUG无所遁形</p>
+<p>你本地测试一切正常，用户那边却报白屏、按钮点了没反应。你没有用户的操作录像，不知道他们用的什么浏览器、点了什么按钮、报了什么错。这种"在我电脑上是好的"困境，靠手动测试永远解决不了。前端错误监控就是把线上真实的错误信息收集回来，让你知道用户遇到了什么问题。</p>
+<p>## 一、监控什么</p>
+<p>前端错误监控主要收集三类信息：</p>
+<p>JS运行时错误：未捕获的异常、类型错误、空指针。通过window.onerror或者unhandledrejection事件捕获。</p>
+<p>资源加载错误：JS/CSS/图片加载失败。通过error事件捕获（注意资源加载错误不冒泡，要用捕获阶段）。</p>
+<p>接口请求错误：fetch或XHR请求返回4xx/5xx。封装请求库时拦截错误上报。</p>
+<p>每条错误记录：错误信息、错误堆栈、用户浏览器版本、操作系统、发生时间、用户当前页面URL。有了这些，你才能复现和定位问题。</p>
+<p>## 二、怎么上报</p>
+<p>捕获到错误后，把信息发送到后端收集服务器。用navigator.sendBeacon发送——它是异步的、不阻塞页面卸载的，特别适合在页面关闭时发数据。不要用fetch同步发，可能页面已经关了请求还没发出去。</p>
+<p>上报接口本身也要容错——上报失败了不要影响用户体验，静默失败就行。</p>
+<p>## 三、Source Map：压缩后的代码怎么调试</p>
+<p>线上代码经过压缩混淆，变量名变成了a、b、c，错误堆栈里的行号列号对应的是压缩后的代码，根本没法读。解决办法是Source Map——构建工具生成一个映射文件，记录压缩后的位置对应原始代码的位置。把Source Map上传到错误监控平台，它会自动把压缩后的错误堆栈还原成原始代码的位置。</p>
+<p>注意：Source Map不要部署到公网——它等于把源代码公开了。上传到监控平台的私有存储就行。</p>
+<p>## 四、Sentry：最流行的错误监控平台</p>
+<p>Sentry是开源的错误监控工具，前后端都支持。你在前端集成Sentry SDK，它自动捕获错误、记录堆栈、还原Source Map、聚合相似错误、通知你。界面上能看到每条错误影响了多少用户、发生频率、用户环境分布。</p>
+<p>对于个人项目，Sentry免费版够用。企业可以自建Sentry服务。</p>
+<p>## 五、性能监控</p>
+<p>除了错误，还能监控性能指标：页面加载时间、首屏渲染时间、接口响应时间。这些数据汇聚起来，你就知道哪些页面慢、哪些接口慢，有针对性地优化。</p>
+<p>## 六、总结</p>
+<p>前端错误监控不是可选项——只要你的产品有真实用户，就需要它。本地测试覆盖不了所有浏览器和场景，用户的真实错误信息是最宝贵的反馈。集成Sentry这样的工具，半小时搞定，以后线上出问题你能第一时间知道，而不是等用户来骂。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

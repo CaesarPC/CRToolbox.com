@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>单页应用路由原理与前端状态管理 - Cr工具站</title>
+<title>单页应用路由原理与前端状态管理 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
-.container{max-width:760px;margin:0 auto;padding:30px 20px}
-.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
-.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
-h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
-.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
-p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
-h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="hd"><a href="articles.html">← 文章列表</a></div>
-<div class="container">
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
 <h1>单页应用路由原理与前端状态管理</h1>
-<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
-<h2>单页应用路由原理与前端状态管理深入：SPA架构的核心机制</h2>
+<div class="meta">Cr工具站 · 技术教程</div>
 <p>单页应用（SPA）是现代Web应用的主流架构。整个应用只有一个HTML页面，所有页面切换都在前端完成，不刷新整页。这种体验接近原生APP：切换流畅、无白屏、状态保留。但SPA背后有两个核心技术问题需要解决：路由管理（URL变化时显示对应页面）和状态管理（跨组件共享数据）。</p>
 <p>前端路由的原理是监听URL变化，渲染对应的组件。有两种实现方式：Hash模式和History模式。Hash模式用URL的#部分（如example.com/#/about），#后面的变化不会触发浏览器刷新，监听hashchange事件切换组件。优点是兼容性好、不需要服务器配置。缺点是URL有个#，不美观。History模式用HTML5的pushState和replaceState API，可以修改URL而不刷新页面，URL干净正常。但缺点是：用户刷新页面时，浏览器会向服务器请求这个URL，服务器必须配置把所有路由都返回同一个HTML文件（否则404）。这就是为什么部署SPA时要配置"全部路径都指向index.html"。</p>
 <p>路由的进阶用法包括：动态路由（/user/:id匹配不同用户页）、嵌套路由（页面里还有子页面）、路由守卫（未登录用户访问需要登录的页面时跳转登录页）、路由懒加载（不同路由的组件按需加载，首屏只加载首页代码）。这些都是Vue Router和React Router提供的标准能力。</p>
@@ -31,6 +35,7 @@ h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd
 <p>状态持久化是常见需求：用户刷新页面后，登录状态、主题设置不要丢失。把Store里的关键数据同步到localStorage，初始化时从localStorage恢复，就能实现简单的持久化。但敏感数据（Token）不要存在localStorage里，有XSS风险，应该用HttpOnly Cookie。</p>
 <p>SPA的性能挑战在于首屏。因为所有代码都在一个页面里，首屏要加载整个应用的JS，可能很大。代码分割（Code Splitting）是主要优化手段：按路由分割，首屏只加载首页的代码，访问其他路由时再加载对应代码。配合路由懒加载，首屏体积可以大幅减小。骨架屏（加载时显示占位UI）让用户感知加载过程，不会觉得页面卡死。</p>
 <p>理解路由和状态管理的原理，不只是会用框架API，而是理解SPA这种架构为什么这样设计、有什么优缺点。在简单项目里，过度使用状态管理库反而增加复杂度；在复杂项目里，没有状态管理库则会陷入混乱。根据项目规模选择合适的复杂度，是工程判断的体现。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统设计方法论 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>系统设计方法论</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>系统设计方法论：从需求到架构的思考框架</h2>
+<p>面试或实战中遇到"设计一个短链接系统"、"设计一个聊天系统"，怎么思考？系统设计不是背答案，是有方法论的。</p>
+<p>第一步：明确需求。功能需求（做什么）和非功能需求（性能、可用性、规模）。问清楚：用户量多少？QPS多少？数据量多大？这些决定架构规模。</p>
+<p>第二步：容量估算。预估数据量、QPS、存储。比如1亿用户，日活1000万，每人每天产生10条数据，一天1亿条，一年365亿条。这个量级决定要分库分表。</p>
+<p>第三步：高层设计。画出核心组件：客户端、API网关、应用服务、数据库、缓存、消息队列。画出数据流。</p>
+<p>第四步：深入细节。数据库选什么（关系型还是NoSQL）？怎么分片？缓存策略？异步处理？一致性怎么保证？</p>
+<p>第五步：权衡。每个方案有优缺点。强一致还是高可用？同步还是异步？单机还是分布式？根据业务需求做选择，没有完美方案。</p>
+<p>第六步：识别瓶颈。哪里会成为瓶颈？数据库写压力？缓存失效？网络带宽？提前识别，提前优化。</p>
+<p>系统设计没有标准答案。关键是展示思考过程：需求澄清→容量估算→高层设计→细节深入→权衡讨论。这比背"短链接系统用哈希表"有价值得多。</p>
+</div>
+</body>
+</html>

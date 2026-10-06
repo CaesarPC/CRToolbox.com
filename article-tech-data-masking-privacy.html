@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据脱敏与隐私保护 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>数据脱敏与隐私保护</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>数据脱敏与隐私保护：用户数据不能随便展示和传输</h2>
+<p>用户手机号13812345678，列表页直接显示？这是隐私泄露。数据脱敏是把敏感信息部分隐藏：138****5678。身份证、银行卡、地址都要脱敏。</p>
+<p>前端脱敏：列表页、详情页展示时，中间几位用*代替。138****5678、身份证110***********1234。后端也应该脱敏传输——前端拿到的就已经是脱敏后的数据，不要把完整数据传到前端再处理（否则抓包能看到）。</p>
+<p>脱敏场景：日志不要打印完整手机号、身份证；API返回按权限脱敏（普通用户看不到别人的完整信息）；截图和导出要脱敏。</p>
+<p>隐私法规：个人信息保护法要求最小必要原则。能不收集就不收集，能脱敏就脱敏。密码绝对不能明文存储（bcrypt哈希）。</p>
+<p>数据脱敏是合规要求，也是产品信任的基础。用户看到自己的信息被妥善处理，才会信任产品。</p>
+</div>
+</body>
+</html>

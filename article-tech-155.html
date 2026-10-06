@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端埋点与数据采集 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>前端埋点与数据采集</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>前端埋点与数据采集：用数据驱动产品决策</p>
+<p>产品上线了，用户怎么用？点了哪些按钮？哪个页面流失多？转化漏斗哪一步掉了？这些都靠埋点：在关键位置插入数据采集代码，上报用户行为。</p>
+<p>埋点类型：页面浏览（PV）、事件点击（按钮点击、功能使用）、曝光（元素进入可视区）、性能数据（前面讲的Web Vitals）、错误信息。</p>
+<p>埋点方式：代码埋点（在按钮onClick里手动写上报代码，精确但侵入代码）、全埋点（SDK自动采集所有点击和页面浏览，灵活但数据噪音大）、可视化埋点（在后台圈选元素定义事件，不用改代码）。实际项目通常是代码埋点+全埋点结合：关键业务事件手动埋，普通浏览自动采。</p>
+<p>埋点SDK：Google Analytics、神策、GrowingIO、Mixpanel。接入SDK后，配置事件和属性，数据上报到平台，在平台做分析。</p>
+<p>事件设计：每个事件要有明确的名称和属性。比如"提交订单"事件，属性包括：订单金额、商品类别、来源页面。这样后续才能按维度分析（哪类商品转化率高）。</p>
+<p>数据上报时机：不要阻塞主流程。埋点数据用navigator.sendBeacon异步发送，页面关了也能发出去。批量上报（攒几条一起发）减少网络请求。</p>
+<p>隐私合规：GDPR、个人信息保护法要求用户同意才能采集。要有隐私政策、同意选项。敏感数据不要埋（手机号、身份证）。</p>
+<p>埋点是数据驱动产品的基础。没有埋点，产品决策靠猜；有了埋点，用数据说话。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

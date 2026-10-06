@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebRTC入门：网页语音视频聊天原理 - Cr工具箱</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
+.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
+h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
+.meta{font-size:13px;color:#999;margin-bottom:20px}
+p{margin-bottom:16px;text-indent:2em}
+a{color:#2563eb;text-decoration:none}
+.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>WebRTC入门：网页语音视频聊天原理</h1>
+<div class="meta">2026-10-06 · 技术教程</div>
+<p>WebRTC是浏览器原生支持的实时通信技术，不用装插件，网页就能实现语音、视频、文件传输。Zoom网页版、腾讯会议网页版，核心都是WebRTC。</p><p>WebRTC的原理是点对点连接。两个人的浏览器直接建立连接，音视频数据不走服务器转发，延迟很低。但连接建立需要信令服务器帮忙交换信息，这个可以用WebSocket实现。</p><p>做一个最简单的视频聊天网页只需要几个API：getUserMedia获取摄像头画面、RTCPeerConnection建立连接、addIceCandidate处理网络穿透。核心代码不到100行。</p><p>WebRTC最大的难点是NAT穿透。两个人在不同网络下，需要STUN服务器帮忙获取公网地址。Google提供免费的STUN服务器，开发测试直接用。</p><p>做个在线客服、视频面试、多人协作白板，WebRTC都是首选方案，纯前端就能实现，不需要后端做视频处理。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

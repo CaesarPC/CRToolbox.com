@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>在线画板 | Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.hd{background:#282a36;padding:12px 16px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+.hd h1{font-size:18px;color:#50fa7b;margin:0}
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tools button{background:#44475a;color:#e6e6e6;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:14px;transition:.15s}
+.tools button:hover{background:#50fa7b;color:#1e1e2e}
+.tools button.active{background:#50fa7b;color:#1e1e2e}
+.tools input[type=color]{width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;background:none}
+.tools input[type=range]{width:80px}
+canvas{flex:1;touch-action:none;cursor:crosshair;background:#fff}
+</style>
+</head>
+<body>
+<div class="hd">
+  <a href="index.html">← 首页</a>
+  <h1>🎨 在线画板</h1>
+</div>
+<div class="tools">
+  <input type="color" id="color" value="#ff5555" title="颜色">
+  <input type="range" id="size" min="1" max="30" value="3" title="笔粗">
+  <button id="pen" class="active">✏️ 画笔</button>
+  <button id="eraser">🧽 橡皮擦</button>
+  <button id="clear">🗑️ 清空</button>
+  <button id="save">💾 保存图片</button>
+</div>
+<canvas id="canvas"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+var drawing = false, erasing = false;
+var lastX = 0, lastY = 0;
+
+function resize() {
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, rect.width, rect.height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+resize();
+window.addEventListener('resize', resize);
+
+function getPos(e) {
+  var rect = canvas.getBoundingClientRect();
+  var t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+
+function start(e) {
+  e.preventDefault();
+  drawing = true;
+  var p = getPos(e);
+  lastX = p.x; lastY = p.y;
+}
+function move(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  var p = getPos(e);
+  ctx.globalCompositeOperation = erasing ? 'destination-out' : 'source-over';
+  ctx.strokeStyle = document.getElementById('color').value;
+  ctx.lineWidth = erasing ? 30 : parseInt(document.getElementById('size').value);
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+  lastX = p.x; lastY = p.y;
+}
+function end() { drawing = false; }
+
+canvas.addEventListener('mousedown', start);
+canvas.addEventListener('mousemove', move);
+canvas.addEventListener('mouseup', end);
+canvas.addEventListener('mouseleave', end);
+canvas.addEventListener('touchstart', start, {passive:false});
+canvas.addEventListener('touchmove', move, {passive:false});
+canvas.addEventListener('touchend', end);
+
+document.getElementById('pen').onclick = function(){erasing=false;this.classList.add('active');document.getElementById('eraser').classList.remove('active');};
+document.getElementById('eraser').onclick = function(){erasing=true;this.classList.add('active');document.getElementById('pen').classList.remove('active');};
+document.getElementById('clear').onclick = function(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);};
+document.getElementById('save').onclick = function(){
+  var a = document.createElement('a');
+  a.download = 'drawing_' + Date.now() + '.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+};
+</script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
+</body>
+</html>

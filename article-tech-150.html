@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端权限设计 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>前端权限设计</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>前端权限设计：从路由到按钮的三级权限控制</p>
+<p>后台管理系统有多角色：管理员看所有功能、编辑只能编辑内容、访客只能查看。前端权限控制要做到：没权限的路由不显示、没权限的菜单不渲染、没权限的按钮禁用或隐藏。</p>
+<p>前端权限分三层：路由级（能不能进这个页面）、菜单级（侧边栏显示哪些菜单）、按钮级（页面内哪些操作按钮可见/可点）。</p>
+<p>实现方式：登录后后端返回用户权限列表（角色、可访问路由、权限点）。前端根据权限列表动态生成路由（没权限的路由不注册）；菜单根据权限过滤渲染；按钮根据权限点判断是否显示。</p>
+<p>路由守卫做第一道防线：用户直接输入URL访问没权限的页面，路由守卫拦截跳转403。</p>
+<p>前端权限只是体验优化，不是安全措施。真正的权限校验在后端——前端隐藏按钮不阻止用户直接调API。后端接口必须验证权限，前端配合做体验。</p>
+<p>常见的权限模型：RBAC（基于角色的访问控制）——用户关联角色，角色关联权限，最简单常用。更复杂的ABAC（基于属性）按用户属性、资源属性动态判断，一般系统用不到。</p>
+<p>好的权限设计让不同角色看到不同的界面，既安全又友好。这是中后台系统的标配功能。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

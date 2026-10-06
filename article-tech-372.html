@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redis缓存设计与穿透击穿雪崩防护 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>Redis缓存设计与穿透击穿雪崩防护</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>Redis缓存设计与穿透击穿雪崩防护：高并发系统的缓存实战</p>
+<p>缓存是提升系统性能最有效的手段。数据库每秒能处理几千次查询，而Redis作为内存数据库，每秒能处理十几万次。把热点数据放到缓存里，数据库压力骤降，响应速度大幅提升。但缓存不是简单地"查不到就存"，设计不当会引发各种问题：缓存穿透、缓存击穿、缓存雪崩，任何一个都能把系统打垮。</p>
+<p>Redis的数据结构丰富，不是只能存key-value。String最简单，存缓存值；Hash适合存对象（用户信息、商品信息）；List适合做消息队列、最新列表；Set适合去重、标签；ZSet（有序集合）适合排行榜、延迟队列。根据业务场景选对数据结构，性能和代码简洁度都翻倍。</p>
+<p>缓存的基本读写模式是Cache-Aside：读的时候先查缓存，命中就返回；没命中就查数据库，把结果写入缓存再返回。写的时候先更新数据库，再删除缓存（不是更新缓存，是删除——因为更新缓存可能有并发问题，删除后下次读会自动重建）。这个模式看起来简单，但细节很多。</p>
+<p>缓存穿透是指查询一个数据库里根本不存在的数据。每次查都穿透到数据库，恶意攻击者可以用不存在的ID频繁请求，把数据库打垮。解决方案有两个：一是缓存空值，查不到的数据也缓存一个null，设置短过期时间（比如1分钟），防止反复查库；二是布隆过滤器，在缓存前面加一层布隆过滤器，它能判断"这个数据一定不存在"，不存在的请求直接拦截，根本到不了缓存层。</p>
+<p>缓存击穿是指某个热点key突然过期，瞬间大量请求同时穿透到数据库。和穿透的区别是：击穿是热点数据存在但缓存过期了。解决方案是热点key不过期（逻辑过期，后台异步更新），或者用互斥锁：第一个发现缓存失效的请求去查数据库重建缓存，其他请求等待，等缓存重建好了直接用。这样同一时间只有一个请求打数据库。</p>
+<p>缓存雪崩是指大量缓存key同时过期，或者Redis节点宕机，大量请求瞬间全部打到数据库。这是最严重的情况。解决方案：过期时间加随机值，不要让所有key同一时间过期；缓存集群部署，保证高可用；做多级缓存（本地缓存+分布式缓存），Redis挂了还有本地缓存兜底；做限流降级，数据库实在扛不住时拒绝部分请求，保住核心功能。</p>
+<p>缓存一致性是缓存设计中最复杂的问题。数据库更新了，缓存还是旧的，用户读到脏数据。强一致性在缓存架构下几乎做不到（成本太高），通常追求最终一致性。延迟双删是常用策略：先删缓存，再更新数据库，延迟一小段时间再删一次缓存，覆盖并发读导致的脏数据。设置合理的过期时间是兜底：即使不一致，过期后也会自动刷新。</p>
+<p>缓存预热是系统上线前的必要操作。新系统缓存是空的，用户一上来就全部打数据库，可能直接崩掉。提前把热点数据加载到缓存里，系统上线时缓存已经有数据了。热点数据包括首页内容、热门商品、热门文章等访问量最大的内容。</p>
+<p>缓存监控也很重要。缓存命中率是核心指标，命中率低于90%说明缓存设计有问题。内存使用率、键数量、慢查询、连接数，都要监控。设置淘汰策略（LRU、LFU），内存满了自动淘汰不常用的key。</p>
+<p>Redis不仅仅是缓存，它还能做分布式锁、计数器、限流、排行榜、消息队列。用好Redis这一个组件，就能解决高并发系统中大量的常见问题。但缓存是双刃剑：设计得好性能起飞，设计得不好就是定时炸弹。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

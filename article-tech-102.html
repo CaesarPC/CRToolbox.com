@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大模型提示工程实战 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>大模型提示工程实战</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>大模型提示工程实战：如何让GPT输出你真正想要的结果</p>
+<p>同样一个大模型，有人用它写出优秀文案，有人用它只得到干巴巴的废话。差别不在模型，在提示词。提示工程（Prompt Engineering）是一门新兴技能：通过精心设计的输入提示，引导大模型输出高质量、符合预期的结果。好的提示词能让通用大模型变成专家级助手，差的提示词只能得到平庸的回答。</p>
+<p>提示词的基本结构包含几个要素：角色设定、任务描述、上下文信息、输出格式、示例。角色设定告诉模型"你是谁"：你是一个资深前端工程师、你是一个专业的文案编辑、你是一个严格的代码审查者。不同的角色设定会显著影响回答的风格和深度。任务描述要具体：不是"帮我写文章"，而是"写一篇800字的文章，主题是XX，面向初学者，语言通俗，分三个小节"。越具体，输出越符合预期。</p>
+<p>Few-shot Learning（少样本示例）是提升输出质量最有效的技巧之一。在提示词里给出几个输入输出示例，模型就会模仿示例的格式和风格。比如你想要特定格式的JSON输出，给它两个示例，它就知道该输出什么格式。示例的数量一般3到5个就够了，太多会占用上下文窗口。示例要多样化，覆盖不同情况，不能全是相似的。</p>
+<p>思维链（Chain of Thought）是让模型分步推理的技巧。在提示词里加一句"请一步步思考"或者"让我们逐步分析"，模型会先展示推理过程，再给出答案。对于数学题、逻辑题、复杂分析题，这种方式能大幅提升准确率。因为大模型是逐词生成的，把推理过程写出来相当于给自己更多"思考时间"。</p>
+<p>约束和限制要写清楚。不想要什么比想要什么更重要。"不要使用专业术语"、"不要超过500字"、"不要分点"、"输出纯文本不要markdown"，这些负向约束能有效避免输出不符合要求。输出格式要求越精确越好："输出一个JSON，包含title、content、tags三个字段"比"输出结构化数据"效果好得多。</p>
+<p>上下文管理是实用技巧。大模型的上下文窗口有限（比如128K token），要把最相关的信息放在提示词里。系统提示（System Prompt）放在最前面，定义模型的行为准则；用户消息放在后面。重要的指令不要放在中间，容易被忽略。长对话时，早期的对话内容可能被截断，需要把关键信息重复提到。</p>
+<p>常见的提示词技巧包括：让模型扮演批评者（先输出方案，再让它自己找问题）、温度参数调节（需要创造性时调高temperature，需要精确输出时调低）、分步骤完成复杂任务（先让它列大纲，再逐节展开）。不要指望一个提示词解决所有问题，复杂任务拆成多轮对话，每轮聚焦一个子任务，效果更好。</p>
+<p>提示工程不是玄学，是有方法论的技能。它和编程类似：清晰的输入产生清晰的输出。学会写好提示词，是用好一切大模型工具的基础，无论是用ChatGPT写文案、用API做AI应用、还是做RAG系统的检索增强。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

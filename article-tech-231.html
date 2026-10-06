@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON数据格式 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>JSON数据格式</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># JSON与API数据格式：前后端交互的通用语言</p>
+<p>JSON是今天前后端数据交换的事实标准。不管什么后端语言、什么前端框架，API数据都是JSON格式。但JSON不只是"一种格式"——理解它的设计、边界和常见坑，能让你的API交互更顺畅。</p>
+<p>## 一、JSON是什么</p>
+<p>JSON（JavaScript Object Notation）是一种轻量级数据格式。它的语法和JS对象字面量几乎一样，但它是纯文本，可以被任何语言解析。</p>
+<p>基本类型：字符串（双引号）、数字、布尔、null、数组[]、对象{}。没有函数、没有undefined、没有注释。</p>
+<p>{"name": "张三", "age": 25, "tags": ["admin", "user"], "address": {"city": "北京"}}</p>
+<p>## 二、JSON vs XML</p>
+<p>XML是JSON之前的数据格式。标签嵌套，冗长啰嗦。<name>张三</name>比"name": "张三"长多了。JSON更轻量、更易读、JS原生支持。除了配置文件（package.json就是JSON）和一些遗留系统，XML基本被JSON取代了。</p>
+<p>## 三、常见坑</p>
+<p>键必须用双引号——{name: "张三"}不是合法JSON，{"name": "张三"}才是。
+不能有注释——JSON不支持//注释。
+不能有尾逗号——最后一个属性后面不能有逗号。
+数字精度问题——大整数在JSON中可能精度丢失。后端返回雪花ID（19位数字），前端JS Number只能安全表示到2^53。解决办法是把ID转成字符串传。</p>
+<p>## 四、序列化与反序列化</p>
+<p>后端对象→JSON字符串（序列化）→网络传输→前端JSON字符串→JS对象（反序列化）。JSON.stringify(obj)和JSON.parse(str)是浏览器原生方法。</p>
+<p>注意：JSON.parse遇到格式错误会抛异常，一定要try-catch。</p>
+<p>## 五、总结</p>
+<p>JSON是前后端交互的通用语言。语法简单，但细节不少——双引号、无注释、大整数转字符串。理解这些细节，能避免很多"数据传过来了但解析出错"的诡异BUG。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

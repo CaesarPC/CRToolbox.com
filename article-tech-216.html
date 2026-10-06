@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>树与二叉树 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>树与二叉树</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 树与二叉树：层级结构的数据组织方式</p>
+<p>如果说数组和链表是线性结构，那树就是第一种非线性数据结构。文件系统的目录层级、公司的组织架构、HTML的DOM树、数据库的索引结构——树无处不在。理解树的基本概念和遍历方式，是理解更复杂数据结构的基础。</p>
+<p>## 一、树的基本概念</p>
+<p>树是由节点组成的层级结构。最顶端的节点叫根节点，每个节点有零个或多个子节点，没有子节点的叫叶子节点。从根到某个节点的路径上有几个节点，就是这个节点的深度。</p>
+<p>二叉树是每个节点最多有两个子节点（左子和右子）的树。它是最简单也最常用的树结构。</p>
+<p>## 二、二叉树的遍历</p>
+<p>遍历就是按某种顺序访问树的每个节点一次。有三种深度优先遍历方式：</p>
+<p>前序遍历：先访问当前节点，再遍历左子树，再遍历右子树。（根→左→右）
+中序遍历：先遍历左子树，再访问当前节点，再遍历右子树。（左→根→右）
+后序遍历：先遍历左子树，再遍历右子树，再访问当前节点。（左→右→根）</p>
+<p>这三种遍历用递归写特别简单。比如前序：function preorder(node) { if (!node) return; visit(node); preorder(node.left); preorder(node.right); }。</p>
+<p>还有广度优先遍历（层序遍历）：从上到下、从左到右一层一层访问。用队列实现——把根节点入队，然后循环出队一个节点，访问它，把它的左右子节点入队。</p>
+<p>## 三、二叉搜索树</p>
+<p>二叉搜索树（BST）是一种特殊的二叉树：左子树所有节点的值都小于当前节点，右子树所有节点的值都大于当前节点。</p>
+<p>这个性质让BST的查找效率很高：和当前节点比，小了往左走，大了往右走。就像二分查找一样，每次排除一半节点。平衡的BST查找是O(log n)。</p>
+<p>但如果插入的数据已经排好序了，BST会退化成一条链表——所有节点都只有右子节点，查找退化成O(n)。所以需要平衡二叉树（如AVL树、红黑树）来保证树的高度始终是O(log n)。</p>
+<p>## 四、B+树：数据库索引的底层</p>
+<p>B+树是数据库索引的底层结构，也是树最重要的实际应用。它是一种多路平衡搜索树——每个节点可以有很多子节点（而不是只有两个），所有数据都存在叶子节点上，叶子节点之间用链表相连。</p>
+<p>为什么数据库用B+树而不是BST？因为B+树一个节点可以存几百个key，树的高度很低（3-4层就能存几千万条数据），每次查询只需要3-4次磁盘I/O。而且叶子节点链表相连，范围查询特别方便——找到起点后顺着链表往后读就行。</p>
+<p>## 五、DOM树：前端的树</p>
+<p>浏览器把HTML解析成DOM树——一个嵌套的节点树。document.querySelector就是在这棵树上查找节点。前端框架的虚拟DOM本质也是一棵树——描述UI结构的JS对象树。</p>
+<p>## 六、总结</p>
+<p>树是描述层级关系的自然结构。从简单的二叉树到数据库用的B+树，树的变种无数，但核心思想都是：用层级结构把查找效率从O(n)降到O(log n)。理解树的遍历和BST的性质，是数据结构的基本功。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

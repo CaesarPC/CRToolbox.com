@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端性能预算 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>前端性能预算</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>前端性能预算：给页面性能设一条不可突破的红线</h2>
+<p>性能优化容易变成"感觉慢了再调"。性能预算（Performance Budget）是预先设定一条红线：页面JS不超过200KB、首屏时间不超过2秒、LCP不超过2.5秒。超过就报警或阻断合并。</p>
+<p>为什么需要预算？没有量化目标，优化就没有方向。设了预算，每次提交代码自动检查：JS体积涨了？图片太大了？超过预算CI直接失败，不让合并。</p>
+<p>预算指标选择：传输体积（JS/CSS/图片大小）、加载时间（LCP、TTFB）、运行时性能（INP、CLS）。核心Web指标（前面讲过）是好的起点。</p>
+<p>怎么执行：CI流水线里跑性能检测（Lighthouse CI），对比预算阈值。超了就失败。也可以在开发环境实时提示。</p>
+<p>预算要合理：不是越小越好（功能要做），而是和业务匹配。一个工具站200KB JS够了，一个复杂应用可能要500KB。根据实际情况定。</p>
+<p>性能预算让优化变成持续的纪律，不是一次性工作。每次提交都守住红线，性能不会逐渐劣化。</p>
+</div>
+</body>
+</html>

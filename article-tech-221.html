@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORS跨域指南 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CORS跨域指南</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># CORS跨域完整指南：浏览器的安全策略与突破</p>
+<p>你写了一个前端页面调用后端接口，控制台报错：No 'Access-Control-Allow-Origin' header is present。这就是跨域问题——前端和后端不在同一个域名下，浏览器默认阻止了请求。很多人被这个问题折磨过，以为是后端接口写错了，其实是浏览器的同源安全策略在起作用。</p>
+<p>## 一、什么是同源策略</p>
+<p>浏览器的同源策略规定：一个网页的脚本不能和不同域名、不同端口、不同协议的资源交互。这是为了安全——防止恶意网站偷你的数据。如果没有同源策略，你打开一个恶意网站，它的JS就能读你银行网站里的Cookie和页面内容。</p>
+<p>同源 = 协议 + 域名 + 端口 三者完全一致。http://a.com 和 https://a.com 不同（协议不同），http://a.com 和 http://b.com 不同（域名不同），http://a.com 和 http://a.com:8080 不同（端口不同）。</p>
+<p>## 二、简单请求与预检请求</p>
+<p>不是所有跨域请求都被阻止。浏览器把跨域请求分两种。</p>
+<p>简单请求：GET/POST/HEAD方法，Content-Type是application/x-www-form-urlencoded、multipart/form-data或text/plain，没有自定义头。这种请求浏览器直接发出去，但在响应里检查有没有Access-Control-Allow-Origin头——没有的话JS拿不到响应。</p>
+<p>非简单请求（比如PUT/DELETE、Content-Type是application/json、带Authorization头）：浏览器在真正发请求之前，先发一个OPTIONS预检请求，问服务器"我这个跨域请求允许吗？"服务器返回允许的方法和头，浏览器确认OK了才发真正的请求。</p>
+<p>## 三、后端怎么解决CORS</p>
+<p>后端在响应里加几个头就行：
+Access-Control-Allow-Origin: https://你的前端域名
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization
+Access-Control-Allow-Credentials: true（如果要带Cookie）</p>
+<p>加了这些头，浏览器就允许跨域访问了。几乎所有后端框架都有现成的CORS中间件，几行配置搞定。</p>
+<p>## 四、Cookie跨域</p>
+<p>跨域请求默认不带Cookie。要带Cookie，前端fetch要设credentials: 'include'，后端要设Access-Control-Allow-Credentials: true，而且Allow-Origin不能是*，必须指定具体域名。</p>
+<p>## 五、开发环境的代理</p>
+<p>前端开发时，前端跑在localhost:5173，后端跑在localhost:3000，这也是跨域。不想改后端配置的话，可以用Vite/Webpack的开发代理——前端请求/api，开发服务器把/api转发到localhost:3000。对浏览器来说请求都是同源的，代理在服务器端转发就不存在跨域问题。</p>
+<p>## 六、总结</p>
+<p>跨域不是后端接口的问题，是浏览器的安全策略。理解同源策略、预检请求、响应头配置，遇到CORS报错就知道该改哪里了。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS容器查询 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CSS容器查询</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CSS容器查询：组件真正可复用的响应式方案</p>
+<p>媒体查询（@media）是根据屏幕宽度调整样式，但它有个根本缺陷：它看的是整个视口宽度，不是组件所在容器的宽度。一个侧边栏组件放在宽屏幕的主内容区里，和放在窄屏幕的弹出层里，视口宽度一样，但容器宽度完全不同。媒体查询无法区分这两种情况。容器查询（Container Queries）解决了这个问题。</p>
+<p>容器查询的思路是：先定义一个"容器"元素，然后根据这个容器的宽度调整内部组件的样式。不是看屏幕多宽，而是看组件的父容器多宽。这样组件真正做到了"放在哪里都能自适应"——在宽容器里横排布局，在窄容器里竖排堆叠。</p>
+<p>用法很简单：父元素设置container-type: inline-size，声明它是一个容器；然后用@container规则，根据容器宽度写样式。比如@container (min-width: 400px) { .card { display: flex; } }，容器宽度超过400px时卡片变横排，否则竖排。</p>
+<p>这对组件库开发是革命性的。以前写一个卡片组件，你不知道它会被放在多宽的容器里，只能写死一种布局。现在组件可以自己根据容器宽度调整：容器宽就多列排列，容器窄就单列堆叠。同一个组件，在页面主区域和侧边栏里自动适配不同布局。</p>
+<p>容器查询和媒体查询的配合：媒体查询管全局布局（整页是单列还是双栏），容器查询管组件内部布局（卡片是横排还是竖排）。两者结合，响应式设计从"页面级"细化到"组件级"。</p>
+<p>浏览器兼容性已经很好，主流浏览器都支持。这是CSS响应式的未来方向：从屏幕尺寸驱动，变成容器尺寸驱动。组件真正可复用，不再需要为不同容器写不同版本。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

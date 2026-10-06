@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>哈希表原理与应用 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>哈希表原理与应用</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 哈希表原理与应用：O(1)查找的秘密</p>
+<p>为什么字典（Map）能瞬间查到key对应的值？为什么数据库用哈希索引？为什么密码存储要用哈希？答案都是哈希表——计算机科学中最重要的数据结构之一。理解哈希表的工作原理，不只是为了面试，更是为了写出高效的数据存取代码。</p>
+<p>## 一、哈希函数与哈希表</p>
+<p>哈希表的核心思想极其简单：有一个哈希函数hash(key)，输入一个key，输出一个数字（哈希值），这个数字就是key在数组里的位置。要查key对应的值，算一下hash(key)，直接去数组那个位置拿。要插入，同样算hash(key)，放在那个位置。平均时间复杂度O(1)——不管数据量多大，查找时间都差不多。</p>
+<p>哈希函数的要求：同样的key必须算出同样的哈希值（确定性）；不同的key尽量算出不同的哈希值（减少碰撞）；计算要快。</p>
+<p>## 二、哈希碰撞：两个人同名怎么办</p>
+<p>不管多好的哈希函数，不同的key总会算出相同的哈希值——这就是哈希碰撞。数组只有这么多位置，key却无限多，碰撞不可避免。</p>
+<p>解决碰撞最常用的方法是链地址法：数组的每个位置不是直接存一个值，而是存一个链表（或动态数组）。所有哈希到同一个位置的key，都挂在那个位置的链表上。查找的时候，先算hash找到位置，然后遍历那个链表逐个比较key。</p>
+<p>理想情况下每个位置只有一个元素，查找O(1)。碰撞多了链表变长，查找退化成O(n)。所以好的哈希函数很重要——它让数据均匀分布，每个位置的链表都很短。</p>
+<p>## 三、负载因子与扩容</p>
+<p>当哈希表塞满了，碰撞会越来越多，性能下降。负载因子=元素个数/数组大小。当负载因子超过阈值（通常0.7），就要扩容——新建一个两倍大的数组，把所有元素重新哈希放进新数组。</p>
+<p>扩容是O(n)操作，但摊还到每次插入，平均还是O(1)。就像搬家——不是每次加东西都搬一次，而是东西多到一定程度才搬一次大的。</p>
+<p>## 四、哈希表的应用</p>
+<p>数据库索引：很多数据库用哈希索引做等值查询——where id = 123，哈希索引直接定位，比B+树还快。但哈希索引不支持范围查询和排序。</p>
+<p>缓存：Redis本身就是键值存储，底层就是哈希表。set key value、get key都是O(1)。</p>
+<p>哈希集合：去重——把元素放进哈希集合，重复的自动忽略。判断一个元素是否存在，O(1)。</p>
+<p>密码存储：这是最特殊的应用。密码不能明文存储，要用哈希函数计算哈希值后存哈希。登录时把用户输入的密码哈希，和数据库里的哈希对比。即使数据库泄露，攻击者也拿不到原始密码。但密码哈希必须用慢哈希（bcrypt、argon2），不能用普通的MD5——普通哈希太快，暴力破解分分钟搞定。</p>
+<p>## 五、总结</p>
+<p>哈希表是计算机科学中最实用的数据结构之一。它用O(1)的平均查找时间，支撑了字典、缓存、索引、集合等无数基础组件。理解哈希函数、碰撞处理、扩容机制，你就理解了为什么键值存储这么快，也知道了它在什么情况下会变慢。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

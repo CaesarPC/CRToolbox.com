@@ -144,6 +144,13 @@ function get(path, cb) {
 function esc(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+/* 安全URL：只允许 http/https，防止 javascript: 等协议 */
+function safeUrl(u) {
+  u = String(u || '').trim();
+  if (!u) return '';
+  if (/^https?:\/\//i.test(u)) return esc(u);
+  return '#';
+}
 function updUserUI() {
   var u = localStorage.getItem(USER_KEY) || '';
   curUser = u;
@@ -195,7 +202,7 @@ function loadList() {
         '<div class="meta">👤 ' + esc(p.author) + (p.author === 'Server' ? ' 👑' : '') + ' · 🕐 ' + esc(p.created) + '</div>' +
         (p.desc ? '<div class="desc">' + esc(p.desc) + '</div>' : '') +
         (p.tags ? '<div class="tags">' + p.tags.split(/[,，]/).map(function (t) { return t.trim(); }).filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
-        (p.link ? '<a class="lnk" href="' + esc(p.link) + '" target="_blank" rel="noopener">🔗 ' + esc(p.link) + '</a>' : '') +
+        (p.link ? '<a class="lnk" href="' + safeUrl(p.link) + '" target="_blank" rel="noopener">🔗 ' + esc(p.link) + '</a>' : '') +
         (p.fileUrl ? '<a class="lnk" href="' + esc(p.fileUrl) + '" download="' + esc(p.fileName || 'download') + '" style="margin-left:10px;background:#50fa7b22;padding:4px 10px;border-radius:6px">📥 下载 ' + esc(p.fileName || '文件') + '</a>' : '') +
         (p.content ? '<details style="margin-top:8px"><summary style="font-size:13px;color:#8be9fd;cursor:pointer">展开详情</summary><div style="font-size:13px;color:#e6e6e6;white-space:pre-wrap;margin-top:8px">' + esc(p.content) + '</div></details>' : '') +
         '<div class="cmt">' +
@@ -333,7 +340,7 @@ document.getElementById('loginLink').onclick = function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006a';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c';
     s.onload = function () { updUserUI(); loadList(); };
     s.onerror = function () { updUserUI(); };
     (document.head || document.body).appendChild(s);
@@ -346,6 +353,6 @@ document.getElementById('loginLink').onclick = function () {
 document.getElementById('pubGo').onclick = doPublish;
 document.getElementById('q').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
 </script>
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006a"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

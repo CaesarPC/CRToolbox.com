@@ -3,342 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实用工具 · Cr工具箱</title>
+<title>实用工具 | Cr工具站</title>
 <style>
-body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
-.hd{background:#282a36;padding:16px 22px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.hd h1{margin:0;font-size:22px;color:#50fa7b}
-.hd .back{color:#8be9fd;text-decoration:none;font-size:14px}
-.tabs{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px;background:#282a36;border-bottom:1px solid #44475a;position:sticky;top:0;z-index:10}
-.tab{padding:7px 14px;border-radius:7px;font-size:13px;background:#1e1e2e;border:1px solid #44475a;color:#bdc3c7;cursor:pointer}
-.tab.on{background:#50fa7b;color:#1e1e2e;font-weight:700;border-color:#50fa7b}
-.wrap{max-width:860px;margin:20px auto;padding:0 16px}
-.panel{display:none;background:#282a36;border-radius:12px;padding:20px;border:1px solid #44475a}
-.panel.on{display:block}
-.panel h2{margin:0 0 4px;font-size:18px;color:#50fa7b}
-.panel .desc{margin:0 0 16px;font-size:12.5px;color:#bdc3c7}
-label{font-size:12.5px;color:#bdc3c7;display:block;margin:10px 0 4px}
-input,select,textarea{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:7px;padding:8px 10px;font-size:13px;width:100%;box-sizing:border-box;font-family:inherit}
-textarea{resize:vertical;min-height:80px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#50fa7b}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.row>*{flex:1;min-width:130px}
-.btn{background:#50fa7b;color:#1e1e2e;border:none;padding:9px 18px;font-size:13.5px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:10px}
-.btn:hover{background:#69ff94}
-.btn2{background:#44475a;color:#e6e6e6;border:none;padding:8px 16px;font-size:13px;border-radius:8px;cursor:pointer;margin-top:10px}
-.btn2:hover{background:#5a5f7a}
-.out{margin-top:14px;background:#1e1e2e;border:1px solid #44475a;border-radius:8px;padding:12px;font-size:14px;color:#8be9fd;word-break:break-all;min-height:20px}
-.out.warn{color:#ffb86c}
-.result{font-size:13px;color:#50fa7b;margin-top:8px;min-height:18px}
-.subgrid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.chip{background:#1e1e2e;border:1px solid #44475a;border-radius:7px;padding:6px 10px;font-size:12px;color:#bdc3c7;cursor:pointer}
-.chip.on{background:#8be9fd;color:#1e1e2e;border-color:#8be9fd}
-.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
-.calc button{background:#1e1e2e;color:#e6e6e6;border:1px solid #44475a;border-radius:8px;padding:14px;font-size:16px;cursor:pointer}
-.calc button.op{background:#ffb86c;color:#1e1e2e;font-weight:700}
-.calc button.eq{background:#50fa7b;color:#1e1e2e;font-weight:700;grid-column:span 2}
-.calc button.fn{background:#44475a;font-size:13px}
-.calc-display{background:#1e1e2e;border:1px solid #44475a;border-radius:8px;padding:14px;font-size:20px;text-align:right;color:#50fa7b;margin-bottom:8px;min-height:26px;word-break:break-all}
-.calc-sub{font-size:12px;color:#6272a4;min-height:14px;text-align:right}
-canvas{border:1px solid #44475a;border-radius:8px;background:#1e1e2e;max-width:100%}
-.qr-wrap{text-align:center;margin-top:12px}
-.qr-wrap img{background:#fff;padding:8px;border-radius:8px;max-width:220px}
-.spin-box{position:relative;width:260px;height:260px;margin:14px auto}
-#spin{width:260px;height:260px;border-radius:50%;border:1px solid #44475a}
-#spin-arrow{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:22px;color:#50fa7b}
-#spin-result{text-align:center;font-size:16px;color:#50fa7b;margin-top:8px;min-height:20px}
-.dice{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.die{width:56px;height:56px;background:#1e1e2e;border:2px solid #50fa7b;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#50fa7b}
-.foot{color:#6272a4;font-size:12px;margin-top:22px;text-align:center}
-#big{font-size:16px;line-height:1.8}
-.img-prev{max-width:100%;max-height:200px;border:1px solid #44475a;border-radius:8px;margin-top:10px;background:#1e1e2e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:16px 20px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+.hd h1{font-size:20px;color:#50fa7b}
+.grid{display:flex;flex-wrap:wrap;gap:8px;padding:16px;max-width:900px;margin:0 auto}
+.tbtn{background:#282a36;border:1px solid #44475a;border-radius:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:#e6e6e6;transition:all .2s cubic-bezier(.4,0,.2,1)}
+.tbtn:hover{border-color:#50fa7b;color:#50fa7b;transform:translateY(-2px)}
+.tbtn:active{transform:scale(.95)}
+.panels{max-width:900px;margin:0 auto;padding:0 16px 100px}
+.panel{background:#282a36;border:1px solid #44475a;border-radius:12px;margin-bottom:12px;overflow:hidden;animation:slideIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.p-hd{background:#1e1e2e;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.p-hd .t{font-size:14px;color:#50fa7b;font-weight:bold}
+.p-close{background:#44475a;border:none;color:#e6e6e6;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:14px;line-height:1}
+.p-close:hover{background:#ff5555;color:#fff}
+.p-body{padding:16px}
+input,textarea,select{width:100%;box-sizing:border-box;padding:8px 10px;border-radius:6px;border:1px solid #44475a;background:#1e1e2e;color:#e6e6e6;font-size:14px;margin:4px 0}
+button.go{background:#50fa7b;color:#1e1e2e;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;font-weight:bold;margin:4px 0}
+.result{background:#1e1e2e;border-radius:6px;padding:10px;margin-top:8px;font-size:13px;color:#bdc3c7;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row input{flex:1;min-width:80px}
+.label{font-size:12px;color:#6272a4;margin-top:6px}
 </style>
 </head>
 <body>
-<div class="hd">
-  <div><h1>🧰 实用工具</h1></div>
-  <a class="back" href="index.html">← 返回工具箱</a>
-</div>
-<div class="tabs" id="tabs"></div>
-<div class="wrap">
-
-  <div class="panel" id="p-calc">
-    <h2>计算器</h2>
-    <p class="desc">标准 + 科学计算（三角函数、平方根、百分比等）。</p>
-    <div class="calc-display" id="cd"></div>
-    <div class="calc-sub" id="cs"></div>
-    <div class="calc">
-      <button class="fn" data-a="(">(</button><button class="fn" data-a=")">)</button><button class="fn" data-a="^">^</button><button class="op" data-a="C">C</button>
-      <button class="fn" data-a="sin(">sin</button><button class="fn" data-a="cos(">cos</button><button class="fn" data-a="tan(">tan</button><button class="op" data-a="⌫">⌫</button>
-      <button class="fn" data-a="sqrt(">√</button><button class="fn" data-a="pi">π</button><button class="fn" data-a="%">%</button><button class="op" data-a="/">÷</button>
-      <button data-a="7">7</button><button data-a="8">8</button><button data-a="9">9</button><button class="op" data-a="*">×</button>
-      <button data-a="4">4</button><button data-a="5">5</button><button data-a="6">6</button><button class="op" data-a="-">−</button>
-      <button data-a="1">1</button><button data-a="2">2</button><button data-a="3">3</button><button class="op" data-a="+">+</button>
-      <button data-a="0">0</button><button data-a=".">.</button><button class="eq" data-a="=">=</button>
-    </div>
-  </div>
-
-  <div class="panel" id="p-qr">
-    <h2>二维码生成</h2>
-    <p class="desc">输入文字/网址生成二维码图片，可下载。本地或外部服务生成。</p>
-    <label>内容（文字 / 网址）</label>
-    <input id="qr-text" placeholder="https:// 或任意文字">
-    <div class="row">
-      <div><label>尺寸（px）</label><input id="qr-size" type="number" value="220"></div>
-      <div><label>方式</label>
-        <select id="qr-mode"><option value="ext">外部服务（无需安装）</option><option value="js">纯前端 JS 生成</option></select>
-      </div>
-    </div>
-    <button class="btn" onclick="genQR()">生成二维码</button>
-    <div class="qr-wrap" id="qr-out"></div>
-  </div>
-
-  <div class="panel" id="p-pwd">
-    <h2>强密码生成器</h2>
-    <p class="desc">随机生成高强度密码，支持自定义长度与字符集。</p>
-    <label>密码长度：<span id="pwd-len-v">16</span></label>
-    <input id="pwd-len" type="range" min="4" max="64" value="16" oninput="document.getElementById('pwd-len-v').textContent=this.value">
-    <div class="subgrid" id="pwd-chars">
-      <span class="chip on" data-c="ABCDEFGHIJKLMNOPQRSTUVWXYZ">大写</span>
-      <span class="chip on" data-c="abcdefghijklmnopqrstuvwxyz">小写</span>
-      <span class="chip on" data-c="0123456789">数字</span>
-      <span class="chip on" data-c="!@#$%^&*()-_=+[]{};:,.<>?/">符号</span>
-    </div>
-    <button class="btn" onclick="genPwd()">生成密码</button>
-    <button class="btn2" onclick="copyPwd()">复制</button>
-    <div class="out" id="pwd-out"></div>
-  </div>
-
-  <div class="panel" id="p-unit">
-    <h2>单位换算器</h2>
-    <p class="desc">长度 / 重量 / 温度 / 数据存储，一键转换。</p>
-    <label>类别</label>
-    <select id="unit-cat" onchange="unitChange()">
-      <option value="len">长度</option><option value="wt">重量</option><option value="temp">温度</option><option value="data">数据存储</option>
-    </select>
-    <div class="row">
-      <div><label>数值</label><input id="unit-val" type="number" value="1"></div>
-      <div><label>从</label><select id="unit-from"></select></div>
-      <div><label>到</label><select id="unit-to"></select></div>
-    </div>
-    <button class="btn" onclick="convUnit()">转换</button>
-    <div class="out" id="unit-out"></div>
-  </div>
-
-  <div class="panel" id="p-time">
-    <h2>时间戳转换</h2>
-    <p class="desc">Unix 时间戳 ↔ 日期时间互转。</p>
-    <label>Unix 秒时间戳 → 日期</label>
-    <input id="ts-stamp" type="number" placeholder="例如 1700000000">
-    <button class="btn" onclick="stamp2date()">转换为日期</button>
-    <div class="out" id="ts-out1"></div>
-    <label>日期时间 → Unix 时间戳（本地时区）</label>
-    <input id="ts-date" type="datetime-local">
-    <button class="btn" onclick="date2stamp()">转换为时间戳</button>
-    <div class="out" id="ts-out2"></div>
-    <button class="btn2" onclick="nowstamp()">📌 现在的时间戳</button>
-  </div>
-
-  <div class="panel" id="p-json">
-    <h2>JSON 格式化 / 校验</h2>
-    <p class="desc">粘贴 JSON，格式化、压缩、校验错误。纯本地处理。</p>
-    <textarea id="json-in" placeholder='{"name":"Cr","tools":["finder","codec"]}'></textarea>
-    <div class="row">
-      <button class="btn" onclick="jsonFmt()">格式化</button>
-      <button class="btn2" onclick="jsonMini()">压缩</button>
-      <button class="btn2" onclick="jsonValidate()">校验</button>
-    </div>
-    <div class="result" id="json-msg"></div>
-    <textarea id="json-out" style="margin-top:10px" placeholder="输出"></textarea>
-  </div>
-
-  <div class="panel" id="p-img">
-    <h2>图片压缩 / 格式转换</h2>
-    <p class="desc">上传图片，压缩质量并转换格式（PNG/JPG/WebP），本地处理不上传。</p>
-    <input type="file" id="img-file" accept="image/*" onchange="loadImg(this)">
-    <div class="row" style="margin-top:10px">
-      <div><label>质量</label><input id="img-q" type="range" min="0.1" max="1" step="0.05" value="0.7"></div>
-      <div><label>格式</label>
-        <select id="img-fmt"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select>
-      </div>
-    </div>
-    <button class="btn" onclick="compressImg()">压缩 / 转换</button>
-    <img class="img-prev" id="img-prev" style="display:none">
-    <a class="btn2" id="img-dl" style="display:none;text-decoration:none;display:inline-block" download="converted">下载</a>
-    <div class="result" id="img-info"></div>
-  </div>
-
-  <div class="panel" id="p-dice">
-    <h2>骰子 / 随机数</h2>
-    <p class="desc">掷骰子或生成指定范围随机数，做决策用。</p>
-    <div class="row">
-      <div><label>范围 最小</label><input id="rn-min" type="number" value="1"></div>
-      <div><label>范围 最大</label><input id="rn-max" type="number" value="100"></div>
-    </div>
-    <button class="btn" onclick="randNum()">随机数</button>
-    <button class="btn2" onclick="rollDice()">🎲 掷骰子</button>
-    <div class="out" id="dice-out"></div>
-  </div>
-
-  <div class="panel" id="p-spin">
-    <h2>大转盘（随机决策）</h2>
-    <p class="desc">输入选项（用逗号分隔），点开始转盘随机选一个。</p>
-    <label>选项（逗号分隔）</label>
-    <input id="spin-opts" value="吃火锅,吃烧烤,吃面,点外卖,自己做饭,奶茶">
-    <button class="btn" onclick="setupSpin()">生成转盘</button>
-    <button class="btn2" onclick="startSpin()">🎡 开始</button>
-    <div class="spin-box">
-      <div id="spin-arrow">▼</div>
-      <canvas id="spin" width="260" height="260"></canvas>
-    </div>
-    <div id="spin-result"></div>
-  </div>
-
-  <div class="panel" id="p-quote">
-    <h2>今日一言</h2>
-    <p class="desc">随机一条励志 / 趣味短句。</p>
-    <div class="out" id="big"></div>
-    <button class="btn" onclick="randQuote()">🔄 换一条</button>
-  </div>
-
-</div>
-<div class="foot">Cr专属工具箱 · 实用工具 · 全部纯本地处理</div>
+<div class="hd"><a href="index.html">← 首页</a><h1>🛠️ 实用工具</h1></div>
+<div class="grid" id="btnGrid"></div>
+<div class="panels" id="panels"></div>
 
 <script>
-var TOOLS=[['calc','🧮 计算器'],['qr','🔳 二维码'],['pwd','🔑 密码'],['unit','📏 单位换算'],['time','🕐 时间戳'],['json','🧾 JSON'],['img','🖼 图片'],['dice','🎲 骰子/随机'],['spin','🎡 大转盘'],['quote','💬 今日一言']];
-var tabs=document.getElementById('tabs');
-TOOLS.forEach(function(t){var s=document.createElement('span');s.className='tab';s.textContent=t[1];s.onclick=function(){show(t[0])};tabs.appendChild(s)});
-var cur='calc';
-function show(id){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('on')});
-  document.getElementById('p-'+id).classList.add('on');document.getElementById('p-'+id).style.display='block';
-  tabs.querySelectorAll('.tab').forEach(function(x){if(x.textContent.indexOf(id)!==-1)x.classList.add('on')});
-  cur=id;window.scrollTo({top:0});}
-show('calc');
+var tools = [
+  {id:'qr', icon:'📱', name:'二维码生成器', build:qrTool},
+  {id:'pwd', icon:'🔑', name:'密码生成器', build:pwdTool},
+  {id:'json', icon:'{ }', name:'JSON格式化', build:jsonTool},
+  {id:'unit', icon:'📏', name:'单位换算', build:unitTool},
+  {id:'color', icon:'🎨', name:'颜色选择器', build:colorTool},
+  {id:'regex', icon:'🔍', name:'正则测试', build:regexTool},
+  {id:'wordcount', icon:'📝', name:'文字统计', build:wordcountTool},
+  {id:'countdown', icon:'⏰', name:'倒计时', build:countdownTool},
+  {id:'base64', icon:'🔄', name:'Base64编解码', build:base64Tool},
+  {id:'htmlent', icon:'&lt;&gt;', name:'HTML实体转换', build:htmlentTool},
+  {id:'sort', icon:'↕️', name:'文字排序', build:sortTool},
+  {id:'rand', icon:'🎲', name:'随机数/硬币', build:randTool},
+  {id:'markdown', icon:'📄', name:'Markdown预览', build:mdTool},
+  {id:'timer', icon:'⏱️', name:'秒表', build:stopwatchTool},
+  {id:'calc', icon:'🔢', name:'简易计算器', build:calcTool},
+];
+var openPanels = [];
+var MAX_PANELS = 3;
 
-/* ===== 计算器 ===== */
-var cd='';
-function safeEval(e){try{return Function('"use strict";return('+e+')')()}catch(err){return NaN}}
-function rendCalc(){document.getElementById('cd').textContent=cd||'0';
-  var t=safeEval(cd.replace(/\^/g,'**').replace(/\×/g,'*').replace(/−/g,'-').replace(/÷/g,'/').replace(/pi/g,Math.PI));
-  document.getElementById('cs').textContent=(cd&&isFinite(t))?('= '+t):'';}
-document.querySelectorAll('.calc button').forEach(function(b){b.onclick=function(){
-  var a=b.getAttribute('data-a');
-  if(a==='C'){cd='';}
-  else if(a==='⌫'){cd=cd.slice(0,-1);}
-  else if(a==='='){cd=String(safeEval(cd.replace(/\^/g,'**').replace(/\×/g,'*').replace(/−/g,'-').replace(/÷/g,'/').replace(/pi/g,Math.PI)));}
-  else{cd+=a;}
-  rendCalc();}});
+var grid = document.getElementById('btnGrid');
+tools.forEach(function(t){
+  var b = document.createElement('button');
+  b.className = 'tbtn';
+  b.innerHTML = t.icon + ' ' + t.name;
+  b.onclick = function(){ togglePanel(t); };
+  grid.appendChild(b);
+});
 
-/* ===== 二维码 ===== */
-function genQR(){
-  var t=document.getElementById('qr-text').value.trim();if(!t){alert('请输入内容');return;}
-  var s=document.getElementById('qr-size').value||220;
-  var m=document.getElementById('qr-mode').value;
-  var enc=encodeURIComponent(t);
-  var out=document.getElementById('qr-out');
-  if(m==='ext'){out.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size='+s+'x'+s+'&data='+enc+'" alt="二维码">';}
-  else{out.innerHTML='<div class="out warn">纯前端生成需内置二维码库（约 20KB），为保持轻量暂用外部服务。点「外部服务」即可。</div>';}
+function togglePanel(t){
+  var existing = openPanels.find(function(p){return p.id===t.id;});
+  if(existing){ closePanel(existing); return; }
+  var panel = document.createElement('div');
+  panel.className = 'panel';
+  panel.id = 'panel-' + t.id;
+  panel.innerHTML = '<div class="p-hd"><span class="t">' + t.icon + ' ' + t.name + '</span><button class="p-close">✕</button></div><div class="p-body" id="body-'+t.id+'"></div>';
+  document.getElementById('panels').appendChild(panel);
+  panel.querySelector('.p-close').onclick = function(){ closePanel({id:t.id, el:panel}); };
+  panel.querySelector('.p-hd').onclick = function(e){ if(e.target.classList.contains('p-close'))return; panel.querySelector('.p-body').style.display = panel.querySelector('.p-body').style.display==='none'?'block':'none'; };
+  openPanels.push({id:t.id, el:panel});
+  t.build(document.getElementById('body-'+t.id));
+  while(openPanels.length > MAX_PANELS){ closePanel(openPanels[0]); }
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-/* ===== 密码 ===== */
-var pwdChars=[];
-document.querySelectorAll('#pwd-chars .chip').forEach(function(c){c.onclick=function(){c.classList.toggle('on');}});
-function getPwdChar(){var s='';document.querySelectorAll('#pwd-chars .chip.on').forEach(function(c){s+=c.getAttribute('data-c')});return s;}
-function genPwd(){var len=+document.getElementById('pwd-len').value;var pool=getPwdChar();if(!pool){alert('至少选一种字符');return;}
-  var arr=new Uint32Array(len);crypto.getRandomValues(arr);var p='';for(var i=0;i<len;i++)p+=pool[arr[i]%pool.length];
-  document.getElementById('pwd-out').textContent=p;document.getElementById('pwd-out').dataset.pwd=p;}
-function copyPwd(){var o=document.getElementById('pwd-out');if(!o.textContent){alert('先生成密码');return;}
-  navigator.clipboard.writeText(o.textContent).then(function(){alert('已复制')});}
+function closePanel(p){
+  if(p.el) p.el.remove();
+  openPanels = openPanels.filter(function(x){return x.id!==p.id;});
+}
 
-/* ===== 单位换算 ===== */
-var UNITS={len:{m:1,km:1000,cm:0.01,mm:0.001,英寸:0.0254,英尺:0.3048,英里:1609.344,海里:1852},
-  wt:{kg:1,g:0.001,mg:0.000001,t:1000,磅:0.45359237,盎司:0.0283495,斤:0.5,两:0.05},
-  data:{B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776,bit:0.125},
-  temp:{'摄氏度':1,'华氏度':2,'开尔文':3}};
-function unitChange(){var cat=document.getElementById('unit-cat').value;var names=Object.keys(UNITS[cat]);
-  var f=document.getElementById('unit-from'),t=document.getElementById('unit-to');f.innerHTML='';t.innerHTML='';
-  names.forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;f.appendChild(o);
-    var o2=document.createElement('option');o2.value=n;o2.textContent=n;t.appendChild(o2);});}
-function convUnit(){var cat=document.getElementById('unit-cat').value;var v=parseFloat(document.getElementById('unit-val').value);var f=document.getElementById('unit-from').value;var t=document.getElementById('unit-to').value;
-  if(isNaN(v)){document.getElementById('unit-out').textContent='请输入数值';return;}
-  var r;
-  if(cat==='temp'){
-    var c;
-    if(f==='摄氏度')c=v;else if(f==='华氏度')c=(v-32)*5/9;else c=v-273.15;
-    if(t==='摄氏度')r=c;else if(t==='华氏度')r=c*9/5+32;else r=c+273.15;
-  }else{r=v*UNITS[cat][f]/UNITS[cat][t];}
-  document.getElementById('unit-out').textContent=v+' '+f+' = '+r.toPrecision(8)+' '+t;}
-unitChange();
+/* ===== 工具实现 ===== */
+function qrTool(el){
+  el.innerHTML = '<div class="label">输入网址或文字：</div><input id="qrInput" placeholder="https://..."><button class="go" onclick="qrGen()">生成二维码</button><div class="result" id="qrOut" style="text-align:center"></div>';
+}
+function qrGen(){
+  var v = document.getElementById('qrInput').value.trim();
+  if(!v) return;
+  document.getElementById('qrOut').innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(v)+'" style="width:200px;height:200px;border-radius:8px">';
+}
 
-/* ===== 时间戳 ===== */
-function stamp2date(){var s=document.getElementById('ts-stamp').value;if(!s){alert('请输入时间戳');return;}
-  var d=new Date(+s*1000);if(isNaN(d)){document.getElementById('ts-out1').textContent='无效时间戳';return;}
-  document.getElementById('ts-out1').textContent=d.toLocaleString('zh-CN',{hour12:false});}
-function date2stamp(){var v=document.getElementById('ts-date').value;if(!v){alert('请选择日期时间');return;}
-  document.getElementById('ts-out2').textContent=Math.floor(new Date(v).getTime()/1000);}
-function nowstamp(){document.getElementById('ts-stamp').value=Math.floor(Date.now()/1000);stamp2date();}
+function pwdTool(el){
+  el.innerHTML = '<div class="row"><span>长度</span><input type="number" id="pwdLen" value="16" min="4" max="64"></div><div class="row"><label><input type="checkbox" id="pwdUpper" checked style="width:auto"> 大写</label><label><input type="checkbox" id="pwdLower" checked style="width:auto"> 小写</label><label><input type="checkbox" id="pwdNum" checked style="width:auto"> 数字</label><label><input type="checkbox" id="pwdSym" style="width:auto"> 符号</label></div><button class="go" onclick="pwdGen()">生成密码</button><div class="result" id="pwdOut" style="font-size:18px;color:#50fa7b;letter-spacing:2px"></div>';
+}
+function pwdGen(){
+  var len = parseInt(document.getElementById('pwdLen').value)||16;
+  var chars='';
+  if(document.getElementById('pwdUpper').checked) chars+='ABCDEFGHJKLMNPQRSTUVWXYZ';
+  if(document.getElementById('pwdLower').checked) chars+='abcdefghijkmnpqrstuvwxyz';
+  if(document.getElementById('pwdNum').checked) chars+='23456789';
+  if(document.getElementById('pwdSym').checked) chars+='!@#$%^&*';
+  if(!chars) chars='abcdefgh';
+  var arr=new Uint32Array(len); crypto.getRandomValues(arr);
+  var pwd=''; for(var i=0;i<len;i++) pwd+=chars[arr[i]%chars.length];
+  document.getElementById('pwdOut').textContent = pwd;
+}
 
-/* ===== JSON ===== */
-function jsonParse(){var t=document.getElementById('json-in').value.trim();if(!t)return null;
-  try{return {ok:true,data:JSON.parse(t)}}catch(e){return {ok:false,msg:e.message}}}
-function jsonFmt(){var r=jsonParse();if(!r.ok){document.getElementById('json-msg').textContent='❌ '+r.msg;return;}
-  document.getElementById('json-out').value=JSON.stringify(r.data,null,2);document.getElementById('json-msg').textContent='✅ 格式化成功';}
-function jsonMini(){var r=jsonParse();if(!r.ok){document.getElementById('json-msg').textContent='❌ '+r.msg;return;}
-  document.getElementById('json-out').value=JSON.stringify(r.data);document.getElementById('json-msg').textContent='✅ 已压缩';}
-function jsonValidate(){var r=jsonParse();document.getElementById('json-msg').textContent=r.ok?'✅ JSON 有效':('❌ '+r.msg);}
+function jsonTool(el){
+  el.innerHTML = '<div class="label">粘贴乱糟糟的JSON：</div><textarea id="jsonIn" rows="4" placeholder=\'{"a":1,"b":[2,3]}\'></textarea><button class="go" onclick="jsonFmt()">格式化</button><div class="result" id="jsonOut"></div>';
+}
+function jsonFmt(){
+  try{ document.getElementById('jsonOut').textContent = JSON.stringify(JSON.parse(document.getElementById('jsonIn').value),null,2); }
+  catch(e){ document.getElementById('jsonOut').textContent = '❌ JSON格式错误: '+e.message; }
+}
 
-/* ===== 图片压缩 ===== */
-var imgOrig=null;
-function loadImg(input){var f=input.files[0];if(!f)return;var rd=new FileReader();
-  rd.onload=function(e){var im=new Image();im.onload=function(){imgOrig=im;document.getElementById('img-prev').style.display='block';document.getElementById('img-prev').src=e.target.result;document.getElementById('img-info').textContent='已载入: '+Math.round(im.width)+'x'+Math.round(im.height)+'px, '+Math.round(f.size/1024)+'KB';};im.src=e.target.result;};rd.readAsDataURL(f);}
-function compressImg(){if(!imgOrig){alert('先上传图片');return;}
-  var q=parseFloat(document.getElementById('img-q').value);var fmt=document.getElementById('img-fmt').value;
-  var c=document.createElement('canvas');c.width=imgOrig.width;c.height=imgOrig.height;
-  var ctx=c.getContext('2d');ctx.drawImage(imgOrig,0,0);
-  var url=c.toDataURL(fmt,q);
-  var dl=document.getElementById('img-dl');dl.href=url;dl.style.display='inline-block';
-  document.getElementById('img-info').textContent='✅ 已生成（'+fmt.split('/')[1].toUpperCase()+', 质量'+q+'）';}
+function unitTool(el){
+  el.innerHTML = '<div class="row"><input id="unitVal" type="number" placeholder="数值"><select id="unitFrom"><option value="m">米</option><option value="cm">厘米</option><option value="km">千米</option><option value="ft">英尺</option><option value="inch">英寸</option></select><span>→</span><select id="unitTo"><option value="m">米</option><option value="cm">厘米</option><option value="km">千米</option><option value="ft">英尺</option><option value="inch">英寸</option></select></div><button class="go" onclick="unitConv()">转换</button><div class="result" id="unitOut"></div>';
+}
+function unitConv(){
+  var v=parseFloat(document.getElementById('unitVal').value)||0;
+  var f=document.getElementById('unitFrom').value, t=document.getElementById('unitTo').value;
+  var toM={m:1,cm:0.01,km:1000,ft:0.3048,inch:0.0254};
+  var meters=v*toM[f]; var result=meters/toM[t];
+  document.getElementById('unitOut').textContent = v+' '+f+' = '+result.toFixed(4)+' '+t;
+}
 
-/* ===== 骰子/随机 ===== */
-function randNum(){var a=+document.getElementById('rn-min').value,b=+document.getElementById('rn-max').value;
-  if(a>b){var t=a;a=b;b=t;}var r=Math.floor(Math.random()*(b-a+1))+a;
-  document.getElementById('dice-out').innerHTML='<div class="dice"><div class="die">'+r+'</div></div>';}
-function rollDice(){var hs='⚀⚁⚂⚃⚄⚅';var r=Math.floor(Math.random()*6);
-  document.getElementById('dice-out').innerHTML='<div class="dice"><div class="die">'+hs[r]+'</div></div>';}
+function colorTool(el){
+  el.innerHTML = '<input type="color" id="colorPick" value="#50fa7b" style="width:100%;height:60px"><div class="result" id="colorOut">HEX: #50fa7b<br>RGB: (80,250,123)</div>';
+  document.getElementById('colorPick').oninput = function(){
+    var h=this.value; var r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
+    document.getElementById('colorOut').innerHTML='HEX: '+h+'<br>RGB: ('+r+','+g+','+b+')';
+  };
+}
 
-/* ===== 大转盘 ===== */
-var spinCtx,spinOpts=[],spinColors=['#50fa7b','#8be9fd','#ffb86c','#ff5555','#bd93f9','#f1fa8c','#6272a4','#ff79c6'];
-function setupSpin(){var t=document.getElementById('spin-opts').value;spinOpts=t.split(/[,，]/).map(function(x){return x.trim()}).filter(Boolean);
-  if(spinOpts.length<2){alert('至少 2 个选项');return;}spinCtx=document.getElementById('spin').getContext('2d');drawSpin(0);}
-function drawSpin(rot){var c=spinCtx,w=260,r=128,cx=130,cy=130;var n=spinOpts.length,arc=2*Math.PI/n;
-  c.clearRect(0,0,w,w);
-  for(var i=0;i<n;i++){
-    c.beginPath();c.moveTo(cx,cy);c.arc(cx,cy,r,i*arc+rot,i*arc+arc+rot);c.closePath();
-    c.fillStyle=spinColors[i%spinColors.length];c.fill();c.strokeStyle='#1e1e2e';c.stroke();
-    c.save();c.translate(cx,cy);c.rotate(i*arc+arc/2+rot);c.textAlign='right';
-    c.fillStyle='#1e1e2e';c.font='bold 13px sans-serif';c.fillText(spinOpts[i],r-12,5);c.restore();
-  }}
-function startSpin(){if(!spinOpts.length){alert('先生成转盘');return;}var target=Math.random()*2*Math.PI+6*Math.PI;
-  var start=Date.now(),dur=3500;var startRot=0;
-  function anim(){var p=Math.min(1,(Date.now()-start)/dur);var ease=1-Math.pow(1-p,3);var rot=startRot+ease*target;
-    drawSpin(rot);
-    if(p<1){requestAnimationFrame(anim);}
-    else{var n=spinOpts.length,arc=2*Math.PI/n;
-      /* 指针固定在顶部(3π/2方向)：先算指针所指的转盘位置，再归一到[0,2π) */
-      var pos=((3*Math.PI/2-(rot%(2*Math.PI)))%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
-      var idx=Math.floor(pos/arc+1e-9)%n;  /* +1e-9 防浮点边界误差 */
-      document.getElementById('spin-result').textContent='🎯 结果：'+spinOpts[idx];}}
-  anim();}
+function regexTool(el){
+  el.innerHTML = '<div class="label">正则表达式：</div><input id="regexPat" placeholder="\\d+"><div class="label">测试文本：</div><textarea id="regexText" rows="3" placeholder="输入要测试的文本..."></textarea><button class="go" onclick="regexTest()">测试</button><div class="result" id="regexOut"></div>';
+}
+function regexTest(){
+  try{
+    var p=new RegExp(document.getElementById('regexPat').value,'g');
+    var t=document.getElementById('regexText').value;
+    var m=t.match(p);
+    document.getElementById('regexOut').textContent = m?('匹配到 '+m.length+' 处: '+m.join(', ')):'没有匹配';
+  }catch(e){ document.getElementById('regexOut').textContent='❌ '+e.message; }
+}
 
-/* ===== 今日一言 ===== */
-var QUOTES=['越努力，越幸运。','每天进步一点点，时间会给你答案。','种一棵树最好的时间是十年前，其次是现在。',
-'山高路远，看世界，也找自己。','不是因为看到希望才坚持，而是坚持了才看到希望。','少抱怨，多行动。','你想要的，都在来的路上。',
-'保持热爱，奔赴山海。','跌倒不是失败，爬不起来才是。','生活明朗，万物可爱。','今天也要元气满满哦！','慢一点没关系，只要在前进。',
-'细节决定成败，态度决定高度。','怕什么真理无穷，进一寸有一寸的欢喜。','世界以痛吻我，我要报之以歌。'];
-function randQuote(){var i=Math.floor(Math.random()*QUOTES.length);document.getElementById('big').textContent='「 '+QUOTES[i]+' 」';}
-randQuote();
+function wordcountTool(el){
+  el.innerHTML = '<div class="label">输入文字：</div><textarea id="wcIn" rows="4" oninput="wcCalc()" placeholder="输入要统计的文字..."></textarea><div class="result" id="wcOut"></div>';
+}
+function wcCalc(){
+  var t=document.getElementById('wcIn').value;
+  document.getElementById('wcOut').innerHTML='字符: '+t.length+' | 字数(去空格): '+t.replace(/\s/g,'').length+' | 行数: '+(t?t.split('\n').length:0);
+}
+
+function countdownTool(el){
+  el.innerHTML = '<div class="label">目标日期：</div><input type="date" id="cdDate"><button class="go" onclick="cdCalc()">开始倒计时</button><div class="result" id="cdOut"></div>';
+}
+function cdCalc(){
+  var d=new Date(document.getElementById('cdDate').value);
+  var now=new Date(); var diff=d-now;
+  if(diff<0){document.getElementById('cdOut').textContent='已过了 '+Math.abs(Math.ceil(diff/86400000))+' 天';return;}
+  var days=Math.ceil(diff/86400000);
+  document.getElementById('cdOut').textContent='还有 '+days+' 天！';
+}
+
+function base64Tool(el){
+  el.innerHTML = '<textarea id="b64In" rows="3" placeholder="输入文字..."></textarea><div class="row"><button class="go" onclick="b64Enc()">编码</button><button class="go" onclick="b64Dec()">解码</button></div><div class="result" id="b64Out"></div>';
+}
+function b64Enc(){try{document.getElementById('b64Out').textContent=btoa(unescape(encodeURIComponent(document.getElementById('b64In').value)));}catch(e){document.getElementById('b64Out').textContent='❌ '+e.message;}}
+function b64Dec(){try{document.getElementById('b64Out').textContent=decodeURIComponent(escape(atob(document.getElementById('b64In').value)));}catch(e){document.getElementById('b64Out').textContent='❌ '+e.message;}}
+
+function htmlentTool(el){
+  el.innerHTML = '<textarea id="heIn" rows="3" placeholder="输入文字..."></textarea><div class="row"><button class="go" onclick="heEnc()">编码</button><button class="go" onclick="heDec()">解码</button></div><div class="result" id="heOut"></div>';
+}
+function heEnc(){document.getElementById('heOut').textContent=document.getElementById('heIn').value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function heDec(){document.getElementById('heOut').textContent=document.getElementById('heIn').value.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&amp;/g,'&');}
+
+function sortTool(el){
+  el.innerHTML = '<div class="label">每行一个：</div><textarea id="sortIn" rows="4" placeholder="苹果&#10;香蕉&#10;橙子"></textarea><div class="row"><button class="go" onclick="sortTxt('asc')">A→Z</button><button class="go" onclick="sortTxt('desc')">Z→A</button></div><div class="result" id="sortOut"></div>';
+}
+function sortTxt(dir){
+  var lines=document.getElementById('sortIn').value.split('\n').filter(function(x){return x.trim();});
+  lines.sort(); if(dir==='desc') lines.reverse();
+  document.getElementById('sortOut').textContent=lines.join('\n');
+}
+
+function randTool(el){
+  el.innerHTML = '<div class="row"><input type="number" id="randMin" value="1" style="width:60px"><span>~</span><input type="number" id="randMax" value="100" style="width:60px"><button class="go" onclick="randNum()">随机数</button><button class="go" onclick="coinFlip()">掷硬币</button></div><div class="result" id="randOut" style="font-size:24px;text-align:center;color:#50fa7b"></div>';
+}
+function randNum(){var a=parseInt(document.getElementById('randMin').value)||1,b=parseInt(document.getElementById('randMax').value)||100;document.getElementById('randOut').textContent=Math.floor(Math.random()*(b-a+1))+a;}
+function coinFlip(){document.getElementById('randOut').textContent=Math.random()<0.5?'🪙 正面':'🪙 反面';}
+
+function mdTool(el){
+  el.innerHTML = '<div class="label">左边写Markdown，右边实时预览：</div><div class="row"><textarea id="mdIn" rows="5" oninput="mdRender()" style="flex:1" placeholder="# 标题&#10;**粗体** *斜体*&#10;- 列表项"></textarea></div><div class="result" id="mdOut"></div>';
+}
+function mdRender(){
+  var t=document.getElementById('mdIn').value;
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  t=t.replace(/^### (.*)$/gm,'<h4 style="color:#8be9fd">$1</h4>');
+  t=t.replace(/^## (.*)$/gm,'<h3 style="color:#8be9fd">$1</h3>');
+  t=t.replace(/^# (.*)$/gm,'<h2 style="color:#50fa7b">$1</h2>');
+  t=t.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+  t=t.replace(/\*(.*?)\*/g,'<i>$1</i>');
+  t=t.replace(/^- (.*)$/gm,'• $1<br>');
+  t=t.replace(/\n/g,'<br>');
+  document.getElementById('mdOut').innerHTML=t;
+}
+
+function stopwatchTool(el){
+  el.innerHTML = '<div class="result" id="swOut" style="font-size:36px;text-align:center;color:#50fa7b;font-variant-numeric:tabular-nums">00:00.0</div><div class="row" style="justify-content:center"><button class="go" onclick="swStart()">开始</button><button class="go" onclick="swLap()">计次</button><button class="go" onclick="swReset()">重置</button></div><div class="result" id="swLaps"></div>';
+}
+var swT=0,swI=null;
+function swStart(){if(swI){clearInterval(swI);swI=null;return;}var t0=Date.now()-swT;swI=setInterval(function(){swT=Date.now()-t0;var m=Math.floor(swT/60000),s=Math.floor(swT/1000)%60,ms=Math.floor(swT/100)%10;document.getElementById('swOut').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s+'.'+ms;},100);}
+function swLap(){document.getElementById('swLaps').textContent+=(document.getElementById('swOut').textContent)+'\n';}
+function swReset(){clearInterval(swI);swI=null;swT=0;document.getElementById('swOut').textContent='00:00.0';document.getElementById('swLaps').textContent='';}
+
+function calcTool(el){
+  el.innerHTML = '<input id="calcDisp" readonly style="text-align:right;font-size:20px"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0"><button class="go" onclick="calcPress(\'C\')">C</button><button class="go" onclick="calcPress(\'/\')">÷</button><button class="go" onclick="calcPress(\'*\')">×</button><button class="go" onclick="calcPress(\'-\')">−</button><button class="go" onclick="calcPress(\'7\')">7</button><button class="go" onclick="calcPress(\'8\')">8</button><button class="go" onclick="calcPress(\'9\')">9</button><button class="go" onclick="calcPress(\'+\')">+</button><button class="go" onclick="calcPress(\'4\')">4</button><button class="go" onclick="calcPress(\'5\')">5</button><button class="go" onclick="calcPress(\'6\')">6</button><button class="go" onclick="calcPress(\'=\')">=</button><button class="go" onclick="calcPress(\'1\')">1</button><button class="go" onclick="calcPress(\'2\')">2</button><button class="go" onclick="calcPress(\'3\')">3</button><button class="go" onclick="calcPress(\'0\')">0</button><button class="go" onclick="calcPress(\'.\')">.</button></div>';
+  window._calc='';
+}
+function calcPress(k){
+  if(k==='C'){window._calc='';}
+  else if(k==='='){try{window._calc=String(eval(window._calc));}catch(e){window._calc='错误';}}
+  else{window._calc+=k;}
+  document.getElementById('calcDisp').value=window._calc;
+}
 </script>
-
-<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261005v2"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

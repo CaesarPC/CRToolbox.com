@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机器学习模型训练全流程 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>机器学习模型训练全流程</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>机器学习模型训练全流程：从原始数据到上线推理的完整链路</p>
+<p>AI大模型很火，但很多人对"训练模型"的理解只停留在"喂数据给AI"。实际上，一个机器学习项目从数据到上线，有一套完整的工程流程。理解这个流程，才能明白AI应用开发和传统软件开发的区别。</p>
+<p>第一步是数据采集和清洗。数据是模型的燃料，质量决定模型上限。原始数据通常是脏乱的：有缺失值、异常值、重复数据、格式不统一。数据清洗要花掉整个项目70%的时间。缺失值填充、异常值剔除、格式统一、去重，这些脏活累活是模型训练的基础。"Garbage In, Garbage Out"——脏数据训练不出好模型。</p>
+<p>第二步是数据标注。监督学习需要带标签的数据：图片要标注是什么物体、文本要标注情感倾向、语音要转写成文字。标注质量直接决定模型效果。标注要做质检（多人标注同一样本，不一致的讨论确认），制定清晰的标注规范。</p>
+<p>第三步是特征工程。原始数据不能直接喂给模型，要转换成模型能理解的特征。文本转成词向量、类别数据做编码、时间数据拆分成多个特征。好的特征工程往往比换模型算法更能提升效果。这是机器学习里最依赖经验的环节。</p>
+<p>第四步是模型选择和训练。选择什么模型？传统机器学习任务（表格数据分类、回归）用XGBoost、随机森林就够了；图像任务用CNN；文本任务用Transformer。训练过程就是不断调整模型参数，让预测结果和真实结果的差距（损失函数）越来越小。深度学习模型需要GPU训练，小模型几小时，大模型几周。</p>
+<p>第五步是模型评估。不能只看训练集上的准确率，要看测试集（模型没见过的数据）上的表现。过拟合是常见问题：模型在训练集上完美，但在新数据上表现差，因为它背下了训练数据而不是学到规律。交叉验证、正则化、更多数据，是应对过拟合的方法。</p>
+<p>第六步是模型调优。调整超参数（学习率、层数、batch size），尝试不同模型结构，看哪个效果好。这个过程叫调参，很耗时但必要。</p>
+<p>第七步是部署上线。训练好的模型保存成文件，部署到服务器上，通过API接收输入返回预测结果。这就是前面讲的AI部署。上线后还要监控：预测准确率有没有下降（数据漂移——线上数据分布和训练时不一样了），延迟有没有升高，成本有没有超预期。</p>
+<p>MLOps是把机器学习工程化的整套体系：数据版本管理、模型版本管理、自动训练流水线、模型监控。和DevOps类似，但多了数据和模型的维度。成熟的AI团队有完整的MLOps流程，模型更新像发版一样规范。</p>
+<p>理解这个全流程，就知道AI开发不是"调API"那么简单。数据准备、训练、评估、部署、监控，每一步都有工程挑战。大模型时代，虽然训练大模型本身门槛高，但基于开源模型做微调、做RAG应用，这套流程仍然适用。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

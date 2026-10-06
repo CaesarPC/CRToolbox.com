@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浏览器扩展开发入门：写一个自己的插件 - Cr工具箱</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
+.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
+h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
+.meta{font-size:13px;color:#999;margin-bottom:20px}
+p{margin-bottom:16px;text-indent:2em}
+a{color:#2563eb;text-decoration:none}
+.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>浏览器扩展开发入门：写一个自己的插件</h1>
+<div class="meta">2026-10-06 · 技术教程</div>
+<p>浏览器插件听起来很厉害，其实入门不难。现在主流用Chrome的Manifest V3规范，核心就是一个manifest.json配置文件加几个HTML页面。</p><p>最简单的插件只需要三步：建一个文件夹，写manifest.json描述插件信息，再写一个popup.html做弹窗界面。打开Chrome扩展管理页面，开启开发者模式，加载解压后的文件夹，插件就装好了。</p><p>常见功能包括：修改网页样式、拦截请求、添加右键菜单、存储本地数据。比如做一个广告拦截插件，核心就是监听请求然后屏蔽掉广告域名。做一个划词翻译插件，就是监听选中文字然后弹出翻译结果。</p><p>插件开发用的就是普通前端技术：HTML、CSS、JavaScript，不需要学新语言。门槛低但用处大，做个自己用的小工具特别方便。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS_Grid与Flexbox协同 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CSS_Grid与Flexbox协同</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CSS Grid与Flexbox协同布局</p>
+<p>实际项目中Grid和Flexbox配合使用。Grid做页面宏观框架（header/sidebar/main/footer），Flexbox做组件内部排列（导航栏、卡片内容、按钮组）。</p>
+<p>示例：页面整体用Grid分三行两列；主内容区里的卡片列表用Flexbox横排；每个卡片内部用Flexbox对齐图片和文字。</p>
+<p>Grid管二维整体，Flex管一维排列。两者互补，不是替代。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

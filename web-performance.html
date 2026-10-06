@@ -5,23 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>前端性能优化入门：网页加载慢怎么办 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
-.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
-h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
-.meta{font-size:13px;color:#999;margin-bottom:20px}
-p{margin-bottom:16px;text-indent:2em}
-a{color:#2563eb;text-decoration:none}
-.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
+.back:hover{color:#50fa7b}
+.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
+h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
+.meta{font-size:12px;color:#6272a4;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #44475a}
+p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-<div class="box">
+<div class="wrap">
 <a href="articles.html" class="back">← 返回文章列表</a>
+<div class="card">
 <h1>前端性能优化入门：网页加载慢怎么办</h1>
 <div class="meta">2026-10-06 · 技术教程</div>
-<p>很多人做网站，写得花里胡哨，但打开要等好几秒。用户根本不会等，直接关掉。前端性能优化就是让网页打开更快、更流畅。</p><p>最常见的优化手段有几个：图片压缩、懒加载、CSS和JS文件合并、开启浏览器缓存。图片是网页里最大的文件，把PNG转成WebP格式，体积能小一半。懒加载就是图片先不加载，滚动到可视区域再加载，首屏速度快很多。</p><p>还有一个容易忽略的是渲染阻塞。CSS放在head里、JS放在body底部，不要反过来。第三方脚本比如统计代码、广告代码，尽量异步加载，别让它们拖慢整个页面。</p><p>性能优化不是一次性的事，上线后要持续监控。用浏览器自带的Lighthouse跑分，分数低的地方针对性优化。一般来说，首屏加载控制在3秒以内，用户体验就不错了。</p>
+<p>很多人做网站，写得花里胡哨，但打开要等好几秒。用户根本不会等，直接关掉。前端性能优化就是让网页打开更快、更流畅。</p>
+<p>最常见的优化手段有几个：图片压缩、懒加载、CSS和JS文件合并、开启浏览器缓存。图片是网页里最大的文件，把PNG转成WebP格式，体积能小一半。懒加载就是图片先不加载，滚动到可视区域再加载，首屏速度快很多。</p>
+<p>还有一个容易忽略的是渲染阻塞。CSS放在head里、JS放在body底部，不要反过来。第三方脚本比如统计代码、广告代码，尽量异步加载，别让它们拖慢整个页面。</p>
+<p>性能优化不是一次性的事，上线后要持续监控。用浏览器自带的Lighthouse跑分，分数低的地方针对性优化。一般来说，首屏加载控制在3秒以内，用户体验就不错了。</p>
 <p><a href="articles.html">← 返回文章列表</a></p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
 </div>
 </body>
 </html>

@@ -6,8 +6,10 @@
 <title>实用工具 | Cr工具站</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
-.hd{background:#282a36;padding:16px 20px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh;overflow-x:hidden}
+#meteorCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hd,.grid,.panels{position:relative;z-index:1}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:16px 20px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
 .hd a{color:#50fa7b;text-decoration:none;font-size:14px}
 .hd h1{font-size:20px;color:#50fa7b}
 .grid{display:flex;flex-wrap:wrap;gap:8px;padding:16px;max-width:900px;margin:0 auto}
@@ -31,11 +33,55 @@ button.go{background:#50fa7b;color:#1e1e2e;border:none;border-radius:6px;padding
 </style>
 </head>
 <body>
+<canvas id="meteorCanvas"></canvas>
 <div class="hd"><a href="index.html">← 首页</a><h1>🛠️ 实用工具</h1></div>
 <div class="grid" id="btnGrid"></div>
 <div class="panels" id="panels"></div>
 
 <script>
+/* ===== 流星背景动画 ===== */
+(function(){
+  var canvas = document.getElementById('meteorCanvas');
+  var ctx = canvas.getContext('2d');
+  var W, H, meteors = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  function spawn(){
+    var speed = 2 + Math.random() * 6;
+    meteors.push({
+      x: Math.random() * W * 0.8,
+      y: -10,
+      vx: speed * 0.6,
+      vy: speed,
+      life: 1,
+      decay: 0.005 + Math.random() * 0.008,
+      size: 1 + Math.random() * 2,
+      trailLen: speed * 8
+    });
+  }
+  function loop(){
+    ctx.fillStyle = 'rgba(30,30,46,0.15)';
+    ctx.fillRect(0, 0, W, H);
+    if (Math.random() < 0.03) spawn();
+    for (var i = meteors.length - 1; i >= 0; i--){
+      var m = meteors[i];
+      m.x += m.vx; m.y += m.vy; m.life -= m.decay;
+      if (m.life <= 0 || m.y > H + 50 || m.x > W + 50){ meteors.splice(i, 1); continue; }
+      var grad = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * m.trailLen, m.y - m.vy * m.trailLen);
+      grad.addColorStop(0, 'rgba(139,233,253,' + m.life + ')');
+      grad.addColorStop(1, 'rgba(139,233,253,0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = m.size;
+      ctx.beginPath();
+      ctx.moveTo(m.x, m.y);
+      ctx.lineTo(m.x - m.vx * m.trailLen, m.y - m.vy * m.trailLen);
+      ctx.stroke();
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
 var tools = [
   {id:'qr', icon:'📱', name:'二维码生成器', build:qrTool},
   {id:'pwd', icon:'🔑', name:'密码生成器', build:pwdTool},
@@ -183,7 +229,7 @@ function heEnc(){document.getElementById('heOut').textContent=document.getElemen
 function heDec(){document.getElementById('heOut').textContent=document.getElementById('heIn').value.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&amp;/g,'&');}
 
 function sortTool(el){
-  el.innerHTML = '<div class="label">每行一个：</div><textarea id="sortIn" rows="4" placeholder="苹果&#10;香蕉&#10;橙子"></textarea><div class="row"><button class="go" onclick="sortTxt('asc')">A→Z</button><button class="go" onclick="sortTxt('desc')">Z→A</button></div><div class="result" id="sortOut"></div>';
+  el.innerHTML = '<div class="label">每行一个：</div><textarea id="sortIn" rows="4" placeholder="苹果&#10;香蕉&#10;橙子"></textarea><div class="row"><button class="go" onclick="sortTxt(\'asc\')">A→Z</button><button class="go" onclick="sortTxt(\'desc\')">Z→A</button></div><div class="result" id="sortOut"></div>';
 }
 function sortTxt(dir){
   var lines=document.getElementById('sortIn').value.split('\n').filter(function(x){return x.trim();});

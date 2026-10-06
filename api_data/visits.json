@@ -398,5 +398,21 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
   "ref": ""
+ },
+ {
+  "id": 1791280069183,
+  "ts": 1791280069183,
+  "time": "2026-10-06 17:47",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (Linux; Android 12; HarmonyOS; ADA-AL00; HMSCore 6.16.4.352) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.6834.79 HuaweiBrowser/17.0.8.310 Mobile Safari/537.36",
+  "ref": ""
+ },
+ {
+  "id": 1791282466074,
+  "ts": 1791282466074,
+  "time": "2026-10-06 18:27",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (Linux; Android 12; HarmonyOS; ADA-AL00; HMSCore 6.16.4.352) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.6834.79 HuaweiBrowser/17.0.8.310 Mobile Safari/537.36",
+  "ref": "https://caesarpc.github.io/articles.html"
  }
 ]

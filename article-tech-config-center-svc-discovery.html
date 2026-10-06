@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>配置中心与服务发现 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>配置中心与服务发现</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>配置中心与服务发现：微服务基础设施的核心组件</h2>
+<p>微服务有几十上百个实例，配置分散在各个服务里，改一个配置要重新部署所有实例？服务实例地址变了，调用方怎么知道对方在哪？配置中心和服务发现就是解决这两个基础设施问题的。</p>
+<p>配置中心集中管理所有服务的配置。数据库地址、API密钥、功能开关、限流参数，都存在配置中心。服务启动时从配置中心拉取配置，运行中配置变更时动态推送，不需要重启服务。Nacos、Apollo、Spring Cloud Config是主流方案。</p>
+<p>配置中心的关键能力：环境隔离（开发、测试、生产配置分开）、版本管理（配置变更有历史记录，能回滚）、灰度发布（先让一部分实例用新配置）、权限控制（谁能改什么配置）、监听通知（配置变了实时推送到服务）。</p>
+<p>配置不要全部放配置中心。只有需要动态变更的配置才放，启动时固定的配置放配置文件就行。配置中心是为了"运行时可调"。</p>
+<p>服务发现解决"服务在哪"的问题。实例启动时向注册中心注册自己的地址（IP+端口），服务下线时注销。调用方从注册中心查询目标服务的实例列表，通过负载均衡选一个调用。Nacos、Eureka、Consul、etcd是注册中心实现。</p>
+<p>服务发现的好处：实例地址动态变化（扩容、缩容、故障转移）对调用方透明。调用方不写死地址，每次从注册中心拿最新列表。健康检查：注册中心定期探测实例，挂了的自动剔除。</p>
+<p>客户端发现 vs 服务端发现：客户端发现（调用方自己从注册中心拿列表，自己做负载均衡，如Ribbon）；服务端发现（请求先到负载均衡器，负载均衡器从注册中心拿列表转发，如Nginx+注册中心）。</p>
+<p>配置中心和注册中心经常是同一个产品（Nacos同时提供两个能力）。它们是微服务架构的基础设施，没有它们，手动管理几十个实例的地址和配置是不可想象的。</p>
+<p>K8s环境下，服务发现和配置有了原生方案：Service做服务发现、ConfigMap做配置。但在传统虚拟机部署或混合环境，Nacos这类组件仍然是主力。</p>
+</div>
+</body>
+</html>

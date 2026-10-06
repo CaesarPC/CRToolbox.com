@@ -67,7 +67,11 @@ textarea{min-height:80px;resize:vertical}
 <body>
 <div class="hd">
   <h1>💬 公开留言墙</h1>
-  <a href="toolbox.html">← 返回工具箱</a>
+  <div style="display:flex;gap:16px;align-items:center;">
+    <a href="https://caesarpc.github.io/caesarbase/main.html" style="opacity:.7;font-size:13px;">← CaesarBase</a>
+    <a href="index.html">← 返回工具箱</a>
+  </div>
+</div>
 </div>
 <div class="wrap">
   <!-- 管理员控制面板（仅 Server 登录可见） -->
@@ -543,7 +547,7 @@ setInterval(function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/ghdb_v2.js?v=20261006c';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c';
     s.onload = function () { setupAdmin(); setupEgg67(); loadWall(); };
     s.onerror = function () { document.getElementById('w-msg').textContent = '数据层加载失败，请刷新重试'; };
     (document.head || document.body).appendChild(s);
@@ -562,6 +566,6 @@ setInterval(function () {
   });
 });
 </script>
-<script src="https://CaesarPC.github.io/clip.js?v=20261006c"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

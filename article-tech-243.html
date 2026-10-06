@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API版本管理 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>API版本管理</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># API版本管理：接口迭代不破坏老用户</p>
+<p>你的API已经上线，有很多前端和App在调用。现在要改接口——加字段、改参数、调逻辑。直接改？老用户的App就崩了。这就是API版本管理要解决的问题。</p>
+<p>## 一、为什么需要版本管理</p>
+<p>App发布后，用户不一定立刻升级。你的旧版本App还在线上跑着，调用的是旧版接口。如果后端直接改了接口格式，旧App就挂了。</p>
+<p>API版本管理就是：保留旧版接口继续可用，新版接口用新的版本号。老用户用旧版，新用户用新版。等所有用户都升级了，再下线旧版。</p>
+<p>## 二、版本号放哪里</p>
+<p>最常见的做法是放在URL里：/api/v1/users、/api/v2/users。一目了然，调试方便。</p>
+<p>也可以放在Header里：Accept: application/vnd.myapp.v2+json。URL更干净，但调试不直观。</p>
+<p>## 三、什么时候需要新版本</p>
+<p>只有不兼容的改动才需要新版本。什么叫不兼容？
+- 删除了字段
+- 修改了字段含义或类型
+- 必填参数变成可选（或反过来）
+- 改了URL路径</p>
+<p>向后兼容的改动不需要新版本：
+- 加了新的可选字段
+- 加了新的可选参数
+- 加了新的接口</p>
+<p>## 四、版本生命周期</p>
+<p>旧版本接口不要永远保留。定一个日落计划：宣布v1将在三个月后下线，给调用方迁移时间。到期后v1返回410 Gone。不要无限维护旧版本——维护成本很高。</p>
+<p>## 五、总结</p>
+<p>API版本管理的核心原则：不兼容改动才升级版本号，向后兼容改动直接加。URL里放版本号最直观。旧版本要有下线计划，不要永久维护。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

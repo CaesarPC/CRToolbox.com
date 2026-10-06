@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>团队代码规范与工程协作 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>团队代码规范与工程协作</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>团队代码规范与工程协作：让多人项目不混乱的制度建设</h2>
+<p>一个人写代码怎么写都行，但一个团队十几个人写同一个项目，如果没有统一规范，代码会变成无法维护的灾难：有人用单引号有人用双引号、有人写分有人不写、变量命名风格各异、提交信息乱七八糟。Code Review时大家花时间争论风格问题，而不是讨论逻辑问题。代码规范和工程协作制度，就是为了解决这个问题。</p>
+<p>代码风格规范是最基础的。ESLint检测代码错误和风格问题，Prettier自动格式化代码。关键是：这些规则要配置在项目里，提交代码时自动检查、自动格式化，不靠人自觉。CI流水线里加一步Lint检查，不符合规范的代码不让合并。这样团队里所有人的代码风格自动统一，不需要在Review时争论。</p>
+<p>命名规范、文件组织规范、注释规范也要写进文档。组件怎么命名、文件放在哪个目录、接口怎么分层、错误怎么处理，这些约定俗成的规则写下来，新人入职照着做就行，不用反复问。</p>
+<p>Git提交信息规范经常被忽视。"update"、"fix"、"修改"这种提交信息，几周后没人知道这次改了什么。规范的提交信息格式（如Conventional Commits）：type(scope): description。type是feat/fix/docs/refactor等类型，一眼看出这次提交是新功能还是修bug。好的提交历史可以自动生成CHANGELOG，也方便回溯问题。</p>
+<p>分支策略和PR流程前面讲过，这里强调Code Review的质量。Review不是走形式"LGTM"就完事。Reviewer要真正看代码：逻辑是否正确、有没有边界情况、命名是否清晰、有没有安全隐患。作者要根据反馈认真修改，而不是抵触。好的Code Review文化是团队成长的重要机制。</p>
+<p>文档是工程协作的重要组成部分。README说明项目怎么跑起来、架构文档说明系统设计、API文档说明接口怎么调。很多项目代码写得不错但文档缺失，三个月后没人记得当初为什么这样设计。好记性不如烂笔头，关键决策和架构要写下来。</p>
+<p>结对编程和技术分享是团队知识共享的方式。新人入职有导师带，每周技术分享会有人讲自己做的东西。知识不集中在某几个人脑子里，团队才不会因为某人离职而停摆。</p>
+<p>代码规范和工程制度不是束缚创造力，而是减少无意义的沟通成本。当风格问题都由工具自动解决，Review就专注于真正重要的逻辑和设计问题。成熟的工程团队和业余团队的区别，往往就体现在这些"看不见"的制度细节上。</p>
+</div>
+</body>
+</html>

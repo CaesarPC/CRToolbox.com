@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elasticsearch搜索引擎实战 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>Elasticsearch搜索引擎实战</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<p>Elasticsearch搜索引擎实战：从模糊查询到全文检索的技术升级</p>
+<p>数据库的LIKE '%关键词%'查询性能差、功能弱（不支持分词、相关性排序、中文分词麻烦）。当需要做搜索功能（商品搜索、文章搜索、日志查询），就该上专门的搜索引擎。Elasticsearch是最流行的开源搜索引擎。</p>
+<p>Elasticsearch的核心是倒排索引。传统索引是"文档→词"，倒排索引是"词→哪些文档包含这个词"。搜索时根据关键词直接找到包含它的文档，速度极快。这和数据库的B+树索引不同，ES是为全文搜索设计的。</p>
+<p>基本概念：Index（索引，相当于数据库）、Type（已废弃）、Document（文档，相当于行）、Field（字段）。数据以JSON文档形式存入ES。写入文档时，ES自动分词建立倒排索引。</p>
+<p>中文分词是关键。英文按空格分词，中文要专门的分词器。IK分词器支持中文细粒度和粗粒度分词，是中文搜索的标配。配置好分词器，"南京市长江大桥"才能正确分成"南京市/长江大桥"而不是"南京市长/江大桥"。</p>
+<p>搜索能力：全文检索（关键词匹配）、多字段搜索（同时搜标题和内容）、过滤（分类、价格范围）、排序（按相关度、时间）、聚合统计（按类别分组统计数量）。这些组合起来，能实现电商网站那种复杂搜索：按关键词搜、按价格筛选、按分类过滤、按销量排序。</p>
+<p>数据同步是ES和数据库配合的核心问题。数据存在MySQL，搜索用ES，两边数据要保持同步。方案：双写（业务代码同时写MySQL和ES，但不一致风险高）；_binlog同步（Canal监听MySQL binlog，自动同步到ES，推荐方案）；消息队列异步同步（数据库变更发MQ，消费者更新ES）。</p>
+<p>ES不适合做事务查询和精准统计（它是最终一致，不适合强事务）。它的定位是搜索引擎，不是主数据库。主数据在MySQL，ES做索引副本，查询从ES走。</p>
+<p>实际应用场景：电商商品搜索、站内文章搜索、日志检索（ELK栈的L就是Logstash收集日志到ES，Kibana查询）、企业内部搜索。</p>
+<p>性能注意：ES是内存密集型，JVM堆内存要合理配置；分片数规划好（太多小分片浪费，太少大分片难迁移）；不用的索引定期删除或归档。</p>
+<p>搜索引擎是网站从"能看"到"好用"的关键组件。好的搜索体验让用户快速找到想要的内容，ES是实现这一点的标准工具。</p>
+</div>
+</body>
+</html>

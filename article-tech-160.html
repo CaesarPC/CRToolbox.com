@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS动画与性能优化 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>CSS动画与性能优化</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p>CSS动画与性能优化：让页面动起来不卡顿</p>
+<p>动画让网站更生动：悬停效果、页面切换、数字滚动。但动画写不好会掉帧。CSS动画性能的关键是：只触发合成层，不触发重排重绘。</p>
+<p>CSS动画属性选择：transform和opacity是最便宜的动画（只触发合成，不触发布局）。改width/height/top/left会触发布局重排，性能差。所以位移动画用transform: translate，大小变化用transform: scale。</p>
+<p>will-change属性提前告诉浏览器某个元素要动画，浏览器提前优化。但不要滥用（每个元素都加will-change反而占更多内存）。</p>
+<p>requestAnimationFrame：JS驱动的动画要用这个API，和浏览器刷新率同步，掉帧少。不要用setInterval做动画。</p>
+<p>合成层：复杂动画元素可以提升为合成层（translateZ(0)或will-change），单独渲染，不影响其他元素。但合成层太多占内存，要克制。</p>
+<p>减少动画复杂度：阴影、滤镜、渐变动画都很贵。必要时简化。</p>
+<p>prefers-reduced-motion：尊重系统的"减少动画"设置，对前庭功能障碍用户友好。</p>
+<p>CSS动画性能的核心：用transform/opacity做动画，避免触发布局。理解渲染管线（前面讲过），就知道为什么。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

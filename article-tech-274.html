@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT刷新令牌 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>JWT刷新令牌</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 什么是JWT刷新令牌：短期Access+长期Refresh</p>
+<p>前面讲过JWT，这里讲一个常见的生产实践：Access Token + Refresh Token双令牌机制。</p>
+<p>## 一、问题</p>
+<p>JWT签发后无法主动作废。如果Access Token有效期设很长（比如7天），泄露了别人可以用7天。设很短（比如15分钟），用户每15分钟就要重新登录，体验差。</p>
+<p>## 二、解决方案</p>
+<p>两个Token：
+Access Token：有效期短（15分钟），放在localStorage，每次请求带它访问API。
+Refresh Token：有效期长（7天），放在HttpOnly Cookie里，用来换新的Access Token。</p>
+<p>Access Token过期后，前端用Refresh Token调一个专门的refresh接口，换一个新的Access Token。用户无感知。</p>
+<p>## 三、好处</p>
+<p>Access Token即使泄露，15分钟后就失效。Refresh Token在HttpOnly Cookie里，JS读不到，XSS偷不走。安全和体验平衡。</p>
+<p>## 四、总结</p>
+<p>双令牌是JWT生产环境的标准实践：短期Access保安全，长期Refresh保体验。不要把JWT有效期设太长。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

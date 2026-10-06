@@ -6,27 +6,26 @@
 <title>网站云端部署与轻量化运维：静态托管、CDN加速与服务稳定化技术详解 - Cr工具箱</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
 .wrap{max-width:720px;margin:0 auto}
-.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
-.back:hover{color:#50fa7b}
-.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
-h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
-.meta{font-size:12px;color:#6272a4;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #44475a}
-p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:26px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15.5px;color:#c8ccd4;line-height:1.9}
 a{color:#50fa7b;text-decoration:none}
 a:hover{text-decoration:underline}
-.section{margin:28px 0 16px 0;padding:14px 18px;background:#1e1e2e;border-left:4px solid #50fa7b;border-radius:0 10px 10px 0}
-.section h2{font-size:16px;color:#50fa7b;margin:0 0 4px 0}
-.section p{font-size:12.5px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
+/* 模块小标题：左侧绿色竖杠 */
+.section{margin:32px 0 16px 0;padding:12px 0 12px 16px;border-left:4px solid #50fa7b}
+.section h2{font-size:18px;color:#50fa7b;margin:0 0 4px 0;font-weight:600;line-height:1.4}
+.section p{font-size:13px;color:#6272a4;margin:0;text-indent:0;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="wrap">
 <a href="articles.html" class="back">← 返回文章列表</a>
-<div class="card">
 <h1>网站云端部署与轻量化运维：静态托管、CDN加速与服务稳定化技术详解</h1>
-<div class="meta">2026-10-06 · 技术教程</div>
+<div class="meta">Cr工具站 · 技术教程</div>
 <div class="section"><h2>引言：云端托管成主流</h2><p>免开机、防宕机、全球加速、低成本上线。</p></div>
 <p>现代个人站点、工具站与轻量商业网站的开发逻辑，已经彻底从传统本地服务器部署转向云端托管模式。相较于老旧的本地主机部署，云端部署具备免常驻开机、防宕机、全球节点加速、低成本甚至零成本上线等优势，是目前个人开发者、小型技术项目、工具类网站的主流落地方案。多数新手开发者在完成前后端代码编写后，常会卡在部署环节，出现页面无法访问、静态资源加载失败、外网无法穿透、域名解析异常、缓存错乱等问题，本质原因是对云端托管、静态分发、网络加速与基础运维逻辑认知缺失。本文系统拆解现代网站云端部署的核心技术、主流方案、避坑要点与运维规范，覆盖静态站部署、反向代理、CDN加速、防访问失效、跨域配置等刚需技术点。</p>
 <div class="section"><h2>静态网站托管</h2><p>Cloudflare Pages、GitHub Pages、Vercel。</p></div>
@@ -48,7 +47,7 @@ a:hover{text-decoration:underline}
 <div class="section"><h2>总结</h2><p>开发+部署+加速+运维+安全一体化闭环。</p></div>
 <p>综合来看，现代网站技术不再是单一写代码的能力，而是开发、部署、加速、运维、安全一体化的完整闭环。前端负责交互体验，后端负责数据逻辑，云端部署负责永久在线，CDN负责高速分发，运维配置负责稳定安全。熟练掌握云端托管、自动化部署、缓存优化、反向代理、跨域与基础安全配置，能够彻底解决个人网站掉线、加载慢、更新难、易崩溃、不安全等所有常见问题，是独立开发者搭建高质量工具站、展示站、交互站、AI功能站的必备核心能力。</p>
 <p><a href="articles.html">← 返回文章列表</a></p>
-</div>
+<p><a href="articles.html">← 返回文章列表</a></p>
 </div>
 </body>
 </html>

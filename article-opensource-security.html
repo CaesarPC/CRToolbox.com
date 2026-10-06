@@ -5,19 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>开源生态、代码安全与个人开发者的项目长期维护思路 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
-.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
-h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
-.meta{font-size:13px;color:#999;margin-bottom:20px}
-p{margin-bottom:16px;text-indent:2em}
-a{color:#2563eb;text-decoration:none}
-.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
+.back:hover{color:#50fa7b}
+.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
+h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
+.meta{font-size:12px;color:#6272a4;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #44475a}
+p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-<div class="box">
+<div class="wrap">
 <a href="articles.html" class="back">← 返回文章列表</a>
+<div class="card">
 <h1>开源生态、代码安全与个人开发者的项目长期维护思路</h1>
 <div class="meta">2026-10-06 · 技术教程</div>
 <p>对于绝大多数程序员，无论是业余爱好者还是在职工程师，都无法从零编写所有底层代码。现代软件开发高度依赖开源生态，同时，项目长期维护、安全审计、依赖管理，是很多个人开发者极易忽略的环节。很多个人工具站、前端项目、后端服务，初期开发顺利，上线运行一段时间后，突然出现漏洞、服务宕机、依赖包无法安装，根源大多是对开源依赖管理、代码安全、长期维护缺乏足够认知。看懂开源生态的利弊，建立安全意识，掌握项目持续维护的方法论，才能让自己开发的应用稳定运行，避免项目"写完即报废"。</p>
@@ -33,6 +37,8 @@ a{color:#2563eb;text-decoration:none}
 <p>随着AI辅助开发普及，很多开发者直接复制AI生成的代码片段引入项目。AI生成的代码看似可以运行，但常常隐藏安全漏洞、未处理的边界情况，甚至引入有问题的依赖。AI产出的代码，必须人工审查、测试之后，再并入项目，不能直接复制上线。AI是代码生成工具，但安全审计、风险评估，仍然需要开发者本人完成。</p>
 <p>总而言之，开源生态极大降低了软件开发的门槛，但也带来依赖风险、安全隐患。项目开发不是写完代码上线就结束，真正的工程能力，体现在上线之后的长期维护。合理挑选开源依赖、做好版本锁定与漏洞扫描、补齐各类安全防护、规范代码仓库、完善文档与变更管理，才能让项目持续稳定运行。对于个人开发者，掌握这套维护思维，能够避开绝大多数线上项目的常见陷阱，把临时的Demo，变成可以长期迭代、稳定可靠的完整应用。</p>
 <p><a href="articles.html">← 返回文章列表</a></p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
 </div>
 </body>
 </html>

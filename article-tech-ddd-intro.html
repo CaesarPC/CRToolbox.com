@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDD领域驱动设计入门 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>DDD领域驱动设计入门</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>DDD领域驱动设计入门：让代码结构匹配业务复杂度</h2>
+<p>业务复杂的系统，代码写成一团：一个Service几千行，什么业务逻辑都往里塞，改一个功能怕动到其他地方。DDD（Domain-Driven Design，领域驱动设计）是一套应对复杂业务的方法论：让代码结构反映业务领域，业务逻辑集中在"领域层"，和技术细节分离。</p>
+<p>DDD的核心概念是领域。电商系统的领域是"订单、商品、库存、支付"；医院系统的领域是"患者、挂号、诊断、处方"。每个领域有自己的模型和业务规则。</p>
+<p>实体（Entity）是有唯一标识的领域对象。订单有订单ID，订单ID不变就是同一个订单，哪怕内容改了。值对象（Value Object）没有标识，靠属性值判断相等。地址、金额都是值对象——两个地址属性完全一样就是同一个地址，不需要单独标识。</p>
+<p>聚合（Aggregate）是一组相关对象的集合，作为一致性边界。订单聚合包括订单、订单项，它们一起保证业务规则（订单总金额=订单项之和）。外部只操作聚合根（订单），不直接操作内部对象。</p>
+<p>领域服务处理不属于单个实体的业务逻辑。比如"转账"涉及两个账户，放在哪个实体里都不合适，就用领域服务。</p>
+<p>领域层是核心：包含所有业务规则，不依赖数据库、不依赖API，纯业务逻辑。基础设施层（数据库、外部API）在外面，通过接口被领域层依赖。这样业务逻辑独立，测试容易，技术换了业务逻辑不用改。</p>
+<p>限界上下文（Bounded Context）划分领域边界。"商品"在营销上下文里是"促销品"，在库存上下文里是"SKU"，在物流上下文里是"包裹"。同一个词在不同上下文有不同含义，分开建模，不要强行统一。</p>
+<p>DDD不是万能的。简单CRUD系统用DDD是杀鸡用牛刀，过度设计。它适合业务逻辑复杂、领域知识丰富的中大型系统。判断标准：业务规则是不是很多很复杂？代码是不是已经难维护？是就考虑DDD。</p>
+<p>DDD是思维方式，不是具体框架。它帮助团队建立统一的业务语言（和产品经理用同样的词），让代码结构和业务对齐。这是应对复杂业务的重要方法论。</p>
+</div>
+</body>
+</html>

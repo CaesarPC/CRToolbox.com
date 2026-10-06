@@ -6,80 +6,98 @@
 <title>Cr工具箱 - 免费在线工具合集</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh;padding:20px}
-.wrap{max-width:680px;margin:0 auto;padding:40px 0}
-.logo{text-align:center;margin-bottom:20px}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh;overflow-x:hidden}
+#meteorCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:40px 20px}
+.logo{text-align:center;margin-bottom:16px}
 .logo .emoji{font-size:52px}
 h1{text-align:center;font-size:30px;color:#50fa7b;margin-bottom:10px;font-weight:700}
-.intro{text-align:center;font-size:14px;color:#6272a4;line-height:1.7;margin-bottom:36px}
-.bigbtn{display:block;background:#50fa7b;color:#1e1e2e;text-decoration:none;font-size:20px;font-weight:700;padding:20px;border-radius:14px;text-align:center;margin-bottom:24px;transition:.15s}
-.bigbtn:hover{background:#6eff8e;transform:translateY(-2px);box-shadow:0 6px 20px rgba(80,250,123,.2)}
-/* 模块介绍卡片 */
-.modules{display:grid;gap:12px}
-.mod{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:18px 20px;transition:.15s;cursor:pointer;text-decoration:none;color:inherit;display:block}
-.mod:hover{border-color:#50fa7b;transform:translateY(-2px)}
-.mod .head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.mod .icon{font-size:22px}
-.mod h3{font-size:15px;color:#50fa7b;margin:0}
-.mod p{font-size:12.5px;color:#6272a4;line-height:1.6;margin:0}
-/* 文章模块高亮 */
+.intro{text-align:center;font-size:14px;color:#bdc3c7;line-height:1.7;margin-bottom:32px;max-width:560px;margin-left:auto;margin-right:auto}
+.bigbtn{display:block;background:#50fa7b;color:#1e1e2e;text-decoration:none;font-size:20px;font-weight:700;padding:20px;border-radius:14px;text-align:center;margin-bottom:32px;transition:.15s;max-width:400px;margin-left:auto;margin-right:auto}
+.bigbtn:hover{background:#6eff8e;transform:translateY(-2px);box-shadow:0 6px 24px rgba(80,250,123,.25)}
+/* 两列网格 */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.mod{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:20px;transition:.15s;cursor:pointer;text-decoration:none;color:inherit;display:block}
+.mod:hover{border-color:#50fa7b;transform:translateY(-3px);box-shadow:0 6px 20px rgba(80,250,123,.08)}
 .mod.feat{border-left:4px solid #50fa7b}
-.mod.feat h3{color:#50fa7b}
+.mod .head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mod .icon{font-size:24px}
+.mod h3{font-size:16px;color:#50fa7b;margin:0}
+.mod p{font-size:13px;color:#6272a4;line-height:1.7;margin:0}
 .foot{text-align:center;margin-top:36px;font-size:12px;color:#6272a4}
 </style>
 </head>
 <body>
+<canvas id="meteorCanvas"></canvas>
 <div class="wrap">
 <div class="logo"><div class="emoji">🧰</div></div>
 <h1>Cr工具箱</h1>
 <p class="intro">免费在线工具合集，无需注册、无需下载、打开即用。<br>
-涵盖编码解码、域名查询、文件转换、实用小工具、小游戏、技术教程等，持续更新中。</p>
-
+涵盖编码解码、域名查询、文件转换、实用小工具、小游戏、技术教程，持续更新中。</p>
 <a href="toolbox.html" class="bigbtn">🚀 进入工具箱</a>
 
-<div class="modules">
+<div class="grid">
 <a href="articles.html" class="mod feat">
 <div class="head"><span class="icon">📚</span><h3>技术文章教程</h3></div>
-<p>前端开发、网络原理、容器部署、安全防护等技术教程文章，持续更新。从入门到进阶，实用知识随时看。</p>
+<p>前端开发、网络原理、容器部署、安全防护、云原生等技术教程。从浏览器渲染到HTTP协议，从Docker部署到SEO优化，实用知识持续更新，适合程序员和技术爱好者阅读学习。</p>
 </a>
 
 <a href="finder.html" class="mod">
 <div class="head"><span class="icon">🔍</span><h3>网站查找器</h3></div>
-<p>输入关键词，自动扫描 .com .net .org .io .dev 等多个后缀的域名占用情况，一键查询哪些域名还能注册。</p>
+<p>输入关键词，自动扫描 .com .net .org .io .dev .xyz 等多个后缀的域名占用情况。一键批量查询，快速知道哪些域名还能注册，找好域名不用一个个试。</p>
 </a>
 
 <a href="combiner.html" class="mod">
 <div class="head"><span class="icon">🔗</span><h3>域名组合器</h3></div>
-<p>自动组合前缀后缀生成域名方案，批量查询可用性，帮你快速找到心仪的可注册域名。</p>
+<p>自动组合前缀后缀生成域名方案，批量查询可用性。输入想法，帮你列出所有可能的域名组合，找到心仪的可注册域名。</p>
 </a>
 
 <a href="codec.html" class="mod">
-<div class="head"><span class="icon">⚙️</span><h3>编码解码</h3></div>
-<p>Base64 编解码、URL 编解码、JSON 格式化、HTML 转义，程序员日常必备工具。</p>
+<div class="head"><span class="icon">⚙️</span><h3>编码解码工具</h3></div>
+<p>Base64 编解码、URL 编解码、JSON 格式化、HTML 转义、SHA-256 哈希校验。程序员日常必备，本地浏览器处理，数据不上传服务器。</p>
 </a>
 
 <a href="file-convert.html" class="mod">
-<div class="head"><span class="icon">📄</span><h3>文件转换</h3></div>
-<p>图片格式转换 PNG/JPG/WebP、CSV 转 JSON、哈希校验，本地浏览器处理，不上传服务器。</p>
+<div class="head"><span class="icon">📄</span><h3>文件格式转换</h3></div>
+<p>图片格式转换 PNG/JPG/WebP、CSV 转 JSON、时间戳换算、单位换算。纯前端处理，文件不离开你的设备，安全快速。</p>
 </a>
 
 <a href="games.html" class="mod">
 <div class="head"><span class="icon">🎮</span><h3>休闲小游戏</h3></div>
-<p>贪吃蛇、2048、扫雷、俄罗斯方块等经典小游戏，打开即玩，无需下载。</p>
+<p>贪吃蛇、2048、扫雷、俄罗斯方块等经典小游戏。打开即玩，无需下载安装，摸鱼放松好选择。</p>
 </a>
 
 <a href="wall.html" class="mod">
 <div class="head"><span class="icon">💬</span><h3>留言墙</h3></div>
-<p>游客留言交流区，随便聊聊、提建议、反馈问题，欢迎来打个招呼。</p>
+<p>游客留言交流区，随便聊聊、提建议、反馈问题。支持文字留言，后台可管理，欢迎来打个招呼。</p>
 </a>
 
 <a href="software.html" class="mod">
-<div class="head"><span class="icon">📦</span><h3>软件下载</h3></div>
-<p>精选实用软件和开源工具推荐，持续更新好用的桌面应用和开发工具。</p>
+<div class="head"><span class="icon">📦</span><h3>软件下载推荐</h3></div>
+<p>精选实用软件和开源工具推荐，涵盖开发工具、效率软件、系统工具。持续更新好用的桌面应用。</p>
 </a>
 </div>
 
 <p class="foot">Cr工具箱 · 免费在线工具 · 仅供学习交流 · 请勿用于非法用途</p>
 </div>
+
+<script>
+/* 流星背景 */
+(function(){
+  var c=document.getElementById('meteorCanvas'),x=c.getContext('2d'),W,H,ms=[];
+  function rz(){W=c.width=innerWidth;H=c.height=innerHeight;}rz();onresize=rz;
+  function sp(){var s=2+Math.random()*6;ms.push({x:Math.random()*W*0.8,y:-10,vx:s*0.6,vy:s,life:1,decay:.005+Math.random()*.008,size:1+Math.random()*2,trail:s*8});}
+  function lp(){x.fillStyle='rgba(30,30,46,0.15)';x.fillRect(0,0,W,H);
+    if(Math.random()<.03)sp();
+    for(var i=ms.length-1;i>=0;i--){var m=ms[i];m.x+=m.vx;m.y+=m.vy;m.life-=m.decay;
+      if(m.life<=0||m.y>H+50||m.x>W+50){ms.splice(i,1);continue;}
+      var g=x.createLinearGradient(m.x,m.y,m.x-m.vx*m.trail,m.y-m.vy*m.trail);
+      g.addColorStop(0,'rgba(139,233,253,'+m.life+')');g.addColorStop(1,'rgba(139,233,253,0)');
+      x.strokeStyle=g;x.lineWidth=m.size;x.beginPath();x.moveTo(m.x,m.y);x.lineTo(m.x-m.vx*m.trail,m.y-m.vy*m.trail);x.stroke();
+    }
+    requestAnimationFrame(lp);}lp();
+})();
+</script>
 </body>
 </html>

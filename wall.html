@@ -34,7 +34,7 @@ textarea{min-height:80px;resize:vertical}
 .pin-item .pin-btn{margin-left:8px;font-size:11px;color:#ff5555;cursor:pointer;background:none;border:1px solid #ff5555;border-radius:4px;padding:1px 7px}
 /* 弹幕舞台 */
 .stage{position:relative;min-height:420px;height:420px;overflow:hidden;background:#1a1a24;border-radius:12px;border:1px solid #44475a;margin-bottom:14px}
-.dm{position:absolute;left:0;top:0;white-space:nowrap;max-width:80%;overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:6px 14px;border-radius:20px;background:rgba(40,42,54,.85);border:1px solid #44475a;color:#e6e6e6;will-change:transform}
+.dm{position:absolute;left:0;top:0;white-space:nowrap;max-width:80%;overflow:hidden;text-overflow:ellipsis;font-size:15px;padding:6px 14px;border-radius:20px;background:rgba(40,42,54,.85);border:1px solid #44475a;color:#e6e6e6;will-change:transform;transition:none !important}
 .dm .nm{color:#8be9fd;font-weight:bold;margin-right:6px}
 .dm.admin{background:rgba(255,215,0,.12);border-color:#ffd700;color:#ffe97a;font-weight:bold}
 .dm.admin .nm{color:#ffd700}
@@ -343,25 +343,35 @@ function spawnDm(item) {
   el.style.backfaceVisibility = 'hidden';
   stage.appendChild(el);
 
-  var stageW = stage.clientWidth || window.innerWidth;
-  var elW = el.offsetWidth || 200;
-  var startX = stageW + 20;
-  var endX = -elW - 20;
-  var dist = startX - endX;
-  var pxPerMs = dist / (dur * 1000);
+  /* 每帧动态计算宽度，避免窗口/滚动条变化导致位置错乱 */
+  function getStartX() { return stage.clientWidth + 30; }
+  function getEndX() { return -el.offsetWidth - 30; }
+
+  el.style.transform = 'translateX(' + getStartX() + 'px)';
+  el.style.opacity = '0';
   var t0 = performance.now();
-  el.style.transform = 'translateX(' + startX + 'px)';
+
   function frame(now) {
-    if (!el.parentNode) return;      // 已被淘汰移除，停止
+    if (!el.parentNode) return;
+    var sX = getStartX(), eX = getEndX();
+    var dist = sX - eX;
+    var pxPerMs = dist / (dur * 1000);
     var dx = (now - t0) * pxPerMs;
     if (dx >= dist) {
-      // 循环：到达左侧后瞬间回到右侧重新播放，弹幕一直滚动不消失
+      /* 走到左边外面后：隐藏一帧 → 瞬间放到右边外面 → 再显示 */
+      el.style.opacity = '0';
       t0 = now;
-      el.style.transform = 'translateX(' + startX + 'px)';
-      requestAnimationFrame(frame);
+      /* 下一帧再显示，让浏览器先完成隐藏 */
+      requestAnimationFrame(function () {
+        if (!el.parentNode) return;
+        el.style.transform = 'translateX(' + getStartX() + 'px)';
+        el.style.opacity = '1';
+        requestAnimationFrame(frame);
+      });
       return;
     }
-    el.style.transform = 'translateX(' + (startX - dx) + 'px)';
+    if (el.style.opacity === '0') el.style.opacity = '1';
+    el.style.transform = 'translateX(' + (sX - dx) + 'px)';
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);

@@ -56,7 +56,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#1e1e2e;color:#
   <div>
     <span class="uinfo" id="uinfo">未登录</span>
     <a href="javascript:;" id="loginLink" style="margin-left:10px">登录</a>
-    <a href="toolbox.html" style="margin-left:14px">← 返回工具箱</a>
+    <a href="https://caesarpc.github.io/caesarbase/main.html" style="margin-left:14px;opacity:.7;">← CaesarBase</a>
+    <a href="index.html" style="margin-left:14px">← 返回工具箱</a>
   </div>
 </div>
 <div class="wrap">
@@ -340,7 +341,7 @@ document.getElementById('loginLink').onclick = function () {
 (function () {
   if (!window.CrGH) {
     var s = document.createElement('script');
-    s.src = 'https://CaesarPC.github.io/ghdb_v2.js?v=20261006c';
+    s.src = 'https://CaesarPC.github.io/website-finder/ghdb_v2.js?v=20261006c';
     s.onload = function () { updUserUI(); loadList(); };
     s.onerror = function () { updUserUI(); };
     (document.head || document.body).appendChild(s);
@@ -353,6 +354,6 @@ document.getElementById('loginLink').onclick = function () {
 document.getElementById('pubGo').onclick = doPublish;
 document.getElementById('q').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
 </script>
-<script src="https://CaesarPC.github.io/clip.js?v=20261006c"></script>
+<script src="https://CaesarPC.github.io/website-finder/clip.js?v=20261006c"></script>
 </body>
 </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebComponents - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>WebComponents</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 什么是Web Components：框架无关的组件</p>
+<p>React、Vue、Angular各有各的组件体系，不能互通。Web Components是浏览器原生的组件标准——用原生JS定义的组件，可以在任何框架里用，甚至不用框架。</p>
+<p>## 一、三个技术</p>
+<p>Custom Elements：定义自己的HTML标签，比如<my-button>。浏览器原生支持。
+Shadow DOM：组件内部DOM和外部隔离，样式不会泄漏。
+HTML Templates：<template>标签定义组件的HTML结构。</p>
+<p>## 二、好处</p>
+<p>框架无关：写一次，React/Vue/原生HTML都能用。
+封装好：Shadow DOM隔离样式和DOM。
+原生标准：不用打包工具，浏览器直接支持。</p>
+<p>## 三、坏处</p>
+<p>生态不如框架组件丰富。
+学习曲线。
+复杂交互开发不如React/Vux方便。</p>
+<p>## 四、总结</p>
+<p>Web Components是浏览器原生组件标准。适合做跨框架的通用组件库。应用开发还是用框架效率高。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

@@ -12,22 +12,21 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;mi
 .hd .links{display:flex;gap:16px;align-items:center}
 .hd a{color:#8be9fd;font-size:13px;text-decoration:none}
 .hd a.cb{opacity:.7}
-.wrap{max-width:900px;margin:26px auto;padding:0 16px}
+.wrap{max-width:800px;margin:26px auto;padding:0 16px}
 .intro{background:#282a36;border-radius:10px;padding:16px 20px;margin-bottom:20px;border-left:4px solid #50fa7b}
 .intro p{margin:0;font-size:13px;color:#bdc3c7;line-height:1.6}
-.article-list{background:#282a36;border-radius:14px;border:1px solid #44475a;overflow:hidden}
-.article-item{padding:18px 20px;border-bottom:1px solid #44475a;cursor:pointer;transition:background .15s}
-.article-item:last-child{border-bottom:none}
-.article-item:hover{background:#1e1e2e}
-.article-item h3{font-size:16px;margin-bottom:6px;color:#50fa7b;font-weight:600}
-.article-item p{font-size:13px;color:#bdc3c7;line-height:1.5}
-.article-item .date{font-size:11px;color:#6272a4;margin-top:8px}
+.article-list{display:grid;gap:12px}
+.article-item{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:18px 20px;cursor:pointer;transition:.15s}
+.article-item:hover{border-color:#50fa7b;box-shadow:0 4px 16px rgba(80,250,123,.08);transform:translateY(-2px)}
+.article-item h3{font-size:15px;color:#e6e6e6;margin-bottom:4px;font-weight:600}
+.article-item p{font-size:12px;color:#6272a4;margin:0;line-height:1.5}
+.article-item .date{font-size:11px;color:#6272a4;margin-top:10px}
 .foot{color:#6272a4;font-size:12px;margin-top:30px;text-align:center;padding-bottom:20px}
 </style>
 </head>
 <body>
 <div class="hd">
-  <h1>📖 文章教程</h1>
+  <h1>📚 文章教程</h1>
   <div class="links">
     <a href="https://caesarpc.github.io/caesarbase/main.html" class="cb">← CaesarBase</a>
     <a href="index.html">← 返回工具箱</a>
@@ -35,34 +34,56 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;mi
 </div>
 <div class="wrap">
   <div class="intro">
-    <p>实用工具教程和使用指南（共25篇）</p>
+    <p>技术深度文章，覆盖前端、后端、架构、DevOps等方向（共39篇）</p>
   </div>
   <div class="article-list">
-    <div class="article-item" onclick="location.href='article-base64.html'"><h3>什么是Base64编码？一分钟看懂</h3><p>Base64是什么？为什么网页里到处都是它？</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-url.html'"><h3>URL编码是什么？%20是什么意思？</h3><p>网址里的奇怪字符其实是URL编码。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-json.html'"><h3>JSON格式化是什么？为什么程序员都需要它</h3><p>API返回的JSON挤成一团看不懂？</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-domain.html'"><h3>怎么查一个域名有没有被注册？免费方法</h3><p>想注册好域名但不知道能不能注册？</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-qrcode.html'"><h3>二维码怎么生成？免费在线工具</h3><p>输入内容一键生成二维码。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-006.html'"><h3>密码生成器怎么用</h3><p>随机强密码保护账号安全。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-007.html'"><h3>时间戳是什么？Unix时间戳怎么换算</h3><p>从1970年到现在的秒数。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-008.html'"><h3>单位换算工具</h3><p>长度重量面积一键转换。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-009.html'"><h3>图片格式转换</h3><p>PNG转JPG转WebP。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-010.html'"><h3>CSV转JSON</h3><p>数据格式转换工具。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-011.html'"><h3>SHA-256哈希校验</h3><p>验证文件有没有被篡改。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-012.html'"><h3>域名组合器怎么用</h3><p>自动组合域名查询可用性。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-013.html'"><h3>网站查找器怎么用</h3><p>一键扫描多后缀域名占用。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-014.html'"><h3>贪吃蛇小游戏</h3><p>经典休闲游戏在线玩。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-015.html'"><h3>2048小游戏</h3><p>数字合并游戏挑战最高分。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-016.html'"><h3>扫雷小游戏</h3><p>经典Windows游戏在线玩。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-017.html'"><h3>俄罗斯方块</h3><p>经典方块游戏在线玩。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-018.html'"><h3>番茄钟工作法</h3><p>25分钟专注计时器。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-019.html'"><h3>在线画板</h3><p>手机上也能画画的工具。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-020.html'"><h3>文本分享工具</h3><p>粘贴文字生成分享链接。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-021.html'"><h3>开源分享专区</h3><p>发布你的作品和脚本。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-022.html'"><h3>公开留言墙</h3><p>给站长留言互动。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-023.html'"><h3>计算器在线使用</h3><p>免费网页计算器。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-024.html'"><h3>单位换算大全</h3><p>长度重量面积温度一键转换。</p><div class="date">2026-10-06</div></div>
-    <div class="article-item" onclick="location.href='article-025.html'"><h3>密码生成器</h3><p>随机强密码保护账号安全。</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-ai-agent-dev-intro.html'"><h3>AI Agent智能体开发入门</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-graphql-api.html'"><h3>GraphQL API设计</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-distributed-lock.html'"><h3>分布式锁实现方案</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-db-sharding-practice.html'"><h3>分库分表实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-rw-split-ha.html'"><h3>读写分离与数据库高可用</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-elasticsearch-search.html'"><h3>Elasticsearch搜索引擎实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-rate-limit-algo.html'"><h3>限流算法实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-circuit-breaker-fallback.html'"><h3>熔断降级与容错设计</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-distributed-tx.html'"><h3>分布式事务方案对比</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-config-center-svc-discovery.html'"><h3>配置中心与服务发现</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-elk-log-system.html'"><h3>日志收集体系ELK</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-serverless-arch.html'"><h3>Serverless架构详解</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-cdn-optimization.html'"><h3>CDN原理与优化</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-tcp-ip-basics.html'"><h3>TCP/IP网络基础</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-grpc-rpc.html'"><h3>gRPC与高性能RPC框架</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-event-driven-arch.html'"><h3>事件驱动架构</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-ddd-intro.html'"><h3>DDD领域驱动设计入门</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-clean-arch-hexagonal.html'"><h3>整洁架构与六边形架构</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-refactor-practice.html'"><h3>重构实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-tech-selection.html'"><h3>技术选型决策方法</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-gray-release-abtest.html'"><h3>灰度发布与AB测试</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-dr-multi-active.html'"><h3>容灾备份与多活架构</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-stress-test-capacity.html'"><h3>压力测试与容量规划</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-tech-debt.html'"><h3>技术债管理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-vite-deep-dive.html'"><h3>Vite构建工具深度解析</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-monorepo.html'"><h3>Monorepo多包管理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-cross-tab-comm.html'"><h3>浏览器跨标签页通信</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-frontend-authz.html'"><h3>前端权限设计</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-i18n-practice.html'"><h3>国际化i18n实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-dark-mode.html'"><h3>暗色模式实现</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-file-upload-chunk.html'"><h3>文件上传与大文件分片</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-browser-storage.html'"><h3>浏览器存储方案对比</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-frontend-tracking.html'"><h3>前端埋点与数据采集</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-ai-product-design.html'"><h3>AI应用产品设计原则</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-form-best-practice.html'"><h3>表单处理最佳实践</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-rich-text-editor.html'"><h3>富文本编辑器原理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-css-animation-perf.html'"><h3>CSS动画与性能优化</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-perf-budget.html'"><h3>前端性能预算</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-data-masking-privacy.html'"><h3>数据脱敏与隐私保护</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-api-versioning.html'"><h3>API版本管理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-system-design-method.html'"><h3>系统设计方法论</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-tech-writing.html'"><h3>技术文档写作</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-edge-rendering.html'"><h3>边缘渲染与下一代Web架构</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-virtual-list.html'"><h3>虚拟列表与长列表性能优化</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-micro-frontend.html'"><h3>微前端架构实践</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-ssr-isomorphic.html'"><h3>服务端渲染SSR与同构应用</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-bff-layer.html'"><h3>BFF层设计与实践</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
   </div>
   <div class="foot">Cr工具站 · 免费在线工具</div>
 </div>

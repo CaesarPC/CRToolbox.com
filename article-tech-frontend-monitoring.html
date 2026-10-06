@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端监控体系搭建 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>前端监控体系搭建</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>前端监控体系搭建：让线上问题在你发现之前先报警</h2>
+<p>用户在手机上打开你的网站白屏了，他不会告诉你，直接关掉。你不知道网站在某些机型上崩了，直到用户量明显下降。前端监控就是解决这个"看不见"的问题：采集线上真实用户的报错、性能、行为数据，让你远程了解网站在真实环境中的表现。</p>
+<p>错误监控是前端监控最基本的能力。JavaScript运行时错误通过window.onerror和unhandledrejection事件捕获。资源加载错误（图片404、脚本加载失败）通过捕获阶段监听error事件收集。框架层面（React的ErrorBoundary、Vue的errorHandler）捕获组件渲染错误。所有错误信息带上：错误消息、堆栈、用户UA、浏览器版本、URL、发生时间，上报到监控服务。</p>
+<p>Source Map是错误监控的关键配套。线上代码是压缩混淆过的，报错堆栈里的行列号对应不到源码。Source Map文件记录了混淆后代码和源码的映射关系，监控服务用Source Map还原出真实的错误位置。这样线上报错能精确定位到源码文件和行号。</p>
+<p>性能监控采集真实用户的体验数据。前面讲过的Web Vitals指标（LCP、INP、CLS）是核心。还有页面加载时间、白屏时间、接口耗时、资源加载耗时。这些数据按地域、浏览器、设备分组统计，发现"iOS 15上LCP普遍偏慢"这种具体问题。</p>
+<p>行为回放（Session Replay）是高级功能：录制用户的操作过程（点击、输入、页面变化），出问题时回放看用户到底做了什么。像看视频一样复现Bug，比看日志猜原因高效得多。</p>
+<p>监控平台有成熟的选择：Sentry是最流行的开源错误监控；商业平台如Fundebug、ByteDance的RUM方案；云厂商也有前端监控服务。中小团队直接用Sentry自托管或SaaS版，几行代码接入就能用。</p>
+<p>告警规则要合理。错误率突增（比平时高几倍）立刻告警；单个严重错误（白屏、JS崩溃）出现就通知；普通警告记录但不打扰。告警发到企业微信/钉钉，值班人员及时响应。</p>
+<p>前端监控和后端监控要打通。前端报错带上trace-id，后端日志也记录同一个trace-id，这样从前端报错可以一路追踪到后端是哪个接口、哪行代码出的问题。全链路排错能力就建立起来了。</p>
+<p>埋点分析是另一类前端数据采集：用户点了哪些按钮、看了哪些页面、转化漏斗哪一步流失。这不是技术监控，而是产品数据分析。通过埋点SDK自动采集用户行为，产品经理用数据做决策。</p>
+<p>没有监控的前端是黑盒。你不知道网站在用户手机上到底跑得怎么样，只能靠用户反馈（但用户不会反馈）。建立前端监控体系，是产品从Demo走向成熟的标志。</p>
+</div>
+</body>
+</html>

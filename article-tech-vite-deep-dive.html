@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vite构建工具深度解析 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>Vite构建工具深度解析</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>Vite构建工具深度解析：为什么它比Webpack快这么多</h2>
+<p>Webpack启动项目要等几十秒，Vite启动只要几百毫秒。差距在哪？原理不同。Webpack在开发启动时就要把整个应用打包成bundle（不管你访问哪个页面，全部先编译）。Vite利用浏览器原生ES模块支持：启动时不打包，浏览器请求哪个模块，Vite才即时编译哪个模块。冷启动速度和项目大小关系不大——大项目也是秒开。</p>
+<p>Vite的核心特性：原生ESM开发（不预打包，按需编译）；依赖预构建（把node_modules里的依赖用esbuild预打包，因为CommonJS要转ESM，且减少请求数）；HMR热更新极快（只更新修改的模块，不重新打包整个bundle）；基于esbuild（Go写的，比JS写的打包器快10-100倍）。</p>
+<p>生产构建时Vite还是用Rollup打包（因为浏览器需要优化的bundle：压缩、tree-shaking、代码分割）。开发用esbuild+ESM，生产用Rollup，各取所长。</p>
+<p>Vite配置很简单：vite.config.js里配置入口、构建选项、插件。Vue/React项目用create-vite脚手架，开箱即用。</p>
+<p>生态：Vite不只是打包器，还有插件系统（处理静态资源、SVG、环境变量）、SSG支持（vite-ssg）、库模式（打包组件库）。</p>
+<p>为什么这么快普及？开发体验好——启动快、热更新快，开发者感知明显。新项目基本都选Vite，老项目从Webpack迁移也不难。</p>
+<p>理解Vite的原理，就知道现代构建工具的演进方向：利用浏览器原生能力（ESM）、用更快的语言（Go/Rust写工具）、按需处理而不是全量打包。</p>
+</div>
+</body>
+</html>

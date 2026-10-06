@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BFF层设计与实践 - Cr工具站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9}
+.container{max-width:760px;margin:0 auto;padding:30px 20px}
+.hd{background:rgba(40,42,54,.9);backdrop-filter:blur(10px);padding:14px 20px;border-bottom:1px solid #44475a;position:sticky;top:0}
+.hd a{color:#50fa7b;text-decoration:none;font-size:14px}
+h1{font-size:26px;color:#50fa7b;line-height:1.4;margin:20px 0 10px}
+.meta{font-size:13px;color:#6272a4;margin-bottom:30px}
+p{margin:16px 0;font-size:15px;color:#cdd6f4;text-align:justify}
+h2{font-size:20px;color:#8be9fd;margin:35px 0 12px;border-left:3px solid #8be9fd;padding-left:12px}
+</style>
+</head>
+<body>
+<div class="hd"><a href="articles.html">← 文章列表</a></div>
+<div class="container">
+<h1>BFF层设计与实践</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>BFF层设计：前端专属的后端聚合层</h2>
+<p>后端有十几个微服务，前端要拿一个页面的数据，需要调用用户服务、商品服务、订单服务三个接口。前端发三个请求，自己聚合数据。这有几个问题：请求多慢、前端要处理多个接口的错误、后端服务一变前端就要改。BFF（Backend For Frontend）就是为解决这个问题的中间层：为前端定制的聚合服务，一次请求返回页面需要的全部数据。</p>
+<p>BFF的核心思想是"按需定制"。Web端需要的数据结构和APP端不一样，小程序端又不一样。与其让通用后端接口适应所有端（导致接口臃肿、字段冗余），不如为每个端做一个专属的BFF，专门聚合该端需要的数据。</p>
+<p>BFF做什么：调用多个后端微服务，并行请求，聚合数据；做数据转换（把后端的字段名转成前端需要的格式）；做裁剪（只返回前端需要的字段，不返回多余数据）；处理错误兜底（某个后端服务挂了，BFF返回兜底数据而不是整个页面报错）。</p>
+<p>BFF不做什么：不写核心业务逻辑（那是微服务的事）、不直接操作数据库（通过微服务接口访问）。BFF是薄聚合层，不是新的业务中心。</p>
+<p>架构位置：客户端 → BFF层 → 后端微服务集群。BFF可以按端拆分：Web-BFF、APP-BFF、小程序-BFF，各自独立部署。也可以按业务域合并。</p>
+<p>BFF的实现技术很灵活：Node.js是最常见的选择，因为前端工程师自己就能写JavaScript，BFF由前端团队维护，不需要等后端排期。这是BFF最大的价值——前端有了自主权，不需要每个小需求都找后端。</p>
+<p>GraphQL是BFF的天然搭档：前端精确声明需要哪些字段，BFF（GraphQL服务）从多个微服务取数据组装。BFF层用GraphQL，前端按需取数，非常灵活。</p>
+<p>BFF也有过度设计的风险。简单项目，前端直接调后端接口就够了，加BFF多一层反而复杂。BFF适合：微服务数量多、页面需要聚合多个服务数据、多端数据需求差异大的场景。判断标准：前端是否真的在"编排"多个后端接口？如果是，BFF让这层编排显式化、可维护。</p>
+<p>BFF模式在大型互联网公司非常普遍。它是前后端协作的润滑剂：后端专注业务能力，前端专注用户体验，BFF作为衔接层让两边都高效。</p>
+</div>
+</body>
+</html>

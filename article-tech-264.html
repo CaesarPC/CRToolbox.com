@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#50fa7b;text-decoration:none;font-size:14px;margin-bottom:24px}
+.back:hover{text-decoration:underline}
+h1{font-size:24px;color:#50fa7b;line-height:1.3;margin-bottom:12px;font-weight:700}
+.meta{font-size:13px;color:#6272a4;margin-bottom:32px}
+p{margin-bottom:16px;text-indent:2em;font-size:15px;color:#c8ccd4;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a href="articles.html" class="back">← 返回文章列表</a>
+<h1>PWA</h1>
+<div class="meta">Cr工具站 · 技术教程</div>
+<p># 什么是PWA：让网页像App一样</p>
+<p>PWA（Progressive Web App）让网页具备原生App的体验：可以添加到手机桌面、离线可用、推送通知。不需要开发iOS/Android两个原生App，一个网站搞定。</p>
+<p>## 一、核心技术</p>
+<p>Service Worker：一个在浏览器后台运行的JS线程，独立于页面。它可以拦截网络请求，离线时返回缓存的资源。这就是离线可用的原理。</p>
+<p>Web App Manifest：一个JSON文件，定义应用名字、图标、主题色。用户"添加到主屏幕"后，图标出现在手机桌面，打开时全屏没有浏览器地址栏——看起来就像原生App。</p>
+<p>## 二、好处</p>
+<p>不需要下载安装——用户访问网页就能用。
+跨平台——一个网站iOS和Android都能跑。
+离线可用——Service Worker缓存了资源，没网也能打开。</p>
+<p>## 三、局限</p>
+<p>iOS对PWA的支持一直不如Android。推送通知、后台运行这些能力在iOS上有限制。复杂的硬件访问（蓝牙、NFC）还是要原生App。</p>
+<p>## 四、总结</p>
+<p>PWA适合内容类工具——网站、博客、简单工具。让用户"添加到主屏幕"获得类似App的体验。重交互、需要硬件能力的场景，还是原生App。</p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
+</body>
+</html>

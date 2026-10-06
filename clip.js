@@ -19,7 +19,19 @@
 /* 手机触摸优化：禁止双击缩放、防止游戏误触 */
 (function(){
   var st = document.createElement('style');
-  st.textContent = 'html{touch-action:manipulation;}input,textarea{user-select:text;-webkit-user-select:text;}';
+  st.textContent = 'html{touch-action:manipulation;}input,textarea{user-select:text;-webkit-user-select:text;}' +
+    /* 苹果风丝滑过渡 */
+    '*{-webkit-tap-highlight-color:transparent;}' +
+    'body{animation:crFadeIn .3s ease-out;}' +
+    '@keyframes crFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}' +
+    'button,a,.bigcard,.card,.dm,.cr-fab,.cr-menu,.cr-box{transition:all .2s cubic-bezier(.4,0,.2,1);}' +
+    'button:active,a:active,.bigcard:active,.card:active{transform:scale(.96);}' +
+    '.cr-fab{transition:transform .2s cubic-bezier(.4,0,.2,1),background .2s;}' +
+    '.cr-fab:active{transform:scale(.9);}' +
+    '.cr-box{animation:crSlideUp .25s cubic-bezier(.4,0,.2,1);}' +
+    '@keyframes crSlideUp{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}' +
+    '.cr-menu{animation:crPop .2s cubic-bezier(.4,0,.2,1);}' +
+    '@keyframes crPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}';
   (document.head || document.documentElement).appendChild(st);
 })();
 

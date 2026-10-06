@@ -5,23 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数据可视化入门：用ECharts做图表不需要后端 - Cr工具箱</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;line-height:1.9;padding:20px}
-.box{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:28px}
-h1{font-size:22px;margin-bottom:16px;color:#2563eb;line-height:1.4}
-.meta{font-size:13px;color:#999;margin-bottom:20px}
-p{margin-bottom:16px;text-indent:2em}
-a{color:#2563eb;text-decoration:none}
-.back{display:inline-block;margin-bottom:16px;color:#666;text-decoration:none}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;line-height:1.9;padding:20px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.back{display:inline-block;color:#6272a4;text-decoration:none;font-size:13px;margin-bottom:16px;transition:.15s}
+.back:hover{color:#50fa7b}
+.card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:28px;overflow:hidden}
+h1{font-size:22px;color:#50fa7b;line-height:1.4;margin-bottom:10px}
+.meta{font-size:12px;color:#6272a4;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #44475a}
+p{margin-bottom:14px;text-indent:2em;font-size:15px;color:#e6e6e6;line-height:1.9}
+a{color:#50fa7b;text-decoration:none}
+a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-<div class="box">
+<div class="wrap">
 <a href="articles.html" class="back">← 返回文章列表</a>
+<div class="card">
 <h1>数据可视化入门：用ECharts做图表不需要后端</h1>
 <div class="meta">2026-10-06 · 技术教程</div>
-<p>数据可视化就是把数字变成图表，让人一眼看懂趋势。做网站展示数据，最常用的就是百度开源的ECharts，免费、文档全、效果好。</p><p>用ECharts做图表只需要三步：引入ECharts的JS文件、准备一个div容器、写几行JavaScript配置图表类型和数据。折线图、柱状图、饼图、地图都有现成模板，复制改改数据就能用。</p><p>很多人以为做图表需要后端数据库，其实不一定。纯前端就能做，数据写死在JS里就行。比如展示一个网站访问量统计，直接在代码里写好每天的数据，图表自动渲染出来。</p><p>ECharts还支持交互：鼠标悬停显示详情、缩放、切换图表类型。做仪表盘、数据大屏特别方便，不需要后端也能做出专业效果。</p>
+<p>数据可视化就是把数字变成图表，让人一眼看懂趋势。做网站展示数据，最常用的就是百度开源的ECharts，免费、文档全、效果好。</p>
+<p>用ECharts做图表只需要三步：引入ECharts的JS文件、准备一个div容器、写几行JavaScript配置图表类型和数据。折线图、柱状图、饼图、地图都有现成模板，复制改改数据就能用。</p>
+<p>很多人以为做图表需要后端数据库，其实不一定。纯前端就能做，数据写死在JS里就行。比如展示一个网站访问量统计，直接在代码里写好每天的数据，图表自动渲染出来。</p>
+<p>ECharts还支持交互：鼠标悬停显示详情、缩放、切换图表类型。做仪表盘、数据大屏特别方便，不需要后端也能做出专业效果。</p>
 <p><a href="articles.html">← 返回文章列表</a></p>
+<p><a href="articles.html">← 返回文章列表</a></p>
+</div>
 </div>
 </body>
 </html>

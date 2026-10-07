@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>后端架构专题 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex; align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .links{display:flex;gap:16px;align-items:center}
+.hd a{color:#8be9fd;font-size:13px;text-decoration:none}
+.hd a.cb{opacity:.7}
+.wrap{max-width:800px;margin:26px auto;padding:0 16px}
+.topic-header{background:#282a36;border-radius:12px;padding:24px;margin-bottom:20px;border-left:4px solid #ffb86c}
+.topic-header h2{font-size:20px;color:#e6e6e6;margin-bottom:8px}
+.topic-header p{font-size:13px;color:#6272a4;line-height:1.6}
+.article-list{display:grid;gap:12px}
+.article-item{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:18px 20px;cursor:pointer;transition:.15s}
+.article-item:hover{border-color:#50fa7b;box-shadow:0 4px 16px rgba(80,250,123,.08);transform:translateY(-2px)}
+.article-item h3{font-size:15px;color:#e6e6e6;margin-bottom:4px;font-weight:600}
+.article-item p{font-size:12px;color:#6272a4;margin:0;line-height:1.5}
+.article-item .date{font-size:11px;color:#6272a4;margin-top:10px}
+.foot{color:#6272a4;font-size:12px;margin-top:30px;text-align:center;padding-bottom:20px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>⚙️ 后端架构专题</h1>
+  <div class="links">
+    <a href="https://caesarpc.github.io/caesarbase/main.html" class="cb">← CaesarBase</a>
+    <a href="topics.html">← 所有专题</a>
+    <a href="index.html">← 工具箱</a>
+  </div>
+</div>
+<div class="wrap">
+  <div class="topic-header">
+    <h2>⚙️ 后端架构</h2>
+    <p>分布式系统、微服务、数据库、API设计、高可用架构等后端核心知识。</p>
+  </div>
+  
+  <div class="article-list">
+    <div class="article-item" onclick="location.href='article-tech-graphql-api.html'"><h3>GraphQL API设计</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-distributed-lock.html'"><h3>分布式锁实现方案</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-db-sharding-practice.html'"><h3>分库分表实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-rw-split-ha.html'"><h3>读写分离与数据库高可用</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-rate-limit-algo.html'"><h3>限流算法实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-circuit-breaker-fallback.html'"><h3>熔断降级与容错设计</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-distributed-tx.html'"><h3>分布式事务方案对比</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-config-center-svc-discovery.html'"><h3>配置中心与服务发现</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-event-driven-arch.html'"><h3>事件驱动架构</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-ddd-intro.html'"><h3>DDD领域驱动设计入门</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-clean-arch-hexagonal.html'"><h3>整洁架构与六边形架构</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-api-versioning.html'"><h3>API版本管理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-system-design-method.html'"><h3>系统设计方法论</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+  </div>
+  
+  <div class="foot">Cr工具站 · 后端架构专题</div>
+</div>
+</body>
+</html>

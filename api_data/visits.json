@@ -62,5 +62,13 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (Linux; Android 12; HarmonyOS; ADA-AL00; HMSCore 6.16.4.352) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.6834.79 HuaweiBrowser/17.0.8.310 Mobile Safari/537.36",
   "ref": "https://caesarpc.github.io/"
+ },
+ {
+  "id": 1791393802528,
+  "ts": 1791393802528,
+  "time": "2026-10-08 01:23",
+  "page": "index.html",
+  "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+  "ref": "https://caesarpc.github.io/"
  }
 ]

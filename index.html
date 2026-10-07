@@ -48,6 +48,7 @@ footer{text-align:center;padding:30px;color:var(--dim);font-size:12px;position:r
 .install-box .opt{display:flex;flex-direction:column;gap:4px;align-items:center;width:100%;margin:8px 0;padding:14px;border-radius:12px;border:none;font-size:16px;font-weight:700;cursor:pointer;transition:.2s}
 .install-box .opt small{font-size:12px;font-weight:400;opacity:.8}
 .install-box .opt.ios{background:rgba(50,200,255,.15);color:#8be9fd}
+.install-box .opt.test{background:rgba(255,184,108,.14);color:#ffb86c}
 .install-box .opt.apk{background:rgba(80,250,123,.12);color:#50fa7b}
 .install-box .opt:hover{transform:scale(1.03);filter:brightness(1.2)}
 .install-box .cancel{background:transparent;border:1px solid var(--border);color:var(--dim);width:100%;padding:10px;border-radius:10px;margin-top:10px;cursor:pointer}
@@ -283,6 +284,12 @@ function installApk() {
   closeInstallModal();
   window.location.href = APK_URL;
 }
+
+// iOS 测试版: 弹出免责声明
+function installIosTest() {
+  closeInstallModal();
+  alert('⚠️ 此安装包仅为测试用途\n\n下载并安装即表示您同意：\n1. 该安装包未经 App Store 审核\n2. 安装/使用造成的任何损失，开发者不承担任何责任\n3. 测试结束后请自行删除\n\n(注：iOS测试版 .ipa 需在 Mac 上用 Xcode 构建，当前暂无可用测试包)');
+}
 </script>
 <script>
 // 离线检测
@@ -305,6 +312,7 @@ updateOnlineStatus();
     <h3>选择安装方式</h3>
     <p class="tip">把 CaesarBase 装成独立 App</p>
     <button class="opt ios" onclick="installIOS()">🍎 iOS / iPad<small>PWA 添加到主屏幕</small></button>
+    <button class="opt test" onclick="installIosTest()">🧪 iOS 测试版<small>测试安装包 · 免责</small></button>
     <button class="opt apk" onclick="installApk()">🤖 鸿蒙 HarmonyOS<small>下载 APK 安装包</small></button>
     <button class="opt apk" onclick="installApk()">📱 安卓 Android<small>下载 APK 安装包</small></button>
     <button class="cancel" onclick="closeInstallModal()">取消</button>

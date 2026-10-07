@@ -20,6 +20,10 @@ canvas{flex:1;touch-action:none;cursor:crosshair;background:#fff}
 </style>
 </head>
 <body>
+<!-- 离线提示顶栏 -->
+<div id="offlineBar" style="display:none;position:fixed;top:0;left:0;right:0;background:#2d2d3f;color:#888;padding:4px 16px;font-size:12px;text-align:center;z-index:9999;">
+  📡 当前未联网 · 部分功能不可用
+</div>
 <div class="hd">
   <a href="index.html">← 首页</a>
   <h1>🎨 在线画板</h1>
@@ -99,5 +103,23 @@ document.getElementById('save').onclick = function(){
 };
 </script>
 <script src="clip.js?v=20261006c"></script>
+<script>
+// PWA注册
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.log('SW failed:', err));
+  });
+}
+// 离线检测
+function updateOnlineStatus() {
+  const bar = document.getElementById('offlineBar');
+  if (bar) bar.style.display = navigator.onLine ? 'none' : 'block';
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+</script>
 </body>
 </html>

@@ -217,7 +217,10 @@ if ('serviceWorker' in navigator) {
 
 // ==== 安装到桌面(PWA) ====
 let deferredPrompt = null;
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+// iPadOS 的Safari会把UA伪装成Mac, 需用多点触控+Mac平台识别
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent)
+  || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  || (navigator.userAgentData && /macOS/i.test(navigator.userAgentData.platform) && navigator.maxTouchPoints > 1);
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
 // 安卓/电脑Chrome: 捕获安装提示

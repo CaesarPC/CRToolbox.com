@@ -1,5 +1,5 @@
 // CaesarBase PWA Service Worker
-const CACHE_NAME = 'caesarbase-v1';
+const CACHE_NAME = 'caesarbase-v2';
 const ASSETS = [
   '/',
   '/index.html',

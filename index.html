@@ -254,8 +254,8 @@ if (isStandalone) {
 const APK_URL = 'https://caesarpc.github.io/apk/CaesarBase.apk';
 
 function installPWA() {
-  // 始终弹出安装方式选择面板: iOS / 鸿蒙 / 安卓
-  document.getElementById('installModal').style.display = 'flex';
+  // 跳转到独立安装选择页(纯静态页面, 不依赖JS弹窗, 鸿蒙等浏览器也能正常显示)
+  window.location.href = 'install.html';
 }
 
 function closeInstallModal() {

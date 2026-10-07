@@ -53,6 +53,7 @@ footer{text-align:center;padding:30px;color:var(--dim);font-size:12px;position:r
   <div class="logo">CaesarBase</div>
   <div class="right">
     <span id="userInfo" style="display:none;font-size:14px">游客</span>
+    <button class="user-btn" id="installBtn" onclick="installPWA()" style="display:none">📲 安装到桌面</button>
     <button class="user-btn" id="loginBtn" onclick="showLogin()">登录</button>
   </div>
 </div>
@@ -213,6 +214,49 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW failed:', err));
   });
 }
+
+// ==== 安装到桌面(PWA) ====
+let deferredPrompt = null;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+// 安卓/电脑Chrome: 捕获安装提示
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'inline-block';
+});
+
+// iOS Safari: 不支持beforeinstallprompt, 直接显示按钮引导
+if (isIOS && !isStandalone) {
+  document.getElementById('installBtn').style.display = 'inline-block';
+}
+
+// 已安装为App → 隐藏按钮
+if (isStandalone) {
+  const b = document.getElementById('installBtn');
+  if (b) b.style.display = 'none';
+}
+
+function installPWA() {
+  // 安卓/电脑: 直接弹安装
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') console.log('安装成功');
+      deferredPrompt = null;
+      document.getElementById('installBtn').style.display = 'none';
+    });
+    return;
+  }
+  // iOS/iPad Safari: 引导用户用分享菜单添加
+  if (isIOS) {
+    alert('在 iPad/iPhone 上安装：\n1. 点底部中间的「分享」按钮\n2. 向下滑，点「添加到主屏幕」\n3. 点右上角「添加」即可');
+  } else {
+    alert('请在浏览器菜单中选择「安装应用」或「添加到主屏幕」');
+  }
+}
+</script>
 
 // 离线检测
 function updateOnlineStatus() {

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>分布式锁实现方案 - CaesarBase</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e6e6f0;line-height:1.8;padding:20px}
+.back{display:inline-block;margin-bottom:20px;color:#50fa7b;text-decoration:none;font-size:14px}
+.back:hover{text-decoration:underline}
+.article{max-width:700px;margin:0 auto;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:16px;padding:30px}
+h1{font-size:24px;margin-bottom:20px;color:#50fa7b}
+.meta{font-size:13px;color:#6272a4;margin-bottom:20px}
+h2{font-size:18px;margin:20px 0 10px;color:#8be9fd}
+p{margin-bottom:12px;color:#c8c8e0;font-size:15px}
+</style>
+</head>
+<body>
+<div class="article">
+<a class="back" href="index.html">← 返回 CaesarBase</a>
+<h1>分布式锁实现方案</h1>
+<div class="meta">Cr工具站 · 约2000字 · 阅读约8分钟</div>
+<h2>分布式锁实现方案：多机环境下的并发控制</h2>
+<p>单机时代，用Java的synchronized或Redis的setnx就能做锁。但系统拆成多机部署后，多个服务实例同时运行，单机锁管不了其他机器。分布式锁就是在多机环境下，保证同一个操作同一时间只有一个实例在执行。</p>
+<p>典型场景：定时任务每台机器都跑，怎么保证只跑一次？库存扣减并发，怎么防止超卖？定时任务的分布式锁：实例启动定时任务前先抢锁，抢到的才执行，其他实例跳过。</p>
+<p>Redis是最常用的分布式锁实现。SET key value NX EX 30：key不存在才设置（NX），过期时间30秒（EX），防止拿到锁的进程挂了锁永远不释放。value要设成唯一值（比如UUID），释放锁时验证value是不是自己的，防止误删别人的锁。释放锁要用Lua脚本保证"检查+删除"原子性。</p>
+<p>Redis锁的问题：主从切换时锁可能丢失。Master写了锁还没同步到Slave就宕机，Slave升级后锁没了，另一个实例也能拿到锁。RedLock算法是Redis官方提出的解决方案：向多个独立的Redis节点同时申请锁，超过半数成功才算拿到锁。但RedLock也有争议（Martin Kleppmann和antirez的著名争论），实际中大多数业务用单Redis实例锁+合理过期时间就够了，不需要上RedLock。</p>
+<p>Zookeeper也能做分布式锁：创建临时顺序节点，最小的节点获得锁，watch前一个节点释放。Zookeeper锁的特点是可靠性高（会话断开自动释放锁），但性能不如Redis，运维复杂。</p>
+<p>数据库做分布式锁：创建一张锁表，插入记录成功算拿到锁，删除记录释放锁。简单但性能差，数据库成瓶颈。适合并发不高的场景。</p>
+<p>选型建议：大多数业务用Redis锁就够了；对可靠性要求极高（涉及金钱、不能出错）的场景用Zookeeper或 etcd。</p>
+<p>锁的粒度很重要。锁整个订单服务太粗，应该锁具体的订单ID。锁的过期时间要合理：太短业务没执行完锁就释放了，太长进程挂了恢复慢。看门狗（Watchdog）机制：业务执行期间自动续期，执行完才停止，解决"业务执行时间不确定"的问题。</p>
+<p>分布式锁是分布式系统的基础组件，但要谨慎使用。能用乐观锁（数据库版本号）解决的不要用分布式锁；能缩小锁粒度的不要锁大范围。锁是并发安全的最后手段，不是第一选择。</p>
+</div>
+</body>
+</html>

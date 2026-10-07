@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技术专题合集 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .links{display:flex;gap:16px;align-items:center}
+.hd a{color:#8be9fd;font-size:13px;text-decoration:none}
+.hd a.cb{opacity:.7}
+.wrap{max-width:900px;margin:26px auto;padding:0 16px}
+.intro{background:#282a36;border-radius:10px;padding:16px 20px;margin-bottom:24px;border-left:4px solid #50fa7b}
+.intro p{margin:0;font-size:13px;color:#bdc3c7;line-height:1.6}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.topic-card{background:#282a36;border:1px solid #44475a;border-radius:14px;padding:24px;cursor:pointer;transition:.15s;text-decoration:none;color:inherit;display:block}
+.topic-card:hover{border-color:#50fa7b;box-shadow:0 8px 24px rgba(80,250,123,.1);transform:translateY(-4px)}
+.topic-icon{font-size:36px;margin-bottom:12px}
+.topic-title{font-size:18px;font-weight:700;color:#e6e6e6;margin-bottom:8px}
+.topic-desc{font-size:13px;color:#6272a4;line-height:1.5;margin-bottom:12px}
+.topic-count{display:inline-block;background:#1e1e2e;color:#50fa7b;font-size:12px;padding:3px 10px;border-radius:10px}
+.foot{color:#6272a4;font-size:12px;margin-top:40px;text-align:center;padding-bottom:20px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>📚 技术专题合集</h1>
+  <div class="links">
+    <a href="https://caesarpc.github.io/caesarbase/main.html" class="cb">← CaesarBase</a>
+    <a href="index.html">← 返回工具箱</a>
+    <a href="articles.html">全部文章</a>
+  </div>
+</div>
+<div class="wrap">
+  <div class="intro">
+    <p>按专题整理的技术文章合集，从入门到实战，系统学习不迷路。</p>
+  </div>
+  
+  <div class="topics-grid">
+    
+    <a href="topic-frontend.html" class="topic-card">
+      <div class="topic-icon">🖥️</div>
+      <div class="topic-title">前端开发</div>
+      <div class="topic-desc">Vue、React、CSS动画、性能优化、浏览器API、工程化等前端核心知识</div>
+      <span class="topic-count">20+ 篇文章</span>
+    </a>
+    
+    <a href="topic-backend.html" class="topic-card">
+      <div class="topic-icon">⚙️</div>
+      <div class="topic-title">后端架构</div>
+      <div class="topic-desc">分布式系统、微服务、数据库、API设计、高可用、中间件等后端架构</div>
+      <span class="topic-count">20+ 篇文章</span>
+    </a>
+    
+    <a href="topic-network.html" class="topic-card">
+      <div class="topic-icon">🌐</div>
+      <div class="topic-title">网络与运维</div>
+      <div class="topic-desc">TCP/IP、HTTP、CDN、负载均衡、监控、部署、Serverless等网络运维知识</div>
+      <span class="topic-count">15+ 篇文章</span>
+    </a>
+    
+    <a href="topic-tools.html" class="topic-card">
+      <div class="topic-icon">🧰</div>
+      <div class="topic-title">工具使用教程</div>
+      <div class="topic-desc">本站所有工具的使用教程，域名查询、编码解码、文件转换等</div>
+      <span class="topic-count">25 篇文章</span>
+    </a>
+    
+    <a href="topic-ai.html" class="topic-card">
+      <div class="topic-icon">🤖</div>
+      <div class="topic-title">AI与前沿技术</div>
+      <div class="topic-desc">AI Agent、大模型、RAG、WebAssembly、边缘计算等前沿技术</div>
+      <span class="topic-count">10+ 篇文章</span>
+    </a>
+    
+    <a href="topic-engineering.html" class="topic-card">
+      <div class="topic-icon">📐</div>
+      <div class="topic-title">软件工程</div>
+      <div class="topic-desc">重构、技术选型、技术债、代码规范、项目管理、技术文档等</div>
+      <span class="topic-count">15+ 篇文章</span>
+    </a>
+    
+  </div>
+  
+  <div class="foot">Cr工具站 · 技术专题合集</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前端开发专题 - Cr工具站</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1e1e2e;color:#e6e6e6;min-height:100vh}
+.hd{background:#282a36;padding:18px 26px;border-bottom:2px solid #50fa7b;display:flex; align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hd h1{margin:0;font-size:22px;color:#50fa7b}
+.hd .links{display:flex;gap:16px;align-items:center}
+.hd a{color:#8be9fd;font-size:13px;text-decoration:none}
+.hd a.cb{opacity:.7}
+.wrap{max-width:800px;margin:26px auto;padding:0 16px}
+.topic-header{background:#282a36;border-radius:12px;padding:24px;margin-bottom:20px;border-left:4px solid #50fa7b}
+.topic-header h2{font-size:20px;color:#e6e6e6;margin-bottom:8px}
+.topic-header p{font-size:13px;color:#6272a4;line-height:1.6}
+.article-list{display:grid;gap:12px}
+.article-item{background:#282a36;border:1px solid #44475a;border-radius:12px;padding:18px 20px;cursor:pointer;transition:.15s}
+.article-item:hover{border-color:#50fa7b;box-shadow:0 4px 16px rgba(80,250,123,.08);transform:translateY(-2px)}
+.article-item h3{font-size:15px;color:#e6e6e6;margin-bottom:4px;font-weight:600}
+.article-item p{font-size:12px;color:#6272a4;margin:0;line-height:1.5}
+.article-item .date{font-size:11px;color:#6272a4;margin-top:10px}
+.foot{color:#6272a4;font-size:12px;margin-top:30px;text-align:center;padding-bottom:20px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>🖥️ 前端开发专题</h1>
+  <div class="links">
+    <a href="https://caesarpc.github.io/caesarbase/main.html" class="cb">← CaesarBase</a>
+    <a href="topics.html">← 所有专题</a>
+    <a href="index.html">← 工具箱</a>
+  </div>
+</div>
+<div class="wrap">
+  <div class="topic-header">
+    <h2>🖥️ 前端开发</h2>
+    <p>从基础原理到工程化实践，系统学习前端开发核心知识。包含Vue、CSS、性能优化、浏览器API、框架原理等。</p>
+  </div>
+  
+  <div class="article-list">
+    <div class="article-item" onclick="location.href='article-tech-vite-deep-dive.html'"><h3>Vite构建工具深度解析</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-monorepo.html'"><h3>Monorepo多包管理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-cross-tab-comm.html'"><h3>浏览器跨标签页通信</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-frontend-authz.html'"><h3>前端权限设计</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-i18n-practice.html'"><h3>国际化i18n实战</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-dark-mode.html'"><h3>暗色模式实现</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-file-upload-chunk.html'"><h3>文件上传与大文件分片</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-browser-storage.html'"><h3>浏览器存储方案对比</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-frontend-tracking.html'"><h3>前端埋点与数据采集</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-form-best-practice.html'"><h3>表单处理最佳实践</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-rich-text-editor.html'"><h3>富文本编辑器原理</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-css-animation-perf.html'"><h3>CSS动画与性能优化</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-perf-budget.html'"><h3>前端性能预算</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-virtual-list.html'"><h3>虚拟列表与长列表性能优化</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-micro-frontend.html'"><h3>微前端架构实践</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-ssr-isomorphic.html'"><h3>服务端渲染SSR与同构应用</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-tech-bff-layer.html'"><h3>BFF层设计与实践</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+    <div class="article-item" onclick="location.href='article-Vue3_Composition_API.html'"><h3>Vue3 Composition API</h3><p>技术深度文章</p><div class="date">2026-10-06</div></div>
+  </div>
+  
+  <div class="foot">Cr工具站 · 前端开发专题</div>
+</div>
+</body>
+</html>

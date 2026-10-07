@@ -18,8 +18,8 @@ canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
 .hero{text-align:center;margin-bottom:40px}
 .hero h1{font-size:48px;font-weight:900;background:linear-gradient(135deg,#50fa7b 0%,#8be9fd 50%,#bd93f9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px}
 .hero p{color:var(--dim);margin-top:10px;font-size:15px}
-.cards{display:flex;flex-direction:column;gap:16px}
-.big-card{background:rgba(26,26,46,.85);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:28px;text-decoration:none;color:var(--text);transition:all .3s;display:block}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.big-card{background:rgba(26,26,46,.85);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:28px;text-decoration:none;color:var(--text);transition:all .3s;display:flex;flex-direction:column}
 .big-card:hover{border-color:var(--green);transform:translateY(-3px)}
 .big-card .icon{font-size:32px;margin-bottom:12px}
 .big-card h3{font-size:20px;margin-bottom:6px}
@@ -43,6 +43,10 @@ footer{text-align:center;padding:30px;color:var(--dim);font-size:12px;position:r
 </style>
 </head>
 <body>
+<!-- 离线提示顶栏 -->
+<div id="offlineBar" style="display:none;position:fixed;top:0;left:0;right:0;background:#2d2d3f;color:#888;padding:4px 16px;font-size:12px;text-align:center;z-index:9999;">
+  📡 当前未联网 · 部分功能不可用
+</div>
 <canvas id="mc"></canvas>
 <div class="topbar">
   <div class="logo">CaesarBase</div>
@@ -72,11 +76,32 @@ footer{text-align:center;padding:30px;color:var(--dim);font-size:12px;position:r
       </div>
       <a class="more" href="https://caesarpc.github.io/cr/articles.html">想看更多文章？进入Cr工具站浏览全部 →</a>
     </div>
+    <a class="big-card" href="https://caesarpc.github.io/cr/topics.html">
+      <div class="icon">🗂️</div>
+      <h3>技术专题合集</h3>
+      <p>按专题分类整理，前端/后端/网络/AI，系统学习不迷路。</p>
+      <span class="go">浏览专题合集 →</span>
+    </a>
     <a class="big-card" href="sponsor.html">
       <div class="icon">📢</div>
       <h3>品牌导流合作</h3>
       <p>广告位招商、品牌导流合作，提交你的站点信息。</p>
       <span class="go">填写合作申请 →</span>
+    </a>
+
+    <div style="grid-column:1/-1;margin-top:20px;padding:10px 0;border-top:1px solid var(--border);font-size:13px;color:var(--dim);letter-spacing:2px">🛡️ 安全研究专区</div>
+
+    <a class="big-card" href="https://caesarpc.github.io/src-scanner-web/">
+      <div class="icon">🛡️</div>
+      <h3>SRC漏洞扫描器 <span style="font-size:11px;background:#ff4757;color:#fff;padding:2px 8px;border-radius:4px;margin-left:6px">需密钥</span></h3>
+      <p>三层扫描（浅层100项/中层150项/深层50项），敏感路径自动检测，50并发。仅限授权安全测试使用。</p>
+      <span class="go">进入扫描器 →</span>
+    </a>
+    <a class="big-card" href="https://caesarpc.github.io/src-scanner-web/quiz.html">
+      <div class="icon">📝</div>
+      <h3>靶场练习</h3>
+      <p>随机生成漏洞题目，勾选你认为有问题的页面，提交后看答案和原理。练熟了再实战。</p>
+      <span class="go">开始练习 →</span>
     </a>
   </div>
 </div>
@@ -177,6 +202,29 @@ if(cu){
     box.appendChild(ac);
   }
 }
+</script>
+<script>
+// PWA注册
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('https://caesarpc.github.io/sw.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.log('SW failed:', err));
+  });
+}
+
+// 离线检测
+function updateOnlineStatus() {
+  const bar = document.getElementById('offlineBar');
+  if (navigator.onLine) {
+    bar.style.display = 'none';
+  } else {
+    bar.style.display = 'block';
+  }
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
 </script>
 </body>
 </html>

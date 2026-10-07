@@ -1,11 +1,17 @@
 // CaesarBase PWA Service Worker
 const CACHE_NAME = 'caesarbase-v1';
 const ASSETS = [
-  '/caesarbase/main.html',
+  '/',
+  '/index.html',
+  '/welcome.html',
+  '/admin.html',
+  '/sponsor.html',
+  '/manifest.json',
   '/cr/index.html',
   '/cr/tools.html',
   '/cr/topics.html',
   '/cr/all-articles.html',
+  '/cr/articles.html',
   '/cr/paint.html',
   '/cr/pomodoro.html',
   '/cr/wall.html',
@@ -31,20 +37,18 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// 拦截请求，缓存优先
+// 请求时：缓存优先，网络回退
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => {
-        // 有缓存就用缓存，同时后台更新
-        const fetchPromise = fetch(event.request).then(response => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
-          return response;
-        }).catch(() => cached);
-        return cached || fetchPromise;
-      })
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request).then(res => {
+        const copy = res.clone();
+        if (res.ok) {
+          caches.open(CACHE_NAME).then(c => c.put(event.request, copy));
+        }
+        return res;
+      }).catch(() => caches.match('/index.html'));
+    })
   );
 });

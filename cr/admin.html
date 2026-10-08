@@ -64,6 +64,11 @@
   </div>
   <div class="sub">数据存储在云端（GitHub 仓库），需要 Server 管理员身份进入。</div>
 
+  <!-- 来源提示：直接打开后台地址时显示 -->
+  <div class="card" id="refTip" style="display:none;background:#282a36;border:1px solid #ff5555;color:#ffb86c">
+    🔒 检测到你<b>直接打开了后台地址</b>。后台数据需要 Server 管理员密码才能查看。请从 <b>CaesarBase 主站</b> 或 <b>CR 工具站</b> 登录 Server 账号后进入，或直接输入密码登录下方后台。
+  </div>
+
   <!-- 鉴权 -->
   <div class="card" id="authBox">
     <h2>🔐 管理员验证</h2>
@@ -251,6 +256,13 @@ function loadSponsors() {
 }
 </script>
 <script>
+(function () {
+  var ref = document.referrer || '';
+  if (ref.indexOf('caesarpc.github.io') < 0) {
+    var t = document.getElementById('refTip');
+    if (t) t.style.display = 'block';
+  }
+})();
 var CLOUD_REPO = 'CaesarPC/website-finder';
 var CLOUD_WALL = 'api_data/wall.json';
 var wallList = [];

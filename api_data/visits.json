@@ -70,5 +70,13 @@
   "page": "index.html",
   "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
   "ref": "https://caesarpc.github.io/"
+ },
+ {
+  "id": 1791430986260,
+  "ts": 1791430986260,
+  "time": "2026-10-08 06:43",
+  "page": "CaesarBase主站",
+  "ua": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36",
+  "ref": ""
  }
 ]

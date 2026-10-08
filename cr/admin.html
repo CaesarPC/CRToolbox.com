@@ -51,6 +51,9 @@
   .visit-row .vt { color: #6272a4; min-width: 130px; }
   .visit-row .vp { color: #8be9fd; flex: 1; word-break: break-all; }
   .visit-row .vua { color: #6272a4; font-size: 11px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vtag{font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;white-space:nowrap}
+  .vtag.cb{color:#0f0f1a;background:#50fa7b}
+  .vtag.cr{color:#0f0f1a;background:#8be9fd}
 </style>
 </head>
 <body>
@@ -420,7 +423,9 @@ function loadVisits() {
     if (!j.list.length) { el.innerHTML = '<div class="empty">暂无访问记录</div>'; return; }
     var h = '';
     j.list.slice().reverse().slice(0, 100).forEach(function (x) {
+      var siteTag = (x.page === 'CaesarBase主站') ? '<span class="vtag cb">CaesarBase</span>' : '<span class="vtag cr">CR工具站</span>';
       h += '<div class="visit-row">' +
+        siteTag +
         '<span class="vt">' + esc(x.time) + '</span>' +
         '<span class="vp">' + esc(x.page || '/') + '</span>' +
         '<span class="vua" title="' + esc(x.ua) + '">' + esc(x.ua).slice(0, 60) + '</span>' +

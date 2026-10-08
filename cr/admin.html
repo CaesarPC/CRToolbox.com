@@ -93,6 +93,7 @@
       <div class="tab" data-tab="feedback">📝 意见反馈</div>
       <div class="tab" data-tab="visits">👁️ 访问监控</div>
       <div class="tab" data-tab="version">🏷️ 版本管理</div>
+      <div class="tab" data-tab="cbmain">🌐 CaesarBase 主站</div>
     </div>
 
     <!-- 留言管理 -->
@@ -152,10 +153,74 @@
         <div id="changelogList"></div>
       </div>
     </div>
+
+    <!-- CaesarBase 主站管理 -->
+    <div class="tab-panel" id="panel-cbmain">
+      <div class="card">
+        <h2>🌐 CaesarBase 主站管理</h2>
+        <div class="stat-row" style="margin-bottom:14px">
+          <div class="stat"><b id="cbArticle">-</b><span>主站文章数</span></div>
+          <div class="stat"><b>2</b><span>站点总数</span></div>
+          <div class="stat"><b>v0.1</b><span>主站版本</span></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <a href="https://caesarpc.github.io/index.html" target="_blank" style="color:#8be9fd">→ 主站主页</a> &nbsp;
+          <a href="https://caesarpc.github.io/sponsor.html" target="_blank" style="color:#8be9fd">→ 招商表单</a> &nbsp;
+          <a href="https://caesarpc.github.io/articles.html" target="_blank" style="color:#8be9fd">→ 全部文章</a>
+        </div>
+        <h3 style="margin:6px 0 10px;color:#8be9fd">🖼 主站广告位管理</h3>
+        <div>
+          <input id="cbAdTitle" placeholder="广告标题" style="padding:8px;margin:4px 6px 4px 0">
+          <input id="cbAdUrl" placeholder="https://网站链接" style="padding:8px;margin:4px 6px 4px 0">
+          <input id="cbAdDesc" placeholder="一句话简介" style="padding:8px;margin:4px 6px 4px 0">
+          <button class="btn green" onclick="addCBAd()">➕ 添加广告位</button>
+        </div>
+        <div id="cbAdList" style="margin-top:14px"></div>
+        <div style="margin-top:18px;color:#6272a4;font-size:12px">📢 合作申请由用户在<b>招商表单页</b>提交，站长在此后台统一查看管理。</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<script src="ghdb_v2.js?v=20261006c"></script>
+<script src="ghdb_v2.js?v=20261006c">
+/* ========== CaesarBase 主站管理 ========== */
+function loadCBStats() {
+  if (!document.getElementById('cbArticle')) return;
+  renderCBAds();
+  fetchT('https://caesarpc.github.io/articles.html?ts=' + Date.now()).then(function (r) { return r.text(); }).then(function (html) {
+    var tmp = document.createElement('div'); tmp.innerHTML = html;
+    var el = document.getElementById('cbArticle');
+    if (el) el.textContent = tmp.querySelectorAll('.article-item').length;
+  }).catch(function () {});
+}
+function renderCBAds() {
+  var box = document.getElementById('cbAdList');
+  if (!box) return;
+  var ads = JSON.parse(localStorage.getItem('cb_ads') || '[]');
+  if (!ads.length) { box.innerHTML = '<div class="sub">暂无广告位</div>'; return; }
+  var h = '';
+  ads.forEach(function (a) {
+    h += '<div class="item" style="margin-bottom:8px;padding:10px;background:#282a36;border-radius:8px">' +
+      '<div><b style="color:#50fa7b">' + esc(a.title) + '</b> <span class="sub">' + esc(a.time || '') + '</span></div>' +
+      '<div style="font-size:12px;color:#6272a4;margin-top:2px">' + esc(a.desc) + '</div>' +
+      '<a href="' + esc(a.url) + '" target="_blank" style="color:#8be9fd;font-size:12px">' + esc(a.url) + '</a></div>';
+  });
+  box.innerHTML = h;
+}
+function addCBAd() {
+  var t = document.getElementById('cbAdTitle').value;
+  var u = document.getElementById('cbAdUrl').value;
+  var d = document.getElementById('cbAdDesc').value;
+  if (!t || !u) { alert('标题和链接必填'); return; }
+  var ads = JSON.parse(localStorage.getItem('cb_ads') || '[]');
+  ads.push({ title: t, url: u, desc: d, time: new Date().toLocaleString() });
+  localStorage.setItem('cb_ads', JSON.stringify(ads));
+  document.getElementById('cbAdTitle').value = '';
+  document.getElementById('cbAdUrl').value = '';
+  document.getElementById('cbAdDesc').value = '';
+  renderCBAds();
+}
+</script>
 <script>
 var CLOUD_REPO = 'CaesarPC/website-finder';
 var CLOUD_WALL = 'api_data/wall.json';
@@ -187,6 +252,7 @@ document.querySelectorAll('.tab').forEach(function (tab) {
     if (tab.dataset.tab === 'feedback') loadFeedback();
     if (tab.dataset.tab === 'visits') loadVisits();
     if (tab.dataset.tab === 'version') loadVersion();
+    if (tab.dataset.tab === 'cbmain') loadCBStats();
   };
 });
 
@@ -250,7 +316,7 @@ document.getElementById('btnLogin').onclick = function () {
   });
 };
 
-function loadAll() { loadWall(); loadStats(); }
+function loadAll() { loadWall(); loadStats(); loadCBStats(); }
 
 function loadStats() {
   if (!window.CrGH) return;

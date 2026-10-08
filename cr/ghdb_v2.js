@@ -442,6 +442,24 @@
     });
   }
 
+    /* 合作申请提交（招商页公开提交，无需登录） */
+  function sponsorPost(data, cb) {
+    var siteUrl = String(data.siteUrl || '').slice(0, 500);
+    var purpose = String(data.purpose || '').slice(0, 1000);
+    var size = String(data.size || '').slice(0, 200);
+    var email = String(data.email || '').slice(0, 200);
+    if (!siteUrl || !purpose || !size) return cb(fail('必填项缺失'));
+    ghRead('api_data/sponsors.json', function (err, list) {
+      if (err) return cb(fail(err.error));
+      list = list || [];
+      list.unshift({ id: Date.now(), email: email, siteUrl: siteUrl, purpose: purpose, size: size, time: nowStr() });
+      ghWrite('api_data/sponsors.json', list.slice(0, 200), function (e2) {
+        if (e2) return cb(fail(e2.error));
+        cb(ok({ msg: '合作申请已提交，站长会尽快查看' }));
+      });
+    });
+  }
+
   /* 访问统计 */
   function report(cb) {
     ghRead('api_data/meta.json', function (err, meta) {
@@ -677,6 +695,15 @@
       });
     });
   }
+    function adminSponsorsList(data, cb) {
+    usernameByToken(data.token, function (username) {
+      if (username !== 'Server') return cb(fail('仅管理员可操作'));
+      ghRead('api_data/sponsors.json', function (err, list) {
+        if (err) return cb(fail(err.error));
+        cb(ok({ list: list || [] }));
+      });
+    });
+  }
   function adminVisitsList(data, cb) {
     usernameByToken(data.token, function (username) {
       if (username !== 'Server') return cb(fail('仅管理员可操作'));
@@ -760,6 +787,7 @@
       if (p === 'admin/users') return adminUsersList({ token: q.token }, cb);
       if (p === 'admin/feedback') return adminFeedbackList({ token: q.token }, cb);
       if (p === 'admin/visits') return adminVisitsList({ token: q.token }, cb);
+      if (p === 'admin/sponsors') return adminSponsorsList({ token: q.token }, cb);
       return cb(fail('接口不存在: ' + p));
     }
     switch (p) {
@@ -770,6 +798,7 @@
       case 'register': return doRegister(data, cb);
       case 'note': return notePost(data, cb);
       case 'feedback': return feedbackPost(data, cb);
+      case 'sponsor': return sponsorPost(data, cb);
       case 'projects': return projectCreate(data, cb);
       case 'projects/comment': return projectComment(data, cb);
       case 'projects/del': return projectDel(data, cb);
@@ -800,12 +829,12 @@
     wallGet: wallGet, wallPost: wallPost, wallPin: wallPin, wallSync: wallSync,
     login: doLogin, register: doRegister,
     noteGet: noteGet, notePost: notePost,
-    feedbackPost: feedbackPost,
+    feedbackPost: feedbackPost, sponsorPost: sponsorPost,
     report: report,
     projectsList: projectsList, projectCreate: projectCreate,
     projectComment: projectComment, projectDel: projectDel,
     adminUsersList: adminUsersList, adminUserReset: adminUserReset, adminUserDelete: adminUserDelete, adminUserSetRole: adminUserSetRole,
-    adminFeedbackList: adminFeedbackList, adminVisitsList: adminVisitsList,
+    adminFeedbackList: adminFeedbackList, adminSponsorsList: adminSponsorsList, adminVisitsList: adminVisitsList,
     visitLog: visitLog,
     verifyAndUnlock: verifyAndUnlock,
     uploadFile: uploadFile

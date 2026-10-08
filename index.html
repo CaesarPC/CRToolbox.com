@@ -209,7 +209,7 @@ if(cu){
     const box=document.getElementById('cardBox');
     const ac=document.createElement('a');
     ac.className='big-card admin-card';
-    ac.href='admin.html';
+    ac.href='cr/admin.html';
     ac.innerHTML='<div class="icon">👑</div><h3>进入后台</h3><p>Server专属后台管理</p><span class="go">打开后台 →</span>';
     box.appendChild(ac);
   }
@@ -300,5 +300,16 @@ updateOnlineStatus();
     <button class="cancel" onclick="closeInstallModal()">取消</button>
   </div>
 </div>
+
+<script src="cr/ghdb_v2.js?v=20261008a"></script>
+<script>
+// CaesarBase 主站访问记录(与CR工具站共用云端 api_data/visits.json)
+window.addEventListener('load',function(){
+  if(window.CrGH && window.CrGH.visitLog){
+    try{ window.CrGH.visitLog({page:'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
+  }
+});
+</script>
+
 </body>
 </html>

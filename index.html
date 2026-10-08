@@ -306,7 +306,7 @@ updateOnlineStatus();
 // CaesarBase 主站访问记录(与CR工具站共用云端 api_data/visits.json)
 window.addEventListener('load',function(){
   if(window.CrGH && window.CrGH.visitLog){
-    try{ window.CrGH.visitLog({page:'index.html', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
+    try{ window.CrGH.visitLog({page:'CaesarBase主站', ua:navigator.userAgent, ref:document.referrer}, function(){}); }catch(e){}
   }
 });
 </script>

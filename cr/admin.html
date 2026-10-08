@@ -176,7 +176,13 @@
           <button class="btn green" onclick="addCBAd()">➕ 添加广告位</button>
         </div>
         <div id="cbAdList" style="margin-top:14px"></div>
-        <div style="margin-top:18px;color:#6272a4;font-size:12px">📢 合作申请由用户在<b>招商表单页</b>提交，站长在此后台统一查看管理。</div>
+
+        <h3 style="margin:18px 0 10px;color:#8be9fd">📢 合作申请 <span id="cbSponsorBadge" style="display:none;background:#ff5555;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-left:6px">0</span></h3>
+        <div style="margin-bottom:10px">
+          <button class="btn" onclick="loadSponsors()">🔄 刷新合作申请</button>
+          <span class="sub" style="margin-left:8px">用户在招商表单页提交的申请</span>
+        </div>
+        <div id="cbSponsorList"></div>
       </div>
     </div>
   </div>
@@ -187,6 +193,7 @@
 function loadCBStats() {
   if (!document.getElementById('cbArticle')) return;
   renderCBAds();
+  loadSponsors();
   fetchT('https://caesarpc.github.io/articles.html?ts=' + Date.now()).then(function (r) { return r.text(); }).then(function (html) {
     var tmp = document.createElement('div'); tmp.innerHTML = html;
     var el = document.getElementById('cbArticle');
@@ -219,6 +226,28 @@ function addCBAd() {
   document.getElementById('cbAdUrl').value = '';
   document.getElementById('cbAdDesc').value = '';
   renderCBAds();
+}
+function loadSponsors() {
+  if (!window.CrGH || !adminToken) return;
+  window.CrGH.adminSponsorsList({ token: adminToken }, function (j) {
+    var el = document.getElementById('cbSponsorList');
+    if (!el) return;
+    if (!j.ok) { el.innerHTML = '<div class="sub">' + esc(j.msg) + '</div>'; return; }
+    var list = j.list || [];
+    var badge = document.getElementById('cbSponsorBadge');
+    if (badge) { badge.style.display = list.length ? 'inline-block' : 'none'; badge.textContent = list.length; }
+    if (!list.length) { el.innerHTML = '<div class="sub">暂无合作申请</div>'; return; }
+    var h = '';
+    list.slice().reverse().forEach(function (s) {
+      h += '<div class="item" style="margin-bottom:8px;padding:12px;background:#282a36;border-radius:8px">' +
+        '<div><b style="color:#50fa7b">' + esc(s.siteUrl) + '</b> <span class="sub">' + esc(s.time || '') + '</span></div>' +
+        '<div style="font-size:12px;color:#6272a4;margin-top:4px">用途: ' + esc(s.purpose) + '</div>' +
+        '<div style="font-size:12px;color:#6272a4;margin-top:2px">规模: ' + esc(s.size) + ' · 邮箱: ' + esc(s.email || '未填') + (s.phone ? ' · 电话: ' + esc(s.phone) : '') + '</div>' +
+        '<div style="margin-top:6px"><a href="' + esc(s.siteUrl) + '" target="_blank" style="color:#8be9fd;font-size:12px">访问站点 →</a></div>' +
+        '</div>';
+    });
+    el.innerHTML = h;
+  });
 }
 </script>
 <script>

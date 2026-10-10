@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>靶场练习 · CaesarBase</title>
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--border:#2a2a4a;--green:#50fa7b;--blue:#8be9fd;--purple:#bd93f9;--text:#e6e6f0;--dim:#6272a4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.topbar{background:rgba(20,20,35,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.topbar .logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,#50fa7b,#8be9fd,#bd93f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar a{color:var(--dim);text-decoration:none;font-size:14px}
+.topbar a:hover{color:var(--green)}
+.wrap{max-width:760px;margin:0 auto;padding:30px 20px;position:relative;z-index:1}
+.hero{text-align:center;margin-bottom:26px}
+.hero h1{font-size:30px;font-weight:900;background:linear-gradient(135deg,#50fa7b 0%,#8be9fd 50%,#bd93f9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--dim);margin-top:8px;font-size:14px}
+.card{background:rgba(26,26,46,.85);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
+.quizTitle{font-size:16px;font-weight:700;margin-bottom:4px;color:#fff}
+.quizSub{color:var(--dim);font-size:13px;margin-bottom:16px}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .2s;background:rgba(15,15,26,.5)}
+.opt:hover{border-color:var(--green)}
+.opt input{width:18px;height:18px;accent-color:var(--green);cursor:pointer}
+.opt .fn{font-family:monospace;font-size:14px;color:var(--blue);flex:1}
+.opt .sz{color:var(--dim);font-size:12px}
+.btnRow{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--blue));color:#0f0f1a}
+.btn-ghost{background:var(--card);border:1px solid var(--border);color:var(--text)}
+.score{text-align:center;font-size:40px;font-weight:900;margin:10px 0}
+.scoreGood{color:var(--green)}.scoreOk{color:#f1c40f}.scoreBad{color:#ff6b6b}
+.segTitle{font-size:15px;font-weight:700;margin:18px 0 10px}
+.segGood{color:var(--green)}.segWarn{color:#f1c40f}.segBad{color:#ff6b6b}
+.resultItem{background:rgba(15,15,26,.5);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.resultItem .p{font-family:monospace;font-size:13px;color:#fff}
+.resultItem .d{font-size:13px;color:var(--dim);margin-top:4px}
+.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:4px;margin-left:8px;vertical-align:1px}
+.tagHigh{background:rgba(255,71,87,.2);color:#ff6b6b}
+.tagMed{background:rgba(241,196,15,.2);color:#f1c40f}
+.hint{font-size:12px;color:var(--dim);margin-top:14px;line-height:1.7}
+footer{text-align:center;padding:24px;color:var(--dim);font-size:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="logo">CaesarBase · 靶场</span>
+  <a href="/index.html">← 返回主站</a>
+</div>
+<div class="wrap">
+  <div class="hero">
+    <h1>🛡️ 安全判断练习</h1>
+    <p>免费 · 选择题式 · 随机出题。勾选你认为存在「敏感信息泄露」的文件，提交后看答案和原理。</p>
+  </div>
+
+  <div class="card" id="quizCard">
+    <div id="quizInner"></div>
+  </div>
+</div>
+<footer>© 2026 CaesarBase · 仅用于授权安全测试学习</footer>
+
+<script>
+var POOL=[
+{url:"/.env",sev:"high",d:"环境变量泄露，含数据库密码、API密钥"},
+{url:"/.git/config",sev:"high",d:"Git仓库配置泄露，可拉取整个源码"},
+{url:"/backup.sql",sev:"high",d:"数据库备份，含全部用户数据"},
+{url:"/www.zip",sev:"high",d:"整站源码打包泄露"},
+{url:"/wp-config.php~",sev:"high",d:"WordPress配置临时备份"},
+{url:"/config.php.bak",sev:"high",d:"配置文件备份，可能含密码"},
+{url:"/actuator/env",sev:"high",d:"Spring环境变量，含密钥"},
+{url:"/nacos",sev:"high",d:"配置中心未授权访问"},
+{url:"/phpinfo.php",sev:"med",d:"PHP配置信息泄露"},
+{url:"/debug.log",sev:"med",d:"调试日志含敏感信息"},
+{url:"/uploads/",sev:"med",d:"上传目录可列目录"},
+{url:"/swagger-ui.html",sev:"med",d:"API文档暴露"},
+{url:"/robots.txt",sev:"safe",d:"爬虫规则，正常公开文件"},
+{url:"/favicon.ico",sev:"safe",d:"网站图标，正常文件"},
+{url:"/login",sev:"safe",d:"登录页面，正常功能"},
+{url:"/about",sev:"safe",d:"关于页面，正常静态页"},
+{url:"/sitemap.xml",sev:"safe",d:"站点地图，SEO正常文件"},
+{url:"/api/v1/health",sev:"safe",d:"健康检查接口，正常"}
+];
+var round=[];
+function pick(arr,n){return arr.slice().sort(function(){return Math.random()-0.5}).slice(0,n)}
+function newRound(){
+  document.getElementById('quizInner').innerHTML='';
+  var vuln=pick(POOL.filter(function(v){return v.sev!=='safe'}),4);
+  var safe=pick(POOL.filter(function(v){return v.sev==='safe'}),2);
+  round=vuln.concat(safe).sort(function(){return Math.random()-0.5});
+  var host='mock-'+Math.floor(1000+Math.random()*9000)+'.site';
+  var h='';
+  h+='<div class="quizTitle">🖥️ 模拟目标站</div>';
+  h+='<div class="quizSub">目标：<span style="font-family:monospace;color:#8be9fd">https://'+host+'/</span> · 这个站根目录有以下文件，勾选属于「敏感信息泄露」的：</div>';
+  round.forEach(function(t,i){
+    h+='<label class="opt"><input type="checkbox" class="qo" data-i="'+i+'"><span class="fn">'+t.url+'</span><span class="sz">'+(t.sev==='safe'?'正常':'敏感')+'</span></label>';
+  });
+  h+='<div class="btnRow"><button class="btn btn-primary" onclick="submitQuiz()">提交判断</button><button class="btn btn-ghost" onclick="newRound()">换一题</button></div>';
+  document.getElementById('quizInner').innerHTML=h;
+}
+function submitQuiz(){
+  var picked=[];
+  document.querySelectorAll('.qo').forEach(function(cb){if(cb.checked)picked.push(parseInt(cb.dataset.i))});
+  var sens=[];round.forEach(function(t,i){if(t.sev!=='safe')sens.push(i)});
+  var good=[],miss=[],wrong=[];
+  sens.forEach(function(i){if(picked.indexOf(i)>=0)good.push(round[i]);else miss.push(round[i])});
+  picked.forEach(function(i){if(sens.indexOf(i)<0)wrong.push(round[i])});
+  var total=sens.length,pct=Math.round(good.length/total*100);
+  var sc=pct>=80?'scoreGood':pct>=50?'scoreOk':'scoreBad';
+  var msg=pct>=80?'漂亮！判断很准':pct>=50?'还可以，再练练':'多练几轮';
+  var h='<div class="score '+sc+'">'+good.length+'/'+total+' ('+pct+'%)</div>';
+  h+='<p style="text-align:center;color:#888;margin-bottom:8px">'+msg+'</p>';
+  h+='<div class="segTitle segGood">✅ 你找对的</div>';
+  if(good.length===0)h+='<p style="color:#666;font-size:13px">一个都没找对</p>';
+  good.forEach(function(v){h+='<div class="resultItem"><div class="p">'+v.url+'<span class="tag '+(v.sev==='high'?'tagHigh':'tagMed')+'">'+(v.sev==='high'?'高危':'中危')+'</span></div><div class="d">'+v.d+'</div></div>'});
+  h+='<div class="segTitle segWarn">⚠️ 你漏掉的</div>';
+  if(miss.length===0)h+='<p style="color:#666;font-size:13px">全找到了！</p>';
+  miss.forEach(function(v){h+='<div class="resultItem"><div class="p">'+v.url+'<span class="tag '+(v.sev==='high'?'tagHigh':'tagMed')+'">'+(v.sev==='high'?'高危':'中危')+'</span></div><div class="d">'+v.d+'</div></div>'});
+  if(wrong.length>0){
+    h+='<div class="segTitle segBad">❌ 你误判的（其实是正常文件）</div>';
+    wrong.forEach(function(v){h+='<div class="resultItem"><div class="p">'+v.url+'</div><div class="d">正常文件，不是漏洞</div></div>'});
+  }
+  h+='<div class="btnRow"><button class="btn btn-primary" onclick="newRound()">再来一题</button><a class="btn btn-ghost" href="/index.html" style="display:block;text-align:center;text-decoration:none">返回主站</a></div>';
+  document.getElementById('quizInner').innerHTML=h;
+}
+newRound();
+</script>
+</body>
+</html>
